@@ -30,6 +30,7 @@ rapidwoo/
 ├── index.html              # Homepage with features and hero section
 ├── shop.html               # Product grid with search and sort
 ├── product.html            # Single product page (dynamic via ?product=slug)
+├── snipcart-products.json  # Snipcart validation file (required for checkout)
 ├── save-products.php       # POST endpoint to save products.json
 ├── upload-temp.php         # Image upload handler
 │
@@ -137,6 +138,45 @@ Access the editor at `/demo/` (e.g., `https://yoursite.com/demo/`).
      data-currency="usd">
 </div>
 ```
+
+### Snipcart Product Validation
+
+Since RapidWoo uses JSON files instead of individual product pages, Snipcart needs a way to validate products at checkout. This is handled by the `snipcart-products.json` file in the root directory.
+
+**How it works:**
+
+1. Each "Add to Cart" button has a `data-item-url` attribute pointing to `/snipcart-products.json`
+2. When a customer checks out, Snipcart fetches this URL to verify the product exists and the price matches
+3. The JSON file contains all products with their IDs, prices, and custom fields (variations)
+
+**File location:** `/snipcart-products.json`
+
+**Example entry:**
+```json
+{
+  "id": "1762000000001",
+  "price": 19.99,
+  "url": "/snipcart-products.json",
+  "customFields": [
+    {
+      "name": "Size",
+      "options": "S|M|L[+3.00]|XL[+5.00]"
+    }
+  ]
+}
+```
+
+**Key points:**
+- Each product needs entries for both numeric ID and slug (for flexibility)
+- The `price` must match the base price in your product data
+- `customFields` define variations with optional price modifiers like `[+3.00]`
+- This file must be publicly accessible at the URL specified in `data-item-url`
+
+**Code references:**
+- `shop.html` → `snipcartValidationUrl()` function
+- `product.html` → `snipcartValidationUrl()` function
+
+Both return `/snipcart-products.json` which is set as the `data-item-url` on all Snipcart buttons.
 
 ### Image Upload Settings
 

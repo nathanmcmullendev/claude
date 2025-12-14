@@ -31,6 +31,7 @@ rapidwoo/
 ├── shop.html               # Product grid with search and sort
 ├── product.html            # Single product page (dynamic via ?product=slug)
 ├── snipcart-products.json  # Snipcart validation file (required for checkout)
+├── CNAME                   # Custom domain config for GitHub Pages
 ├── save-products.php       # POST endpoint to save products.json
 ├── upload-temp.php         # Image upload handler
 │
@@ -87,6 +88,93 @@ open http://localhost:8000
 ### Option 3: Traditional Web Hosting
 
 Upload all files to your web host. Requires PHP 7.4+ with `mb_string` extension.
+
+### Option 4: GitHub Pages with Custom Domain
+
+GitHub Pages provides free hosting directly from your repository.
+
+#### Step 1: Enable GitHub Pages
+
+1. Go to your repository on GitHub
+2. Click **Settings** → **Pages** (in the left sidebar)
+3. Under "Source", select **Deploy from a branch**
+4. Choose **main** branch and **/ (root)** folder
+5. Click **Save**
+
+#### Step 2: Add the CNAME File
+
+A `CNAME` file tells GitHub which domain to use. Create a file named `CNAME` in your repo root containing just your domain:
+
+```
+rapidwoo.com
+```
+
+> **Note:** This file already exists if you cloned from the official repo.
+
+#### Step 3: Configure DNS (InMotion Hosting)
+
+Log in to your InMotion Hosting account and navigate to **cPanel** → **Zone Editor** (or **DNS Zone Editor**).
+
+**For apex domain (rapidwoo.com):**
+
+Add these **A Records** pointing to GitHub's servers:
+
+| Type | Name | Value |
+|------|------|-------|
+| A | @ | `185.199.108.153` |
+| A | @ | `185.199.109.153` |
+| A | @ | `185.199.110.153` |
+| A | @ | `185.199.111.153` |
+
+**For www subdomain:**
+
+Add a **CNAME Record**:
+
+| Type | Name | Value |
+|------|------|-------|
+| CNAME | www | `nathanmcmullendev.github.io` |
+
+> **Replace** `nathanmcmullendev` with your GitHub username if different.
+
+#### Step 4: Verify & Enable HTTPS
+
+1. Go back to GitHub → **Settings** → **Pages**
+2. Under "Custom domain", enter `rapidwoo.com`
+3. Click **Save**
+4. Wait for DNS verification (can take up to 24-48 hours, usually faster)
+5. Once verified, check **Enforce HTTPS**
+
+#### DNS Propagation
+
+DNS changes can take time to propagate:
+- **Most cases:** 15 minutes to 1 hour
+- **Worst case:** Up to 48 hours
+
+Use [dnschecker.org](https://dnschecker.org) to verify your DNS records are propagating.
+
+#### ⚠️ Important: GitHub Pages Limitations
+
+GitHub Pages serves **static files only** — PHP will not execute. This means:
+
+| Feature | GitHub Pages | Traditional Hosting |
+|---------|-------------|---------------------|
+| Shop display | ✅ Works | ✅ Works |
+| Product pages | ✅ Works | ✅ Works |
+| Snipcart checkout | ✅ Works | ✅ Works |
+| Product editor | ⚠️ Read-only | ✅ Full functionality |
+| Image uploads | ❌ Won't work | ✅ Works |
+| Save to server | ❌ Won't work | ✅ Works |
+
+**For full editor functionality**, use Netlify (supports serverless functions) or traditional PHP hosting.
+
+#### Troubleshooting DNS
+
+| Issue | Solution |
+|-------|----------|
+| "Domain not found" | Wait for DNS propagation |
+| Certificate error | Wait 15-30 min after DNS propagates for GitHub to issue SSL |
+| Site shows wrong content | Clear browser cache, verify CNAME file contents |
+| Mixed content warnings | Ensure all asset URLs use HTTPS |
 
 ---
 

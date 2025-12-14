@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop â€¢ RapidWoo</title>
+
+  <!-- Styles (relative paths) -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+
+  <!-- Snipcart (v3.4.1) -->
+  <script src="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.js"></script>
+  <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.css" />
+
+  <!-- Core scripts (data + helpers; keep order) -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/utils.js"></script>
+
+  <style>
+    /* Layout + header */
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .header-nav { border-bottom:1px solid #e5e7eb; background:#fff; }
+    .header-inner { max-width:1200px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .nav-left, .nav-right { display:flex; align-items:center; gap:14px; }
+    .crumbs { display:flex; gap:12px; align-items:center; color:#6b7280; font-size:14px; }
+    .crumbs a { color:#6b7280; text-decoration:none; }
+
+    /* Toolbar + grid */
+    .toolbar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin:14px 0 18px; }
+    .tools { display:flex; gap:10px; align-items:center; }
+    .tools input[type="search"], .tools select { padding:10px 12px; border:1px solid #dcdfe6; border-radius:10px; }
+    .tools input[type="search"] { min-width:260px; }
+    .count { color:#6b7280; font-size:14px; }
+
+    .grid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px; }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    @media (max-width: 780px) { .grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+
+    .empty, .loading {
+      background:#f6f7f7; border:1px solid #e5e7eb; border-radius:12px; padding:28px; text-align:center;
+    }
+
+    /* ---------- UNIFORM SQUARE THUMBS ---------- */
+    .product-card {
+      display:block; background:#fff; border:1px solid #e5e7eb; border-radius:14px; overflow:hidden;
+      text-decoration:none; color:inherit; transition: box-shadow .2s ease;
+    }
+    .product-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+
+    .product-image-wrap { position:relative; aspect-ratio:1/1; background:#f7f7f8; overflow:hidden; }
+    .product-image {
+      position:absolute; inset:0; width:100%; height:100% !important; object-fit:cover; object-position:center; display:block;
+    }
+
+    .product-badge { position:absolute; top:10px; left:10px; background:#d63638; color:#fff; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; }
+    .product-badge.featured { background:#2271b1; }
+
+    .product-info { padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .product-categories { font-size:12px; color:#6b7280; }
+    .product-title { font-size:16px; line-height:1.25; color:#1f2937; }
+    .product-description { font-size:13px; color:#6b7280; min-height:38px; }
+    .product-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px; }
+    .product-price { font-weight:700; display:flex; gap:8px; align-items:center; }
+    .product-price del { color:#6b7280; font-weight:400; }
+    .stock-badge { font-size:12px; color:#6b7280; }
+    .stock-badge.instock { color:#008a20; }
+    .stock-badge.outofstock { color:#d63638; }
+    .add-btn { font-size:13px; padding:6px 12px; white-space:nowrap; }
+  </style>
+</head>
+<body>
+
+  <!-- Snipcart configuration -->
+  <div hidden id="snipcart"
+       data-api-key="YTNhNTA0OWQtMjQ4NS00MTg0LWI0NjYtNTdiNTM5NmYxOTE1NjM4ODgyMjg4ODE0ODkwMzUw"
+       data-config-add-product-behavior="none"
+       data-config-modal-style="side"
+       data-currency="usd">
+  </div>
+  <script>
+    window.SnipcartSettings = {
+      publicApiKey: "YTNhNTA0OWQtMjQ4NS00MTg0LWI0NjYtNTdiNTM5NmYxOTE1NjM4ODgyMjg4ODE0ODkwMzUw",
+      loadStrategy: "on-user-interaction",
+      currency: "usd"
+    };
+  </script>
+
+  <!-- Header -->
+  <header class="header-nav">
+    <div class="header-inner">
+      <div class="nav-left">
+        <a href="index.html" class="muted-link" style="text-decoration:none;">Home</a>
+        <strong>Shop</strong>
+        <a href="demo/index.html" class="muted-link" style="text-decoration:none;">Editor</a>
+      </div>
+      <div class="nav-right">
+        <button class="snipcart-checkout button">
+          ðŸ›’ Cart (<span class="snipcart-items-count">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="crumbs" style="margin-top:6px;">
+      <a href="index.html">Home</a> <span>â€º</span> <span>Shop</span>
+    </div>
+
+    <section id="loading-state" class="loading" style="display:block">
+      <h2 style="font-size:18px; margin-bottom:6px;">Loading productsâ€¦</h2>
+      <p class="muted">Please wait.</p>
+    </section>
+
+    <section id="empty-state" class="empty" style="display:none">
+      <h2 style="font-size:18px; margin-bottom:6px;">No products found</h2>
+      <p class="muted">Try adjusting your search or check back later.</p>
+      <div style="margin-top:12px;">
+        <button id="clear-search" class="button">Clear search</button>
+      </div>
+    </section>
+
+    <section id="shop-content" style="display:none">
+      <div class="toolbar">
+        <h1 style="font-size:28px; font-weight:800; margin:0;">Shop</h1>
+        <div class="tools">
+          <input id="search" type="search" placeholder="Search productsâ€¦" />
+          <select id="sort">
+            <option value="newest">Sort: Newest</option>
+            <option value="price-asc">Price: Low â†’ High</option>
+            <option value="price-desc">Price: High â†’ Low</option>
+            <option value="title-asc">Title: A â†’ Z</option>
+            <option value="title-desc">Title: Z â†’ A</option>
+          </select>
+          <span class="count" id="product-count">0 products</span>
+        </div>
+      </div>
+      <div id="products-grid" class="grid"></div>
+    </section>
+  </main>
+
+  <div id="validation-products" style="display:none;"></div>
+
+<script>
+(function () {
+  const Utils = window.RapidWoo?.Utils || {
+    q: (s, r=document) => r.querySelector(s),
+    qa: (s, r=document) => Array.from(r.querySelectorAll(s)),
+  };
+  const Storage = window.RapidWoo?.Storage;
+
+  const el = {
+    loading: Utils.q('#loading-state'),
+    empty: Utils.q('#empty-state'),
+    content: Utils.q('#shop-content'),
+    grid: Utils.q('#products-grid'),
+    count: Utils.q('#product-count'),
+    search: Utils.q('#search'),
+    sort: Utils.q('#sort'),
+    clear: Utils.q('#clear-search'),
+    validation: Utils.q('#validation-products'),
+  };
+
+  let all = [];
+  let filtered = [];
+  let q = '';
+  let sort = 'newest';
+  const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+  const isHttpUrl = (u) => typeof u === 'string' && /^https?:\/\//i.test(u);
+  const cleanText = (htmlish) => {
+    if (!htmlish) return '';
+    const div = document.createElement('div'); div.innerHTML = htmlish;
+    return (div.textContent || div.innerText || '').trim();
+  };
+
+  function priceOf(p) {
+    const candidates = [p?.sale_price, p?.price, p?.regular_price];
+    for (const v of candidates) {
+      if (v === null || v === undefined) continue;
+      const s = String(v).trim();
+      if (!s) continue;
+      const n = Number(s);
+      if (Number.isFinite(n) && n > 0) return n;
+    }
+    return null;
+  }
+
+  function productImage(p) {
+    const cand = p?.image || (p?.images && p.images[0] && (p.images[0].src || p.images[0])) || '';
+    return cand || '';
+  }
+
+  // URL for navigation (clicking product card)
+  function productUrl(p) {
+    const slugOrId = p.slug || p.id;
+    return `product.html?product=${encodeURIComponent(slugOrId)}`;
+  }
+
+  // URL for Snipcart validation (JSON endpoint)
+  function snipcartValidationUrl() {
+    return '/snipcart-products.json';
+  }
+
+  function showLoading(){ el.loading.style.display='block'; el.empty.style.display='none'; el.content.style.display='none'; }
+  function showEmpty(){ el.loading.style.display='none'; el.content.style.display='none'; el.empty.style.display='block'; }
+  function showContent(){ el.loading.style.display='none'; el.empty.style.display='none'; el.content.style.display='block'; }
+  function setCount(n){ if (el.count) el.count.textContent = `${n} product${n===1?'':'s'}`; }
+
+  function injectValidationProduct(p) {
+    const div = document.createElement('div');
+    const img = productImage(p);
+    const price = priceOf(p);
+    const title = (p.title || 'Untitled Product');
+    const desc = cleanText(p.short_description || p.description || '');
+
+    div.className = 'snipcart-add-item';
+    div.setAttribute('data-item-id', String(p.id || p.slug || Math.random()).replace(/\s+/g,'-'));
+    div.setAttribute('data-item-name', title);
+    div.setAttribute('data-item-price', String(price ?? 0));
+    div.setAttribute('data-item-url', snipcartValidationUrl());
+    if (img && isHttpUrl(img)) div.setAttribute('data-item-image', img);
+    if (desc) div.setAttribute('data-item-description', desc);
+
+    el.validation.appendChild(div);
+  }
+
+  function createProductCard(p) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    const effectivePrice = priceOf(p);
+    const hasSale = p.sale_price && p.regular_price &&
+                    String(p.sale_price).trim() !== String(p.regular_price).trim();
+    let description = cleanText(p.short_description || p.description || '');
+    if (description.length > 120) description = description.slice(0, 120) + 'â€¦';
+
+    const img = productImage(p);
+    const stock = p.stock_status || 'instock';
+    const isInStock = stock === 'instock';
+    const url = productUrl(p);
+    const idAttr = (p.id || p.slug || '').toString().replace(/\s+/g,'-');
+    const titleAttr = (p.title || 'Product');
+
+    card.innerHTML = `
+      <a href="${url}" style="text-decoration:none;color:inherit;">
+        <div class="product-image-wrap">
+          ${img
+            ? `<img class="product-image" src="${img}" alt="${titleAttr.replace(/"/g,'&quot;')}" loading="lazy" width="800" height="800">`
+            : `<div style="font-size:64px;color:#ccc">ðŸ“¦</div>`
+          }
+          ${hasSale ? '<span class="product-badge">Sale</span>' : ''}
+          ${p.featured && !hasSale ? '<span class="product-badge featured">â­ Featured</span>' : ''}
+        </div>
+
+        <div class="product-info">
+          ${p.categories?.length ? `<div class="product-categories">${p.categories[0]}</div>` : ''}
+          <h2 class="product-title">${titleAttr}</h2>
+          ${description ? `<p class="product-description">${description}</p>` : ''}
+
+          <div class="product-footer">
+            <div>
+              <div class="product-price">
+                ${hasSale ? `<del>${nf.format(Number(p.regular_price) || 0)}</del>` : ''}
+                <span>${nf.format(effectivePrice ?? 0)}</span>
+              </div>
+              <span class="stock-badge ${stock}">
+                ${stock === 'instock' ? 'In Stock' : stock === 'outofstock' ? 'Out of Stock' : 'On Backorder'}
+              </span>
+            </div>
+            <div class="add-btn-slot"></div>
+          </div>
+        </div>
+      </a>
+    `;
+
+    const isVariable = p && p.type === 'variable';
+    if (isVariable) {
+      const chooseBtn = document.createElement('button');
+      chooseBtn.className = 'add-btn button button-primary';
+      chooseBtn.textContent = 'Choose';
+      chooseBtn.title = 'Choose options';
+      chooseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = url;
+      });
+      card.querySelector('.add-btn-slot').appendChild(chooseBtn);
+      return card;
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'add-btn button button-primary snipcart-add-item';
+      btn.textContent = 'ðŸ›’ Add';
+      btn.title = isInStock ? 'Add to cart' : 'Unavailable';
+
+      const validPrice = Number.isFinite(effectivePrice) && effectivePrice > 0;
+      const validImage = !img || isHttpUrl(img);
+      if (!isInStock || !validPrice) {
+        btn.setAttribute('disabled', '');
+      }
+
+      btn.setAttribute('data-item-id', idAttr || Math.random().toString(36).slice(2));
+      btn.setAttribute('data-item-name', titleAttr);
+      if (validPrice) btn.setAttribute('data-item-price', String(effectivePrice.toFixed(2)));
+      btn.setAttribute('data-item-url', snipcartValidationUrl());
+      if (img && validImage) btn.setAttribute('data-item-image', img);
+      if (description) btn.setAttribute('data-item-description', description);
+
+      card.querySelector('.add-btn-slot').appendChild(btn);
+      return card;
+    }
+  }
+
+  function applyFilters() {
+    const s = (q || '').trim().toLowerCase();
+    filtered = (all || []).filter(p => {
+      if (!s) return true;
+      const hay = [
+        p.title, p.slug, cleanText(p.short_description), cleanText(p.description), ...(p.categories || [])
+      ].join(' ').toLowerCase();
+      return hay.includes(s);
+    });
+    applySort();
+  }
+
+  function applySort() {
+    switch (sort) {
+      case 'price-asc':  filtered.sort((a,b) => (priceOf(a) ?? Infinity) - (priceOf(b) ?? Infinity)); break;
+      case 'price-desc': filtered.sort((a,b) => (priceOf(b) ?? -Infinity) - (priceOf(a) ?? -Infinity)); break;
+      case 'title-asc':  filtered.sort((a,b) => String(a.title||'').localeCompare(String(b.title||''))); break;
+      case 'title-desc': filtered.sort((a,b) => String(b.title||'').localeCompare(String(a.title||''))); break;
+      default:
+        filtered.sort((a,b) => {
+          const da = new Date(a.date_created || a.date || 0).getTime() || 0;
+          const db = new Date(b.date_created || b.date || 0).getTime() || 0;
+          return db - da;
+        });
+    }
+    render();
+  }
+
+  function render() {
+    el.grid.innerHTML = '';
+    el.validation.innerHTML = '';
+
+    if (!filtered.length) { setCount(0); showEmpty(); return; }
+
+    setCount(filtered.length);
+    filtered.forEach(p => injectValidationProduct(p));
+    filtered.forEach(p => el.grid.appendChild(createProductCard(p)));
+    showContent();
+  }
+
+  function attachUI() {
+    el.search?.addEventListener('input', () => { q = el.search.value || ''; applyFilters(); });
+    el.sort?.addEventListener('change', () => { sort = el.sort.value; applySort(); });
+    el.clear?.addEventListener('click', () => { q = ''; if (el.search) el.search.value=''; applyFilters(); });
+  }
+
+  async function loadProducts() {
+    try {
+      if (!Storage?.getProducts) return [];
+      const data = await Storage.getProducts();
+      return (data?.products || []).filter(p => !p.hidden);
+    } catch (e) {
+      console.error('Error loading products', e);
+      return [];
+    }
+  }
+
+  async function init() {
+    showLoading();
+    all = await loadProducts();
+    attachUI();
+    applyFilters();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('rapidwoo:products:updated', async () => {
+    all = await loadProducts();
+    applyFilters();
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const KEY = 'fpe.shop.prefs';
+
+  function getPrefs(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
+      return Object.assign({ title:true, price:true, description:true, stock:true, add:true }, saved);
+    } catch {
+      return { title:true, price:true, description:true, stock:true, add:true };
+    }
+  }
+
+  function setDisplay(selector, show) {
+    document.querySelectorAll(selector).forEach(n => { n.style.display = show ? '' : 'none'; });
+  }
+
+  function apply(prefs){
+    setDisplay('.shop-product-title, .product-title', prefs.title !== false);
+    setDisplay('.shop-product-price, .product-price', prefs.price !== false);
+    setDisplay('.shop-product-description, .product-description', prefs.description !== false);
+    setDisplay('.shop-product-stock, .product-stock, .stock-badge', prefs.stock !== false);
+    setDisplay('.shop-product-add, .product-add, .add-btn', prefs.add !== false);
+  }
+
+  function refresh(){ apply(getPrefs()); }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', refresh);
+  } else {
+    refresh();
+  }
+
+  window.addEventListener('storage', (e) => { if (e.key === KEY) refresh(); });
+  document.addEventListener('rapidwoo:prefs:updated', refresh);
+  document.addEventListener('rapidwoo:products:rendered', refresh);
+})();
+</script>
+
+</body>
+</html>

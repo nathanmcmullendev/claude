@@ -1,0 +1,11 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Test Product",
+      "slug": "test-product",
+      "price": "19.99",
+      "stock_status": "instock"
+    }
+  ]
+}

@@ -168,7 +168,7 @@ function bindImageUpload() {
     if (!file) return;
 
     try {
-      uploadBtn.textContent = 'Ã¢ÂÂ³ Uploading...';
+      uploadBtn.textContent = '⏳ Uploading...';
       uploadBtn.disabled = true;
 
       const imageUrl = await processImageFile(file);
@@ -179,10 +179,10 @@ function bindImageUpload() {
         imagePreview.style.display = 'block';
       }
     } catch (error) {
-      console.error('Ã¢ÂÅ’ Image upload error:', error);
+      console.error('❌ Image upload error:', error);
       Utils.showToast(error.message || 'Failed to process image', 'error');
     } finally {
-      uploadBtn.textContent = 'Ã°Å¸â€œÂ¤ Upload New Image';
+      uploadBtn.textContent = '📤 Upload New Image';
       uploadBtn.disabled = false;
       e.target.value = '';
     }
@@ -242,7 +242,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
       const file = e.dataTransfer?.files?.[0];
       if (!file) return;
       try {
-        uploadBtn.textContent = 'Ã¢ÂÂ³ Uploading...';
+        uploadBtn.textContent = '⏳ Uploading...';
         uploadBtn.disabled = true;
         const imageUrl = await processImageFile(file);
         imageField.value = imageUrl;
@@ -254,7 +254,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
         console.error('Drop upload error:', err);
         Utils.showToast(err.message || 'Failed to process image', 'error');
       } finally {
-        uploadBtn.textContent = 'Ã°Å¸â€œÂ¤ Upload New Image';
+        uploadBtn.textContent = '📤 Upload New Image';
         uploadBtn.disabled = false;
       }
     });
@@ -283,7 +283,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
 }
 
 // ============================================
-// ADDITIONAL IMAGES Ã¢â‚¬â€œ UI + LOGIC (single-or-both)
+// ADDITIONAL IMAGES – UI + LOGIC (single-or-both)
 // ============================================
 let GalleryUI = null;
 
@@ -342,7 +342,7 @@ function ensureGalleryUI() {
 
   </div>
   <div class="rw-actions">
-    <button id="rw-gal1-upload" type="button" class="button rw-icon" title="Upload"><span>Ã°Å¸â€œÂ¤ Upload New Image</span></button>
+    <button id="rw-gal1-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
     <button id="rw-gal1-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
@@ -363,7 +363,7 @@ function ensureGalleryUI() {
 
   </div>
   <div class="rw-actions">
-    <button id="rw-gal2-upload" type="button" class="button rw-icon" title="Upload"><span>Ã°Å¸â€œÂ¤ Upload New Image</span></button>
+    <button id="rw-gal2-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
     <button id="rw-gal2-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
@@ -733,7 +733,7 @@ function pickPriceNumber(p) {
     }
     return null;
   };
-  // priority: sale Ã¢â€ â€™ price Ã¢â€ â€™ regular
+  // priority: sale → price → regular
   return tryParse(p?.sale_price) ?? tryParse(p?.price) ?? tryParse(p?.regular_price) ?? 0;
 }
 
@@ -841,7 +841,7 @@ async function loadSavedOrDemo() {
 // INITIALIZATION (load saved first; fallback to file)
 // ============================================
 async function init() {
-  console.log('🚀 Initializing RapidWoo EditorÃ¢â‚¬Â¦');
+  console.log('🚀 Initializing RapidWoo Editor…');
 
   // ✅ Use saved dataset if present (even empty by design). Only load demo on true first run.
   App.products = await loadSavedOrDemo();
@@ -946,7 +946,7 @@ window.saveToGitHubManual = saveToGitHubManual;
 // TOOLBAR ACTIONS
 // ============================================
 function bindToolbar() {
-  // Ã°Å¸â€â€ž Reload from /demo/products.json (explicit user action)
+  // 🔄 Reload from /demo/products.json (explicit user action)
   Utils.q('#btn-load-demo').addEventListener('click', async () => {
     const confirmed = await Utils.showConfirm(
       'Reload saved products from the server? This will discard any unsaved local changes.',
@@ -1399,7 +1399,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
         };
         const delta = cleanDelta(v.price_delta);
 
-        // Prefer variationÃ¢â‚¬â„¢s own prices; else compute from base Ã‚Â± delta
+        // Prefer variation's own prices; else compute from base ± delta
         const varRegNum  = Number(v.regular_price);
         const varSaleNum = Number(v.sale_price);
         const hasVarReg  = Number.isFinite(varRegNum)  && varRegNum  > 0;
@@ -1426,7 +1426,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
               <option value="outofstock"${(v.stock_status)==='outofstock'?' selected':''}>Out of stock</option>
             </select>
           </td>
-          <td style="padding:6px 8px;"><button class="var-remove button">Ã¢Å“â€¢</button></td>
+          <td style="padding:6px 8px;"><button class="var-remove button">✕</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -1436,7 +1436,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       });
     })();
 
-    // Preset Ã¢â€ â€™ fill the options text automatically
+    // Preset → fill the options text automatically
     Utils.q('#fld-attr-preset')?.addEventListener('change', () => {
       const preset = Utils.q('#fld-attr-preset').value;
       if (preset !== 'custom') {
@@ -1473,7 +1473,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
               <option value="outofstock">Out of stock</option>
             </select>
           </td>
-          <td style="padding:6px 8px;"><button class="var-remove button">Ã¢Å“â€¢</button></td>
+          <td style="padding:6px 8px;"><button class="var-remove button">✕</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -1483,7 +1483,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       });
     });
 
-    // Generate SKUs (unique): baseSKU-size, de-dupe with -2, -3, Ã¢â‚¬Â¦
+    // Generate SKUs (unique): baseSKU-size, de-dupe with -2, -3, …
     Utils.q('#btn-generate-skus')?.addEventListener('click', () => {
       const base = (Utils.q('#fld-sku')?.value || '').trim() || 'SKU';
       const tbody = Utils.q('#var-tbody');
@@ -1534,7 +1534,7 @@ if (ui && ui.slot1 && ui.slot2) {
   // Fallback: use images[] if gallery is empty
   if (!urlA && !urlB) {
     const fromImages = toStringImages(product.images)
-      .filter(u => u && u !== product.image); // donÃ¢â‚¬â„¢t repeat the main image
+      .filter(u => u && u !== product.image); // don't repeat the main image
     urlA = fromImages[0] || '';
     urlB = fromImages[1] || '';
   }
@@ -1793,7 +1793,7 @@ function bindModals() {
     if (e.target.id === 'quickview-modal') closeQuickView();
   });
 
-  // (No direct toggle handlers hereÃ¢â‚¬â€openShopModal owns persistence + live apply)
+  // (No direct toggle handlers here–openShopModal owns persistence + live apply)
 }
 
 function openProductModal(index) {
@@ -1936,7 +1936,7 @@ async function openShopModal() {
     const safeImg = getSnipcartSafeImage(p); // http/https only (no base64)
 
     const desc  = (p?.short_description || p?.description || '').toString().replace(/<[^>]*>/g, '');
-    const short = desc.length > 120 ? (desc.slice(0, 120) + 'Ã¢â‚¬Â¦') : desc;
+    const short = desc.length > 120 ? (desc.slice(0, 120) + '…') : desc;
 
     const productUrl = (location && location.origin ? location.origin : '') + '/shop.html';
 
@@ -1967,7 +1967,7 @@ async function openShopModal() {
             data-item-url="${productUrl}"
             ${safeImg ? `data-item-image="${safeImg.replace(/"/g,'&quot;')}"` : ''}
           >
-            Ã°Å¸â€ºâ€™ Add
+            🛒 Add
           </button>
         </div>
         <div>
@@ -1984,7 +1984,7 @@ async function openShopModal() {
   // Apply prefs to the freshly-rendered grid
   applyPrefsToGrid(grid, getShopPrefs());
 
-  // Bind toggle Ã¢â€ â€™ persist + live apply (once)
+  // Bind toggle → persist + live apply (once)
   if (!grid.dataset.togglesBound) {
     function handleToggleChange() {
       const prefs = prefsFromToggles(tTitle, tPrice, tDesc, tStock, tAdd);
@@ -2116,7 +2116,7 @@ function closeQuickView() {
 document.addEventListener('DOMContentLoaded', init);
 
 /* =========================================================
-   RapidWoo Ã¢â‚¬â€ Default "Show Additional Images" = ON (when exists)
+   RapidWoo – Default "Show Additional Images" = ON (when exists)
    Drop-in patch: place at the very end of /demo/editor.js
    ========================================================= */
 (function () {
@@ -2134,7 +2134,7 @@ document.addEventListener('DOMContentLoaded', init);
     // 2) best-effort: look for a checkbox whose nearby label text contains our phrase
     const inputs = qa('input[type="checkbox"]', panelRoot);
     for (const input of inputs) {
-      // Try <label for="Ã¢â‚¬Â¦">text</label>
+      // Try <label for="…">text</label>
       const id = input.getAttribute('id');
       if (id) {
         const label = panelRoot.querySelector(`label[for="${CSS.escape(id)}"]`);
@@ -2176,7 +2176,7 @@ document.addEventListener('DOMContentLoaded', init);
 
     const shouldBeOn = defaultWantsAdditional(product);
 
-    // If itÃ¢â‚¬â„¢s already correct, do nothing. Otherwise set and emit change.
+    // If it's already correct, do nothing. Otherwise set and emit change.
     if (checkbox.checked !== shouldBeOn) {
       checkbox.checked = shouldBeOn;
       checkbox.dispatchEvent(new Event('change', { bubbles: true }));

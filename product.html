@@ -195,6 +195,25 @@
     return null;
   }
 
+  // Get price range for variable products
+  function getVariationPriceRange(product) {
+    if (product?.type !== 'variable') return null;
+    if (!Array.isArray(product?.variations) || product.variations.length === 0) return null;
+    
+    let min = Infinity, max = -Infinity;
+    product.variations.forEach(v => {
+      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+      if (!isNaN(price) && price > 0) {
+        if (price < min) min = price;
+        if (price > max) max = price;
+      }
+    });
+    
+    if (min === Infinity) return null;
+    const formatted = (min === max) ? nf.format(min) : nf.format(min) + ' – ' + nf.format(max);
+    return { min, max, isRange: min !== max, formatted };
+  }
+
   // URL for navigation (not used on product page, but kept for consistency)
   function productUrl(p) {
     const slugOrId = p.slug || p.id;
@@ -403,15 +422,21 @@
     const cats = (p.categories && p.categories.length) ? p.categories.join(', ') : '';
     Utils.q('#cats').textContent = cats;
 
-    const reg = Number(String(p.regular_price ?? p.price ?? '').trim());
-    const saleNum = Number(String(p.sale_price ?? '').trim());
-    const saleValid = Number.isFinite(saleNum) && saleNum > 0;
-    const hasSale = saleValid && Number.isFinite(reg) && reg > 0 && saleNum !== reg;
-    const effective = priceOf(p);
+    // Check for variable product price range first
+    const priceRange = getVariationPriceRange(p);
+    if (priceRange) {
+      Utils.q('#price').innerHTML = `<span>${priceRange.formatted}</span>`;
+    } else {
+      const reg = Number(String(p.regular_price ?? p.price ?? '').trim());
+      const saleNum = Number(String(p.sale_price ?? '').trim());
+      const saleValid = Number.isFinite(saleNum) && saleNum > 0;
+      const hasSale = saleValid && Number.isFinite(reg) && reg > 0 && saleNum !== reg;
+      const effective = priceOf(p);
 
-    Utils.q('#price').innerHTML = hasSale
-      ? `<del>${nf.format(reg)}</del> <span>${nf.format(saleNum)}</span>`
-      : `<span>${nf.format(effective ?? 0)}</span>`;
+      Utils.q('#price').innerHTML = hasSale
+        ? `<del>${nf.format(reg)}</del> <span>${nf.format(saleNum)}</span>`
+        : `<span>${nf.format(effective ?? 0)}</span>`;
+    }
 
     const stock = p.stock_status || 'instock';
     const stockEl = Utils.q('#stock');

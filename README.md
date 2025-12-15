@@ -1,10 +1,10 @@
 # RapidWoo
 
-**A serverless e-commerce platform with a browser-based product editor — no backend required.**
+**A serverless static commerce platform with browser-based admin editor and hosted checkout — no backend required.**
 
 > 🔗 **[Live Demo](https://rapidwoo.com)** · **[Editor](https://rapidwoo.com/demo/)** · Test Card: `4242 4242 4242 4242`
 
-![RapidWoo Editor](https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765795777/rapidwoo/products/qcxy2q7u470du17ifurk.png)
+![RapidWoo Editor](https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765797054/rapidwoo/products/lbohiyus6lvimunkwqos.png)
 
 ---
 
@@ -14,25 +14,25 @@ Most static e-commerce solutions rely on external dashboards or headless CMSs. I
 
 The result is a working proof-of-concept that demonstrates:
 - Client-side data persistence using GitHub's REST API
-- Real checkout integration (Snipcart) with price validation
-- CDN image uploads from the browser (Cloudinary)
+- Real checkout integration (Snipcart) with server-validated pricing
+- CDN image uploads directly from the browser (Cloudinary)
 - A complete admin interface built in vanilla JavaScript
+
+**Source of truth:** Product JSON in GitHub is the single source of truth — the storefront renders from it, and checkout validation is generated from it.
 
 ---
 
 ## Key Engineering Challenges
 
-These are the interesting problems I solved:
-
 | Challenge | Solution |
 |-----------|----------|
 | **Client-side persistence** | GitHub Contents API for reads/writes with SHA-based conflict detection |
-| **Idempotent variation generation** | Prevent duplicate SKUs when clicking "Generate" multiple times |
-| **Global SKU uniqueness** | Build index from all products before generating new SKUs |
-| **Schema evolution without migrations** | Runtime normalization layer that handles legacy + new formats |
+| **Checkout price integrity** | Auto-generated `snipcart-products.json` validates prices server-side, preventing client tampering |
+| **Idempotent variation generation** | Clicking "Generate Variations" twice won't duplicate rows — existing options are detected and skipped |
+| **Global SKU uniqueness** | SKU generator builds index from ALL products before creating new codes |
+| **Schema evolution without migrations** | Runtime normalization layer handles legacy + current data formats |
 | **Optimistic UI with eventual consistency** | localStorage for instant feedback, GitHub API for permanent storage |
-| **Price validation for checkout security** | Auto-generated validation file synced with product data |
-| **Storing credentials client-side** | Documented tradeoffs; designed for dedicated bot accounts with minimal permissions |
+| **Zero-cost image pipeline** | Browser → Cloudinary CDN → optimized, cached, responsive delivery |
 
 ---
 
@@ -42,46 +42,79 @@ These are the interesting problems I solved:
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │  GitHub Pages   │────▶│  Static HTML    │────▶│   Snipcart      │
 │  (Free Hosting) │     │  + Vanilla JS   │     │   (Checkout)    │
-└────────┬────────┘     └────────┬────────┘     └─────────────────┘
-         │                       │
-         ▼                       ▼
-┌─────────────────┐     ┌─────────────────┐
-│  GitHub API     │     │   Cloudinary    │
-│  (Data Store)   │     │   (Image CDN)   │
-└─────────────────┘     └─────────────────┘
+└────────┬────────┘     └────────┬────────┘     └────────┬────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  GitHub API     │     │   Cloudinary    │     │  Validation     │
+│  (Data Store)   │     │   (Image CDN)   │     │  (Price Check)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
 **Data Flow:**
 ```
-User edits → localStorage (instant) → GitHub API (permanent) → GitHub Actions → Live site (~60s)
+Editor → localStorage (instant) → GitHub API (permanent) → GitHub Actions → Live site (~60s)
 ```
 
-This architecture eliminates:
-- Monthly hosting costs
-- Database management
-- Server maintenance
-- DevOps complexity
+**Cost Model:**
+- GitHub Pages: Free hosting with SSL
+- Cloudinary Free Tier: 25GB storage, 25GB bandwidth/month
+- Snipcart Test Mode: Free for development
+- **Result:** $0/month infrastructure for low-write stores
+
+---
+
+## Security & Integrity
+
+### Checkout Validation
+
+Snipcart validates every cart item against `snipcart-products.json` before processing payment:
+
+```json
+{
+  "POST-MIN-0001": {
+    "price": 21.99,
+    "name": "Poster - Minimal Mountains",
+    "variations": [
+      { "sku": "POST-MIN-1620-PRINT", "price": 21.99 },
+      { "sku": "POST-MIN-2436-PRINT", "price": 29.99 }
+    ]
+  }
+}
+```
+
+This file is **auto-generated** when products are saved and deployed with the site. Client-side price manipulation is caught and rejected.
+
+### Threat Model
+
+| Risk | Current Mitigation | Production Path |
+|------|-------------------|-----------------|
+| Token stored client-side | Fine-grained token, minimal permissions, dedicated bot account | OAuth flow or serverless proxy |
+| Price tampering | Snipcart server-side validation | Keep validation file deployed |
+| Multi-admin conflicts | SHA-based conflict detection | Locking / PR workflow |
+| Malicious image uploads | Cloudinary format/size restrictions | Signed uploads |
 
 ---
 
 ## What It Does
 
-### Product Editor
-- Visual interface for creating/editing products
+### Product Editor (`/demo/`)
+- Visual admin interface with inline editing
+- Bulk actions (delete, duplicate)
+- Column visibility toggles
 - Simple products (single price) and variable products (size/color variations)
-- Drag-and-drop image uploads to Cloudinary
-- Real-time preview
+- Drag-and-drop image uploads
 - One-click save to GitHub
 
 ### Storefront
 - Responsive product catalog
-- Dynamic price ranges for variable products (`$19.99 – $29.99`)
-- Working checkout with Snipcart integration
-- Auto-generated price validation to prevent tampering
+- Dynamic price ranges for variable products (`$21.99 – $45.99`)
+- Variation selector with live price updates
+- Working checkout with Snipcart
 
 ### Variable Products
 - Generate variations from attribute options (S, M, L, XL)
-- Auto-generate unique SKUs across all products
+- Auto-generate globally unique SKUs
 - Per-variation pricing and stock status
 - Inherited base prices with override capability
 
@@ -96,76 +129,67 @@ This architecture eliminates:
 | Images | Cloudinary | CDN, automatic optimization, free tier |
 | Checkout | Snipcart | Handles payments, cart, validation |
 | Frontend | Vanilla JS (ES6+) | No build step, no dependencies, fast |
-| Styling | Custom CSS | Full control, no framework bloat |
 
 ---
 
-## Code Highlights
+## File Structure
 
-**Editor:** `demo/editor.js` (~2500 lines)
-- Complete product CRUD interface
-- Variation management with idempotent generation
-- Image upload with drag-and-drop
-- Settings panel for credentials
-
-**Storage Layer:** `assets/js/storage.js`
-- GitHub API wrapper with error handling
-- SHA tracking for updates
-- Dirty state management
-
-**Product Schema:** Normalized at runtime
-- Handles legacy and current formats
-- Automatic `gallery[]` ↔ `images[]` sync
-- Price validation file generation
-
----
-
-## Tradeoffs & Decisions
-
-| Decision | Tradeoff | Rationale |
-|----------|----------|-----------|
-| GitHub token in localStorage | Security risk | POC scope; documented mitigation path |
-| No build step | No TypeScript, no bundling | Faster iteration, simpler debugging |
-| Vanilla JS over React | More verbose | Zero dependencies, no framework lock-in |
-| Single editor assumption | No collaboration | Avoids complex conflict resolution |
-| 60-second deploy delay | Not instant | Acceptable for low-frequency edits |
-
----
-
-## Running Locally
-
-```bash
-git clone https://github.com/nathanmcmullendev/claude.git
-cd claude
-# Serve with any static server
-npx serve .
+```
+├── index.html                 # Landing page
+├── shop.html                  # Product catalog
+├── product.html               # Product detail + variations
+├── snipcart-products.json     # Auto-generated price validation
+│
+├── demo/
+│   ├── index.html             # Editor interface
+│   └── editor.js              # Editor logic (~2500 lines)
+│
+├── data/
+│   └── products.json          # Product data (source of truth)
+│
+└── assets/js/
+    ├── storage.js             # GitHub API wrapper
+    ├── imageHandler.js        # Cloudinary uploads
+    └── config.js              # Runtime configuration
 ```
 
-Then visit `http://localhost:3000/demo/` and configure:
-1. GitHub token (fine-grained, Contents: Read/Write)
-2. Cloudinary cloud name + unsigned preset
-3. Save & test connection
+---
+
+## Try It
+
+**Live demo:** [rapidwoo.com/demo/](https://rapidwoo.com/demo/)
+
+To run your own instance:
+1. Fork this repo
+2. Enable GitHub Pages (Settings → Pages → GitHub Actions)
+3. Create a fine-grained GitHub token (Contents: Read/Write)
+4. Set up free Cloudinary account with unsigned upload preset
+5. Configure credentials in Editor → Settings
+
+*No secrets are stored in the repo. Editor requires your own credentials.*
 
 ---
 
 ## What I Learned
 
-1. **GitHub API is surprisingly capable as a data store** — version history, atomic updates, and free hosting make it viable for low-write applications.
+1. **GitHub API works as a data store** — version history, atomic updates, and free hosting make it viable for low-write applications.
 
-2. **Idempotency matters even in simple UIs** — users click buttons multiple times. If your generators don't check for existing data, you get duplicates.
+2. **Idempotency matters in UI generators** — users click buttons multiple times. Generators must detect existing data to prevent duplicates.
 
-3. **Schema evolution is hard without a backend** — I ended up building a normalization layer that handles multiple data formats at runtime.
+3. **Schema evolution is hard without a backend** — I built a normalization layer that handles multiple data formats at runtime.
 
-4. **Client-side security is about tradeoffs, not perfection** — documenting the risks and mitigation paths is more valuable than pretending they don't exist.
+4. **Client-side security is about tradeoffs** — documenting risks and mitigation paths is more valuable than pretending they don't exist.
+
+5. **Validation must be server-controlled** — even in a "serverless" architecture, price validation needs a source of truth the client can't modify.
 
 ---
 
 ## Status
 
-**Current Version:** 3.3  
+**Version:** 3.3  
 **Status:** Proof of Concept (functional, not production-ready)
 
-This project demonstrates the architecture and solves the interesting engineering problems. For production use, the token storage would need to move server-side (OAuth flow or serverless proxy).
+This project demonstrates architecture and solves real engineering problems. For production, token storage would move server-side via OAuth or serverless proxy.
 
 ---
 

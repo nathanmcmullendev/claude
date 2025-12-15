@@ -1,509 +1,810 @@
 # RapidWoo
 
-**Static e-commerce with a browser-based product editor. No database. No monthly fees.**
+**A serverless e-commerce product management system built for GitHub Pages**
+
+RapidWoo is a lightweight, fully client-side e-commerce solution that requires no backend server. Products are stored as JSON in your GitHub repository, images are hosted on Cloudinary CDN, and the entire system runs on GitHub Pages for free.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)
-
-RapidWoo is a self-hosted storefront with a WooCommerce-style product editor that runs entirely in the browser. Edit products without touching code—changes save directly to JSON files and can optionally commit to GitHub for automatic deployment.
+![Platform](https://img.shields.io/badge/platform-GitHub%20Pages-black.svg)
+![Storage](https://img.shields.io/badge/storage-Cloudinary%20CDN-blue.svg)
 
 ---
 
-## ✨ Features
+## Table of Contents
 
-- **No Database Required** — Products live in a JSON file. No server maintenance, no database backups, no security patches.
-- **Visual Product Editor** — WooCommerce-style admin interface. Edit prices, images, descriptions, variations—all in your browser.
-- **Variable Products** — Support for size/color variations with different prices and SKUs.
-- **Snipcart Integration** — Drop-in shopping cart with Stripe/PayPal. No backend code required.
-- **Image Uploads** — Drag-and-drop or click to upload. Auto-compression with server upload or base64 fallback.
-- **GitHub Persistence** — Click save. Changes commit to your repo. Site rebuilds automatically.
-- **Free Hosting Compatible** — Deploy on Netlify, Vercel, or any PHP-capable host.
-- **No Build Step** — Vanilla HTML, CSS, JavaScript. Fork and customize in minutes.
+- [Features](#features)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [File Structure](#file-structure)
+- [Product Data Schema](#product-data-schema)
+- [Editor Guide](#editor-guide)
+- [Image Handling](#image-handling)
+- [Save & Sync Flow](#save--sync-flow)
+- [Shop Integration](#shop-integration)
+- [API Reference](#api-reference)
+- [Customization](#customization)
+- [Troubleshooting](#troubleshooting)
+- [Development Notes](#development-notes)
 
 ---
 
-## 📁 Project Structure
+## Features
+
+### Core Features
+- ✅ **Serverless Architecture** - Runs entirely on GitHub Pages, no backend required
+- ✅ **Visual Product Editor** - Full-featured slide-out panel for editing products
+- ✅ **Cloudinary CDN Integration** - Automatic image upload and optimization
+- ✅ **GitHub API Sync** - Products saved directly to your repository
+- ✅ **Real-time Preview** - Live shop preview within the editor
+- ✅ **Variable Products** - Support for sizes, colors, and custom attributes
+- ✅ **Bulk Operations** - Select multiple products for batch actions
+
+### Product Management
+- Create, edit, duplicate, and delete products
+- Variable product support with SKU generation
+- Inventory tracking (in stock, out of stock, on backorder)
+- Sale pricing with automatic price display
+- Categories and tags
+- SEO-friendly slugs
+- Short and long descriptions
+- Multiple gallery images
+
+### Editor Features
+- Drag & drop image uploads
+- Collapsible sections for organized editing
+- Column visibility toggles
+- Import/Export JSON
+- Demo data loading
+- Settings panel for credentials
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         BROWSER                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  │  Editor UI  │  │  Shop UI    │  │  Product Pages          │  │
+│  │  /demo/     │  │  /shop.html │  │  /product.html          │  │
+│  └──────┬──────┘  └──────┬──────┘  └───────────┬─────────────┘  │
+│         │                │                      │                │
+│         ▼                ▼                      ▼                │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                    JavaScript Layer                       │   │
+│  │  storage.js │ editor.js │ imageHandler.js │ cart.js      │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│         │                │                      │                │
+└─────────┼────────────────┼──────────────────────┼────────────────┘
+          │                │                      │
+          ▼                ▼                      ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────────┐
+│   localStorage  │ │  GitHub API     │ │  Cloudinary API         │
+│   (cache/draft) │ │  (persistence)  │ │  (image CDN)            │
+└─────────────────┘ └────────┬────────┘ └─────────────────────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  GitHub Pages   │
+                    │  (hosting)      │
+                    │                 │
+                    │ /data/          │
+                    │   products.json │
+                    └─────────────────┘
+```
+
+### Data Flow
+
+1. **Read**: Browser fetches `products.json` from GitHub Pages
+2. **Cache**: Products cached in localStorage for instant access
+3. **Edit**: Changes saved to localStorage immediately (auto-save)
+4. **Persist**: Manual "Save" pushes to GitHub via API
+5. **Deploy**: GitHub Actions deploys changes (~30 seconds)
+6. **Images**: Uploaded to Cloudinary, URL stored in product data
+
+---
+
+## Quick Start
+
+### 1. Fork the Repository
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/rapidwoo.git
+cd rapidwoo
+```
+
+### 2. Enable GitHub Pages
+
+1. Go to repository **Settings** → **Pages**
+2. Set source to **GitHub Actions**
+3. The site will deploy to `https://YOUR_USERNAME.github.io/rapidwoo/`
+
+### 3. Create a GitHub Personal Access Token
+
+1. Go to **GitHub Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**
+2. Create new token with:
+   - Repository access: Select your rapidwoo repo
+   - Permissions: Contents (Read and write)
+3. Copy the token (starts with `github_pat_`)
+
+### 4. Set Up Cloudinary (Free)
+
+1. Sign up at [cloudinary.com](https://cloudinary.com)
+2. Go to **Settings** → **Upload** → **Upload presets**
+3. Create new preset:
+   - Name: `rapidwoo_unsigned`
+   - Signing Mode: **Unsigned**
+   - Folder: `rapidwoo/products`
+4. Note your **Cloud name** from the dashboard
+
+### 5. Configure the Editor
+
+1. Open `https://YOUR_SITE/demo/`
+2. Click **⚙️ Settings**
+3. Enter your credentials:
+   - GitHub Token
+   - GitHub Username
+   - Repository Name
+   - Cloudinary Cloud Name
+   - Upload Preset
+4. Click **Save & Test Connection**
+
+---
+
+## Configuration
+
+### Settings Storage
+
+Credentials are stored in browser localStorage under the key `rapidwoo-config`:
+
+```javascript
+{
+  "github": {
+    "token": "github_pat_xxxx",
+    "owner": "your-username",
+    "repo": "rapidwoo",
+    "branch": "main",
+    "productPath": "data/products.json"
+  },
+  "cloudinary": {
+    "cloudName": "your-cloud-name",
+    "uploadPreset": "rapidwoo_unsigned"
+  }
+}
+```
+
+### Programmatic Configuration
+
+```javascript
+// Configure GitHub
+RapidWoo.Storage.configureGitHub({
+  token: "github_pat_xxxx",
+  owner: "your-username",
+  repo: "rapidwoo",
+  branch: "main"
+});
+
+// Configure Cloudinary
+RapidWoo.Storage.configureCloudinary({
+  cloudName: "your-cloud-name",
+  uploadPreset: "rapidwoo_unsigned"
+});
+
+// Check configuration status
+RapidWoo.Storage.isGitHubConfigured();    // true/false
+RapidWoo.Storage.isCloudinaryConfigured(); // true/false
+```
+
+---
+
+## File Structure
 
 ```
 rapidwoo/
-├── index.html              # Homepage with features and hero section
-├── shop.html               # Product grid with search and sort
-├── product.html            # Single product page (dynamic via ?product=slug)
-├── snipcart-products.json  # Snipcart validation file (required for checkout)
-├── CNAME                   # Custom domain config for GitHub Pages
-├── save-products.php       # POST endpoint to save products.json
-├── upload-temp.php         # Image upload handler
+├── index.html              # Landing/home page
+├── shop.html               # Product listing page
+├── product.html            # Single product page
+│
+├── data/
+│   ├── products.json       # Live product data (synced with GitHub)
+│   └── dummy-products.json # Demo/sample products
+│
+├── demo/
+│   ├── index.html          # Product editor interface
+│   └── editor.js           # Editor logic, UI, save handling
 │
 ├── assets/
 │   ├── css/
-│   │   ├── main.css        # Global styles, CSS variables, layout
-│   │   └── components.css  # Toasts, modals, cards, forms
+│   │   ├── main.css        # Global styles
+│   │   ├── components.css  # Reusable components
+│   │   └── editor.css      # Editor-specific styles
+│   │
 │   └── js/
-│       ├── config.js       # Configuration and constants
-│       ├── storage.js      # Data persistence (localStorage + server)
-│       ├── utils.js        # UI helpers (toasts, confirms, modals)
-│       ├── imageHandler.js # Image upload and compression
-│       └── cart.js         # Snipcart integration helpers
+│       ├── storage.js      # localStorage + GitHub API
+│       ├── imageHandler.js # Cloudinary upload + compression
+│       ├── config.js       # Default configuration
+│       ├── utils.js        # Utilities (toast, modal, etc.)
+│       └── cart.js         # Shopping cart functionality
 │
-├── data/
-│   ├── products.json       # Working product data (modified by editor)
-│   └── dummy-products.json # Sample products (pristine, for reset)
-│
-└── demo/
-    ├── index.html          # Product Editor UI (admin interface)
-    └── editor.js           # Editor logic (~2200 lines)
+└── .github/
+    └── workflows/
+        └── static.yml      # GitHub Pages deployment
 ```
+
+### Key Files Explained
+
+| File | Purpose |
+|------|---------|
+| `storage.js` | Handles all data persistence: localStorage caching, GitHub API saves, configuration management |
+| `editor.js` | Complete product editor: UI rendering, form handling, image uploads, variations management |
+| `imageHandler.js` | Image processing: Cloudinary uploads, validation, base64 fallback compression |
+| `config.js` | Default settings, image constraints, product templates |
+| `utils.js` | Helper functions: DOM queries, toast notifications, modals, confirmations |
+| `cart.js` | Shopping cart: add/remove items, quantity management, checkout |
 
 ---
 
-## 🚀 Quick Start
+## Product Data Schema
 
-### Option 1: Deploy to Netlify (Recommended)
+Products are stored in `data/products.json` with the following structure:
 
-1. **Fork this repository** to your GitHub account
-2. **Connect to Netlify:**
-   - Go to [netlify.com](https://netlify.com) and click "Add new site"
-   - Choose "Import an existing project" → GitHub
-   - Select your forked repo
-3. **Configure Snipcart:**
-   - Get your API key from [snipcart.com](https://snipcart.com)
-   - Update the `data-api-key` in `shop.html` and `product.html`
-4. **Done!** Your store is live.
-
-### Option 2: Local Development
-
-```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/rapidwoo.git
-cd rapidwoo
-
-# Start a local PHP server
-php -S localhost:8000
-
-# Open in browser
-open http://localhost:8000
+```json
+{
+  "products": [
+    {
+      "id": 1734567890123,
+      "title": "Product Name",
+      "slug": "product-name",
+      "sku": "PROD-001",
+      "type": "simple",
+      "stock_status": "instock",
+      "regular_price": "29.99",
+      "sale_price": "24.99",
+      "price": "24.99",
+      "short_description": "Brief product summary",
+      "description": "Full product description with details",
+      "categories": ["Category1", "Category2"],
+      "tags": ["tag1", "tag2"],
+      "image": "https://res.cloudinary.com/xxx/image/upload/product-1.jpg",
+      "images": [
+        "https://res.cloudinary.com/xxx/image/upload/product-2.jpg",
+        "https://res.cloudinary.com/xxx/image/upload/product-3.jpg"
+      ],
+      "gallery": [
+        {"url": "https://res.cloudinary.com/xxx/image/upload/product-2.jpg"},
+        {"url": "https://res.cloudinary.com/xxx/image/upload/product-3.jpg"}
+      ],
+      "extra_images_enabled": true,
+      "hidden": false,
+      "attributes": {
+        "Size": ["S", "M", "L", "XL"]
+      },
+      "variations": [
+        {
+          "id": 1734567890124,
+          "sku": "PROD-001-S",
+          "attributes": {"Size": "S"},
+          "regular_price": "29.99",
+          "sale_price": "24.99",
+          "stock_status": "instock"
+        }
+      ]
+    }
+  ]
+}
 ```
 
-### Option 3: Traditional Web Hosting
+### Field Reference
 
-Upload all files to your web host. Requires PHP 7.4+ with `mb_string` extension.
-
-### Option 4: GitHub Pages with Custom Domain
-
-GitHub Pages provides free hosting directly from your repository.
-
-#### Step 1: Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click **Settings** → **Pages** (in the left sidebar)
-3. Under "Source", select **Deploy from a branch**
-4. Choose **main** branch and **/ (root)** folder
-5. Click **Save**
-
-#### Step 2: Add the CNAME File
-
-A `CNAME` file tells GitHub which domain to use. Create a file named `CNAME` in your repo root containing just your domain:
-
-```
-rapidwoo.com
-```
-
-> **Note:** This file already exists if you cloned from the official repo.
-
-#### Step 3: Configure DNS (InMotion Hosting)
-
-Log in to your InMotion Hosting account and navigate to **cPanel** → **Zone Editor** (or **DNS Zone Editor**).
-
-**For apex domain (rapidwoo.com):**
-
-Add these **A Records** pointing to GitHub's servers:
-
-| Type | Name | Value |
-|------|------|-------|
-| A | @ | `185.199.108.153` |
-| A | @ | `185.199.109.153` |
-| A | @ | `185.199.110.153` |
-| A | @ | `185.199.111.153` |
-
-**For www subdomain:**
-
-Add a **CNAME Record**:
-
-| Type | Name | Value |
-|------|------|-------|
-| CNAME | www | `nathanmcmullendev.github.io` |
-
-> **Replace** `nathanmcmullendev` with your GitHub username if different.
-
-#### Step 4: Verify & Enable HTTPS
-
-1. Go back to GitHub → **Settings** → **Pages**
-2. Under "Custom domain", enter `rapidwoo.com`
-3. Click **Save**
-4. Wait for DNS verification (can take up to 24-48 hours, usually faster)
-5. Once verified, check **Enforce HTTPS**
-
-#### DNS Propagation
-
-DNS changes can take time to propagate:
-- **Most cases:** 15 minutes to 1 hour
-- **Worst case:** Up to 48 hours
-
-Use [dnschecker.org](https://dnschecker.org) to verify your DNS records are propagating.
-
-#### ⚠️ Important: GitHub Pages Limitations
-
-GitHub Pages serves **static files only** — PHP will not execute. This means:
-
-| Feature | GitHub Pages | Traditional Hosting |
-|---------|-------------|---------------------|
-| Shop display | ✅ Works | ✅ Works |
-| Product pages | ✅ Works | ✅ Works |
-| Snipcart checkout | ✅ Works | ✅ Works |
-| Product editor | ⚠️ Read-only | ✅ Full functionality |
-| Image uploads | ❌ Won't work | ✅ Works |
-| Save to server | ❌ Won't work | ✅ Works |
-
-**For full editor functionality**, use Netlify (supports serverless functions) or traditional PHP hosting.
-
-#### Troubleshooting DNS
-
-| Issue | Solution |
-|-------|----------|
-| "Domain not found" | Wait for DNS propagation |
-| Certificate error | Wait 15-30 min after DNS propagates for GitHub to issue SSL |
-| Site shows wrong content | Clear browser cache, verify CNAME file contents |
-| Mixed content warnings | Ensure all asset URLs use HTTPS |
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | number | Unique identifier (timestamp-based) |
+| `title` | string | Product display name |
+| `slug` | string | URL-friendly identifier |
+| `sku` | string | Stock keeping unit |
+| `type` | string | `"simple"` or `"variable"` |
+| `stock_status` | string | `"instock"`, `"outofstock"`, `"onbackorder"` |
+| `regular_price` | string | Normal price |
+| `sale_price` | string | Discounted price (optional) |
+| `price` | string | Active price (sale or regular) |
+| `image` | string | Main product image URL |
+| `images` | array | Gallery image URLs |
+| `gallery` | array | Gallery objects with `{url}` |
+| `extra_images_enabled` | boolean | Show gallery images |
+| `hidden` | boolean | Hide from shop |
+| `attributes` | object | Variation attributes |
+| `variations` | array | Variation options |
 
 ---
 
-## 📝 Using the Product Editor
+## Editor Guide
 
-Access the editor at `/demo/` (e.g., `https://yoursite.com/demo/`).
+### Accessing the Editor
 
-### Editor Features
-
-| Feature | Description |
-|---------|-------------|
-| **Inline Editing** | Click any cell in the table to edit directly |
-| **Side Panel** | Click ✏️ to open the full editor with all fields |
-| **Preview** | Click 👁️ to preview how the product will look |
-| **Bulk Actions** | Select multiple products to delete, hide, or show |
-| **Image Upload** | Drag-drop or click to upload images |
-| **Variable Products** | Create size/color variations with different prices |
+Navigate to `/demo/` on your site (e.g., `https://yoursite.com/demo/`)
 
 ### Toolbar Actions
 
 | Button | Action |
 |--------|--------|
-| ➕ **Add Product** | Create a new product |
-| 💾 **Save** | Save changes to the server |
-| 👁️ **View** | View Shop, Shop Settings, Spreadsheet View |
-| 📁 **Data** | Refresh, Load Demo, Import/Export JSON |
+| **💾 Save** | Push changes to GitHub |
+| **🔄 Refresh** | Reload from GitHub (discards local changes) |
+| **📦 Load Demo** | Load sample products (doesn't auto-save) |
+| **➕ Add** | Create new product |
+| **📥 Import** | Import products from JSON file |
+| **📤 Export** | Download products as JSON |
+| **⚙️ Settings** | Configure GitHub & Cloudinary |
 
-### Data Management
+### Editing Products
 
-- **Products.json** — Your working product data (gets modified when you save)
-- **Dummy-products.json** — Pristine sample data (never modified, used for "Load Demo")
+1. Click the **✏️ pencil icon** on any product row
+2. Edit fields in the slide-out panel
+3. Changes auto-save to localStorage
+4. Click **Save Changes** or the main **💾 Save** button to push to GitHub
+
+### Working with Variations
+
+1. Set **Product Type** to `Variable`
+2. Enter **Main Attribute Name** (e.g., "Size")
+3. Select **Preset Options** or enter custom options
+4. Click **Generate Variations**
+5. Customize individual variation prices/stock/SKUs
+6. Click **Generate SKUs** for automatic SKU creation
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Escape` | Close edit panel |
 
 ---
 
-## ⚙️ Configuration
+## Image Handling
 
-### Snipcart Setup
+### Upload Flow
 
-1. Create a [Snipcart account](https://snipcart.com)
-2. Get your public API key from Dashboard → API Keys
-3. Replace the `data-api-key` attribute in:
-   - `shop.html`
-   - `product.html`
-
-```html
-<div hidden id="snipcart"
-     data-api-key="YOUR_SNIPCART_API_KEY"
-     data-config-modal-style="side"
-     data-currency="usd">
-</div>
+```
+User selects image
+        │
+        ▼
+┌───────────────────┐
+│ Validate image    │ ← Check type, size
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐     ┌───────────────────┐
+│ Upload to         │────▶│ Return Cloudinary │
+│ Cloudinary        │     │ secure_url        │
+└─────────┬─────────┘     └───────────────────┘
+          │ (if fails)
+          ▼
+┌───────────────────┐     ┌───────────────────┐
+│ Compress to       │────▶│ Return base64     │
+│ base64 fallback   │     │ data URL          │
+└───────────────────┘     └───────────────────┘
 ```
 
-### Snipcart Product Validation
-
-Since RapidWoo uses JSON files instead of individual product pages, Snipcart needs a way to validate products at checkout. This is handled by the `snipcart-products.json` file in the root directory.
-
-**How it works:**
-
-1. Each "Add to Cart" button has a `data-item-url` attribute pointing to `/snipcart-products.json`
-2. When a customer checks out, Snipcart fetches this URL to verify the product exists and the price matches
-3. The JSON file contains all products with their IDs, prices, and custom fields (variations)
-
-**File location:** `/snipcart-products.json`
-
-**Example entry:**
-```json
-{
-  "id": "1762000000001",
-  "price": 19.99,
-  "url": "/snipcart-products.json",
-  "customFields": [
-    {
-      "name": "Size",
-      "options": "S|M|L[+3.00]|XL[+5.00]"
-    }
-  ]
-}
-```
-
-**Key points:**
-- Each product needs entries for both numeric ID and slug (for flexibility)
-- The `price` must match the base price in your product data
-- `customFields` define variations with optional price modifiers like `[+3.00]`
-- This file must be publicly accessible at the URL specified in `data-item-url`
-
-**Code references:**
-- `shop.html` → `snipcartValidationUrl()` function
-- `product.html` → `snipcartValidationUrl()` function
-
-Both return `/snipcart-products.json` which is set as the `data-item-url` on all Snipcart buttons.
-
-### Image Upload Settings
-
-Configure in `assets/js/config.js`:
+### Image Constraints
 
 ```javascript
-IMAGE: {
-  MAX_SIZE: 8 * 1024 * 1024,  // 8MB max file size
-  MAX_WIDTH: 1200,             // Max width for compression
-  QUALITY: 0.85,               // JPEG quality (0-1)
-  ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+{
+  MAX_SIZE: 8 * 1024 * 1024,  // 8MB
+  ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  COMPRESSION_QUALITY: 0.7,
+  MAX_DIMENSION: 800
 }
 ```
 
-### Storage Keys
+### Cloudinary URL Format
+
+```
+https://res.cloudinary.com/{cloud_name}/image/upload/{folder}/{filename}
+```
+
+Example:
+```
+https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg
+```
+
+### Image Transformations
+
+Cloudinary supports on-the-fly transformations:
 
 ```javascript
-STORAGE_KEYS: {
-  USER_PRODUCTS: 'rapidwoo-user-products',    // Primary storage
-  DEMO_PRODUCTS: 'rapidwoo-demo-products',    // Cached demos
-  UPLOADED_DEMO: 'rapidwoo-uploaded-demo',    // From home upload
+// Original
+https://res.cloudinary.com/xxx/image/upload/rapidwoo/products/image.jpg
+
+// Resized to 400x400, cropped to fill
+https://res.cloudinary.com/xxx/image/upload/w_400,h_400,c_fill/rapidwoo/products/image.jpg
+
+// Auto quality and format
+https://res.cloudinary.com/xxx/image/upload/q_auto,f_auto/rapidwoo/products/image.jpg
+
+// Thumbnail (150x150)
+https://res.cloudinary.com/xxx/image/upload/w_150,h_150,c_thumb/rapidwoo/products/image.jpg
+```
+
+---
+
+## Save & Sync Flow
+
+### Dual-Layer Storage
+
+RapidWoo uses a two-tier storage strategy:
+
+1. **localStorage** (immediate, local)
+   - Instant saves on every edit
+   - Survives page refresh
+   - Browser-specific
+
+2. **GitHub API** (persistent, shared)
+   - Manual save via button
+   - Permanent storage in repo
+   - Deploys to live site
+
+### Save Process
+
+```javascript
+// 1. Auto-save to localStorage (every edit)
+safeSaveProducts();  // Calls Storage.saveProducts()
+
+// 2. Manual save to GitHub (Save button)
+saveToGitHubManual();  // Calls Storage.saveToGitHub()
+```
+
+### GitHub API Flow
+
+```
+┌─────────────────┐
+│ Get current SHA │ ← Required for update
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Encode content  │ ← Base64 encode JSON
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ PUT to GitHub   │ ← Update file
+│ Contents API    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ GitHub Actions  │ ← Auto-deploy
+│ deploys site    │   (~30 seconds)
+└─────────────────┘
+```
+
+### Conflict Prevention
+
+A save lock prevents concurrent GitHub API calls:
+
+```javascript
+let _githubSaveInProgress = false;
+
+async function saveToGitHubManual() {
+  if (_githubSaveInProgress) {
+    _pendingGitHubSave = true;
+    return;
+  }
+  _githubSaveInProgress = true;
+  // ... save logic
+  _githubSaveInProgress = false;
 }
 ```
 
 ---
 
-## 🛒 Product Schema
+## Shop Integration
 
-Each product in `products.json` follows this structure:
+### Loading Products in Shop Pages
 
-```json
-{
-  "id": 1762000000001,
-  "title": "Product Name",
-  "slug": "product-name",
-  "sku": "SKU-001",
-  "type": "simple",
-  "stock_status": "instock",
-  "regular_price": "29.99",
-  "sale_price": "24.99",
-  "price": "24.99",
-  "categories": ["Category 1", "Category 2"],
-  "tags": ["tag1", "tag2"],
-  "image": "https://example.com/image.jpg",
-  "images": ["https://example.com/image2.jpg"],
-  "gallery": [{"url": ""}, {"url": ""}],
-  "extra_images_enabled": false,
-  "description": "<p>Full product description with HTML.</p>",
-  "short_description": "Brief description for listings.",
-  "manage_stock": true,
-  "stock_quantity": 50,
-  "weight": "1.5",
-  "dimensions": {"length": "10", "width": "5", "height": "3"},
-  "shipping_class": "standard",
-  "featured": false,
-  "sold_individually": false,
-  "hidden": false
-}
-```
+```javascript
+// In shop.html or product.html
+const Storage = window.RapidWoo.Storage;
 
-### Variable Products
-
-For products with variations (sizes, colors):
-
-```json
-{
-  "type": "variable",
-  "attributes": {
-    "Size": ["S", "M", "L", "XL"]
-  },
-  "variations": [
-    {
-      "id": 17620000000011,
-      "sku": "SKU-001-S",
-      "attributes": {"Size": "S"},
-      "regular_price": "29.99",
-      "sale_price": "24.99",
-      "stock_status": "instock"
-    },
-    {
-      "id": 17620000000012,
-      "sku": "SKU-001-M",
-      "attributes": {"Size": "M"},
-      "regular_price": "29.99",
-      "sale_price": "24.99",
-      "stock_status": "instock"
+async function loadProducts() {
+  try {
+    // Try localStorage cache first
+    const cached = Storage.getProducts();
+    if (cached?.products) {
+      return cached.products;
     }
-  ]
+    
+    // Fallback to fetch from file
+    const response = await fetch('/data/products.json');
+    const data = await response.json();
+    return data.products;
+  } catch (error) {
+    console.error('Failed to load products:', error);
+    return [];
+  }
 }
+```
+
+### Rendering Products
+
+```javascript
+function renderProductCard(product) {
+  const price = product.sale_price || product.price || product.regular_price;
+  const hasGallery = product.extra_images_enabled && product.images?.length;
+  
+  return `
+    <div class="product-card" data-id="${product.id}">
+      <img src="${product.image}" alt="${product.title}">
+      ${hasGallery ? `<div class="gallery-indicator">${product.images.length + 1} images</div>` : ''}
+      <h3>${product.title}</h3>
+      <p class="price">$${parseFloat(price).toFixed(2)}</p>
+      ${product.sale_price ? `<p class="was-price">Was $${product.regular_price}</p>` : ''}
+      <a href="/product.html?slug=${product.slug}">View Details</a>
+    </div>
+  `;
+}
+```
+
+### Cart Integration
+
+```javascript
+const Cart = window.RapidWoo.Cart;
+
+// Add to cart
+Cart.add(productId, quantity, variationId);
+
+// Get cart contents
+const items = Cart.getItems();
+
+// Get total
+const total = Cart.getTotal();
+
+// Clear cart
+Cart.clear();
 ```
 
 ---
 
-## 🔧 API Endpoints
+## API Reference
 
-### POST `/save-products.php`
+### RapidWoo.Storage
 
-Saves products to `data/products.json`.
+```javascript
+// Configuration
+Storage.configureGitHub({ token, owner, repo, branch })
+Storage.configureCloudinary({ cloudName, uploadPreset })
+Storage.isGitHubConfigured() → boolean
+Storage.isCloudinaryConfigured() → boolean
+Storage.getGitHubConfig() → object
 
-**Request:**
-```json
-{
-  "products": [...]
-}
+// Product Operations
+Storage.getProducts() → { products: [] }
+Storage.saveProducts({ products: [] })
+Storage.saveToGitHub({ products: [] }) → Promise<{ success, commit, productCount }>
+Storage.loadFromGitHub() → Promise<{ products: [] }>
+
+// Import/Export
+Storage.importJSON(file) → Promise<{ products: [] }>
+Storage.exportJSON({ products: [] })
+
+// Cache Management
+Storage.isDirty() → boolean
+Storage._markDirty(boolean)
+Storage._setCache({ products: [] })
+Storage._getCache() → { products: [] }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Products saved to server",
-  "productCount": 11,
-  "timestamp": "2025-12-14 22:54:00",
-  "commit": "a1b2c3d"
-}
+### RapidWoo.ImageHandler
+
+```javascript
+// Upload
+ImageHandler.uploadToCloudinary(file) → Promise<string>  // Returns URL
+ImageHandler.processImageFile(file) → Promise<{ type: 'url'|'base64', data: string }>
+
+// Validation
+ImageHandler.validateImage(file) → { valid: boolean, errors: [] }
+
+// Compression (fallback)
+ImageHandler.compressImage(file, maxWidth, quality) → Promise<string>  // Returns base64
 ```
 
-### POST `/upload-temp.php`
+### RapidWoo.Utils
 
-Uploads an image to `/uploads/tmp/`.
+```javascript
+// DOM
+Utils.q(selector) → Element
+Utils.qa(selector) → NodeList
+Utils.esc(string) → string  // HTML escape
 
-**Request:** `multipart/form-data` with `file` or `image` field
-
-**Response:**
-```json
-{
-  "ok": true,
-  "url": "https://yoursite.com/uploads/tmp/abc123.jpg",
-  "filename": "abc123.jpg",
-  "mime": "image/jpeg",
-  "width": 1200,
-  "height": 800
-}
+// Notifications
+Utils.showToast(message, type, title)  // type: 'success'|'error'|'warning'|'info'
+Utils.showConfirm(message, title) → Promise<boolean>
+Utils.showAlert(message, title) → Promise<void>
 ```
 
 ---
 
-## 🎨 Customization
+## Customization
 
-### CSS Variables
+### Styling
 
-Customize the look in `assets/css/main.css`:
+Override CSS variables in your stylesheet:
 
 ```css
 :root {
-  --brand: #2271b1;        /* Primary color */
-  --brand-600: #135e96;    /* Darker brand */
-  --ink: #0f172a;          /* Text color */
-  --text: #334155;         /* Body text */
-  --muted: #6b7280;        /* Secondary text */
-  --bg: #f5f7fb;           /* Background */
-  --card: #ffffff;         /* Card background */
-  --line: #e5e7eb;         /* Borders */
-  --ok: #0f9d58;           /* Success */
-  --danger: #d63638;       /* Error/delete */
-  --warn: #f59e0b;         /* Warning */
-  --radius: 16px;          /* Border radius */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --text: #1f2937;
+  --text-muted: #6b7280;
+  --bg: #ffffff;
+  --bg-alt: #f9fafb;
+  --line: #e5e7eb;
 }
 ```
 
 ### Adding Custom Fields
 
-1. Update `DEFAULTS.PRODUCT` in `config.js`
-2. Add form fields in `demo/index.html`
-3. Update `normalizeProduct()` in `editor.js`
-4. Update `applyPanel()` and `openPanel()` in `editor.js`
+1. Add field to product schema in `config.js`
+2. Add input to editor panel in `demo/index.html`
+3. Handle field in `editor.js` `openPanel()` and `applyPanel()`
+
+### Custom Product Types
+
+Extend the type dropdown in the editor:
+
+```javascript
+// In editor.js
+const PRODUCT_TYPES = ['simple', 'variable', 'grouped', 'external'];
+```
 
 ---
 
-## 📱 Browser Support
+## Troubleshooting
 
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### Common Issues
 
-Mobile responsive design works on all modern mobile browsers.
+#### "GitHub not configured"
+- Go to Settings and enter your GitHub token
+- Ensure token has `contents:write` permission
+
+#### Images not uploading
+- Check Cloudinary credentials in Settings
+- Ensure upload preset is set to **Unsigned**
+- Check browser console for errors
+
+#### Changes not appearing on live site
+- Wait 30-60 seconds for GitHub Actions deployment
+- Hard refresh (`Ctrl+Shift+R`) to clear cache
+- Check GitHub Actions tab for deployment status
+
+#### "SHA mismatch" error
+- Another save is in progress, wait and retry
+- Refresh editor to get latest SHA
+
+#### Corrupted characters (mojibake)
+- Ensure files are saved as UTF-8
+- Hard refresh to clear cached JavaScript
+
+### Debug Commands
+
+Open browser console and run:
+
+```javascript
+// Check configuration
+console.log(RapidWoo.Storage.isGitHubConfigured());
+console.log(RapidWoo.Storage.isCloudinaryConfigured());
+
+// View current products
+console.log(App.products);
+
+// Check localStorage
+console.log(localStorage.getItem('rapidwoo-config'));
+console.log(localStorage.getItem('rapidwoo-products-cache'));
+
+// Force refresh from GitHub
+await RapidWoo.Storage.loadFromGitHub();
+
+// Manual save
+await window.saveToGitHubManual();
+```
+
+### Cache Reset
+
+```javascript
+// Clear product cache (keeps credentials)
+localStorage.removeItem('rapidwoo-products-cache');
+localStorage.removeItem('rapidwoo-products-dirty');
+location.reload();
+
+// Full reset (clears everything)
+localStorage.clear();
+location.reload();
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Development Notes
 
-### Products not saving
+### Local Development
 
-1. Check that `save-products.php` has write permissions
-2. Verify the `data/` directory exists and is writable
-3. Check browser console for errors
+```bash
+# Simple local server
+npx serve .
 
-### Images not uploading
+# Or with Python
+python -m http.server 8000
+```
 
-1. Verify `upload-temp.php` is accessible
-2. Check that `uploads/tmp/` directory exists (created automatically)
-3. Ensure file size is under 8MB
-4. Confirm file type is allowed (JPEG, PNG, WebP, GIF)
+### GitHub Actions Deployment
 
-### Snipcart not working
+The `.github/workflows/static.yml` handles automatic deployment:
 
-1. Verify your API key is correct
-2. Check that product URLs are accessible
-3. Ensure `data-item-url` points to a valid JSON endpoint
+```yaml
+name: Deploy to GitHub Pages
 
-### UTF-8/Encoding issues
+on:
+  push:
+    branches: ["main"]
 
-If you see corrupted characters:
-1. Ensure all files are saved as UTF-8
-2. Check `save-products.php` includes proper headers
-3. Clear browser localStorage and reload
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - uses: actions/deploy-pages@v4
+```
+
+### Security Considerations
+
+- **GitHub Token**: Store only in localStorage, never commit
+- **Cloudinary**: Use unsigned presets for browser uploads
+- **CORS**: GitHub Pages allows cross-origin requests to GitHub API
+
+### Performance Tips
+
+- Use Cloudinary transformations for thumbnails
+- Enable gzip in GitHub Pages (automatic)
+- Minimize product JSON size (remove unused fields)
+- Use `f_auto,q_auto` Cloudinary params for optimal images
 
 ---
 
-## 📄 License
-
-MIT License - feel free to use for personal or commercial projects.
-
----
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ---
 
-## 🙏 Credits
+## License
 
-- **Snipcart** — Shopping cart and checkout
-- **Unsplash** — Demo product images
-- Built with vanilla HTML, CSS, and JavaScript
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 📞 Support
+## Credits
 
-- **Issues:** [GitHub Issues](https://github.com/nathanmcmullendev/rapidwoo/issues)
-- **Documentation:** This README
+Built with:
+- [Cloudinary](https://cloudinary.com) - Image CDN
+- [GitHub Pages](https://pages.github.com) - Hosting
+- [GitHub API](https://docs.github.com/en/rest) - Data persistence
 
 ---
 
-*Built by [Nathan McMullen](https://github.com/nathanmcmullendev)*
+**Made with ❤️ for serverless e-commerce**

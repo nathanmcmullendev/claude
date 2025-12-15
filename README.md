@@ -1,24 +1,35 @@
 # RapidWoo
 
-**A proof-of-concept serverless product catalog with Snipcart checkout, running entirely on GitHub Pages.**
+**A serverless e-commerce platform running entirely on GitHub Pages.**
 
-> **Live Demo:** [rapidwoo.com](https://rapidwoo.com)
+> **Live Demo:** [rapidwoo.com](https://rapidwoo.com)  
+> **Current Version:** v3.1  
+> **Test Card:** `4242 4242 4242 4242`
 
-## What This Demonstrates
+---
 
-- ✅ Full product catalog with visual editor
-- ✅ Snipcart checkout integration (test mode ready - use card `4242424242424242`)
-- ✅ Automatic price validation to prevent cart tampering
-- ✅ Cloudinary CDN for image hosting
-- ✅ GitHub Pages hosting with zero monthly costs
-- ✅ No custom backend required
+## Features
 
-## What This Is NOT
+### ✅ What's Included
 
-- ❌ **Not production-ready** — PAT stored in browser localStorage (see [Security Notes](#security-notes))
-- ❌ **Not multi-user safe** — No conflict resolution for simultaneous editors
-- ❌ **Not for customer PII** — No authentication, no customer data protection
-- ❌ **Not PCI compliant** — Snipcart handles payment compliance, but this admin interface is not hardened
+| Feature | Description |
+|---------|-------------|
+| **Product Editor** | Visual admin interface for managing products |
+| **Simple & Variable Products** | Single items or products with variations (sizes, colors) |
+| **Price Range Display** | Variable products show `$19.99 – $29.99` |
+| **Snipcart Checkout** | Full shopping cart and payment processing |
+| **Cloudinary Images** | CDN-hosted product images |
+| **GitHub Storage** | Products saved to repository via API |
+| **Zero Monthly Cost** | GitHub Pages + Snipcart test mode = free |
+
+### ⚠️ Current Limitations
+
+| Limitation | Reason |
+|------------|--------|
+| Not production-ready | GitHub token stored in localStorage |
+| Single editor only | No multi-user conflict resolution |
+| No customer accounts | Snipcart handles all customer data |
+| Manual deployment | ~60 second wait after saves |
 
 ---
 
@@ -30,132 +41,60 @@
 git clone https://github.com/YOUR_USERNAME/rapidwoo.git
 ```
 
-Go to **Settings → Pages → Source: GitHub Actions**
+**Settings → Pages → Source: GitHub Actions**
 
 ### 2. Create GitHub Token
 
-1. GitHub **Settings → Developer settings → Personal access tokens → Fine-grained tokens**
-2. Select your repo, grant **Contents: Read and write**
-3. Copy the token
+1. **Settings → Developer settings → Personal access tokens → Fine-grained tokens**
+2. Select your repo
+3. Grant: **Contents: Read and write**
+4. Copy token
 
 ### 3. Set Up Cloudinary (Free)
 
 1. Sign up at [cloudinary.com](https://cloudinary.com)
-2. Create unsigned upload preset named `rapidwoo_unsigned`
+2. Create unsigned upload preset
 3. Note your Cloud name
 
-### 4. Set Up Snipcart (Free for Test Mode)
+### 4. Set Up Snipcart (Free Test Mode)
 
 1. Sign up at [snipcart.com](https://snipcart.com)
-2. Get your **public API key** from Dashboard
-3. Add to `index.html`, `shop.html`, `product.html`:
-```html
-<script src="https://cdn.snipcart.com/themes/v3.x.x/default/snipcart.js"></script>
-<div id="snipcart" data-api-key="YOUR_PUBLIC_KEY" hidden></div>
-```
+2. Get public API key from Dashboard
+3. Update API key in HTML files
 
 ### 5. Configure Editor
 
-1. Open `https://YOUR_SITE/demo/`
+1. Visit `https://YOUR_SITE/demo/`
 2. Click **⚙️ Settings**
-3. Enter GitHub token, repo info, Cloudinary credentials
+3. Enter credentials
 4. **Save & Test Connection**
-
----
-
-## ⚠️ GitHub Pages Deployment Note
-
-If deploying as a **project site** (e.g., `username.github.io/rapidwoo/`), all fetch calls must use relative paths:
-
-```javascript
-// ✅ Correct (works in subdirectory)
-fetch('./data/products.json')
-
-// ❌ Wrong (404 on project sites)  
-fetch('/data/products.json')
-```
-
-The live demo at `rapidwoo.com` uses a custom domain (root path), so this doesn't apply there.
 
 ---
 
 ## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                         BROWSER                               │
-│  ┌─────────────┐  ┌─────────────┐  ┌───────────────────────┐ │
-│  │   Editor    │  │    Shop     │  │   Snipcart Checkout   │ │
-│  │   /demo/    │  │  /shop.html │  │   (hosted by Snipcart)│ │
-│  └──────┬──────┘  └──────┬──────┘  └───────────┬───────────┘ │
-└─────────┼────────────────┼─────────────────────┼─────────────┘
-          │                │                     │
-          ▼                ▼                     ▼
-    ┌───────────┐    ┌───────────┐    ┌─────────────────────┐
-    │  GitHub   │    │ Cloudinary│    │ Snipcart Validation │
-    │   API     │    │    CDN    │    │ /snipcart-products  │
-    │           │    │           │    │      .json          │
-    └─────┬─────┘    └───────────┘    └─────────────────────┘
-          │
-          ▼
-    ┌───────────┐
-    │  GitHub   │
-    │   Pages   │
-    │ (hosting) │
-    └───────────┘
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   GitHub Pages  │────▶│   Static HTML   │────▶│   Snipcart      │
+│   (Hosting)     │     │   + JavaScript  │     │   (Checkout)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                       │                       │
+        ▼                       ▼                       ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   GitHub API    │     │   Cloudinary    │     │   Payment       │
+│   (Data Store)  │     │   (Images)      │     │   Processing    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
-### Storage Strategy
-
-| Layer | Purpose | Persistence |
-|-------|---------|-------------|
-| localStorage | Draft/cache, instant saves | Browser only |
-| GitHub API | Source of truth | Permanent, deployed |
-| Snipcart validation | Price verification | Auto-generated on save |
-
----
-
-## Snipcart Integration
-
-### How Checkout Works
-
-1. User adds product to cart (Snipcart widget)
-2. User clicks checkout → Snipcart hosted checkout
-3. Snipcart validates prices against `/snipcart-products.json`
-4. Test card `4242 4242 4242 4242` + any future date + any CVC
-5. Order confirmed → Snipcart dashboard
-
-### Automatic Price Validation
-
-When you save products in the editor, RapidWoo automatically generates `snipcart-products.json`:
-
-```json
-[
-  {
-    "id": "graphic-tshirt-neon-wave",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  }
-]
-```
-
-**This prevents price tampering** — Snipcart rejects any cart where prices don't match the validation file.
-
-### Variable Products
-
-For products with variations (sizes, colors), the editor generates Snipcart-compatible custom fields:
+### Data Flow
 
 ```
-Size: S|M|L[+3.00]|XL[+5.00]
+Editor → localStorage (instant) → GitHub API (permanent)
+                                        ↓
+                              GitHub Actions deploys
+                                        ↓
+                              Live site updated (~60s)
 ```
-
-Price modifiers (`[+3.00]`) are calculated automatically from your variation prices.
 
 ---
 
@@ -164,118 +103,126 @@ Price modifiers (`[+3.00]`) are calculated automatically from your variation pri
 ```
 rapidwoo/
 ├── index.html              # Landing page
-├── shop.html               # Product listing
-├── product.html            # Single product page
-├── snipcart-products.json  # Auto-generated validation (DO NOT EDIT)
-│
-├── data/
-│   ├── products.json       # Product data (synced to GitHub)
-│   └── dummy-products.json # Demo products
+├── shop.html               # Product catalog
+├── product.html            # Product detail page
+├── snipcart-products.json  # Price validation (auto-generated)
 │
 ├── demo/
-│   ├── index.html          # Product editor UI
-│   └── editor.js           # Editor logic
+│   ├── index.html          # Editor interface
+│   └── editor.js           # Editor logic (~2300 lines)
 │
-└── assets/js/
-    ├── storage.js          # GitHub API + Snipcart validation generation
-    ├── imageHandler.js     # Cloudinary uploads
-    ├── config.js           # Default settings
-    ├── utils.js            # Helpers (toast, modal)
-    └── cart.js             # Cart functionality
+├── data/
+│   ├── products.json       # Live product data
+│   └── dummy-products.json # Demo data
+│
+├── assets/
+│   ├── js/                 # Core modules
+│   └── css/                # Stylesheets
+│
+├── VERSION.md              # Current version documentation
+├── ROADMAP.md              # Development roadmap
+├── METHODOLOGY.md          # Development approach
+└── SESSION-START.md        # Session context guide
 ```
+
+---
+
+## Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [VERSION.md](VERSION.md) | Current state, schema, features |
+| [ROADMAP.md](ROADMAP.md) | Short-term (v3.2-3.5) and long-term (v4.0-6.0) plans |
+| [METHODOLOGY.md](METHODOLOGY.md) | Precision development approach |
+| [SESSION-START.md](SESSION-START.md) | How to start development sessions |
+
+---
+
+## Pages
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Landing | `/` | Hero + featured products |
+| Shop | `/shop.html` | Product catalog grid |
+| Product | `/product.html?product=slug` | Single product detail |
+| Editor | `/demo/` | Admin product editor |
+
+---
+
+## Product Types
+
+### Simple Products
+Single item, single price.
+
+```
+Price: $24.99
+[Add to Cart]
+```
+
+### Variable Products
+Multiple variations with individual prices.
+
+```
+Price: $19.99 – $29.99
+Size: [S ▼]
+[Add to Cart]
+```
+
+When customer selects a size, price updates to that variation's price.
+
+---
+
+## Snipcart Integration
+
+### Price Validation
+
+Products are validated against `snipcart-products.json` to prevent tampering:
+
+```json
+{
+  "id": "graphic-tshirt",
+  "price": 19.99,
+  "customFields": [
+    { "name": "Size", "options": "S|M|L[+3.00]|XL[+5.00]" }
+  ]
+}
+```
+
+This file auto-generates when you save products.
+
+### Test Checkout
+
+1. Add products to cart
+2. Use card: `4242 4242 4242 4242`
+3. Expiry: Any future date
+4. CVC: Any 3 digits
 
 ---
 
 ## Security Notes
 
-### ⚠️ GitHub Token Risk
+| Risk | Mitigation |
+|------|------------|
+| GitHub token in localStorage | Use dedicated bot account with minimal permissions |
+| Unsigned Cloudinary uploads | Restrict formats and file size in Cloudinary settings |
+| HTML in descriptions | Sanitize with DOMPurify if accepting user content |
+| Single editor | Designate one editor or implement locking |
 
-This POC stores your GitHub Personal Access Token in browser `localStorage`. This means:
-
-- Any XSS vulnerability can steal it
-- Browser extensions can access it
-- Shared computers are a risk
-
-**Mitigations for production:**
-- Use a dedicated bot account with minimal permissions
-- Implement a serverless proxy (Cloudflare Worker) for token storage
-- Use GitHub OAuth App instead of PAT
-
-### ⚠️ HTML in Descriptions
-
-Product descriptions are rendered as HTML. If accepting user-generated content, sanitize input:
-
-```javascript
-const safe = DOMPurify.sanitize(product.description);
-```
-
-### ⚠️ Cloudinary Unsigned Uploads
-
-Unsigned presets allow anyone with the preset name to upload. Restrict in Cloudinary settings:
-- Allowed formats: `jpg, png, webp, gif`
-- Max file size: 10MB
-- Folder restriction: `rapidwoo/`
-
-### ⚠️ Single Editor Assumption
-
-No conflict resolution exists. If two people edit simultaneously, last save wins. For teams, consider:
-- Designating a single editor
-- Implementing optimistic locking
-- Using a proper CMS
-
----
-
-## Save Flow
-
-```
-Edit Product → localStorage (instant)
-      │
-      ▼
-Click "Save" → GitHub API
-      │
-      ├──→ Update data/products.json
-      │
-      └──→ Auto-generate snipcart-products.json
-                    │
-                    ▼
-            GitHub Actions deploys (~60 seconds)
-                    │
-                    ▼
-            Live site updated + Snipcart validation synced
-```
-
----
-
-## Testing Checkout
-
-1. Add products to cart
-2. Click cart → Checkout
-3. Use test card: `4242 4242 4242 4242`
-4. Expiry: Any future date
-5. CVC: Any 3 digits
-6. Complete order
-7. Check Snipcart dashboard for order
+**For production:** Use GitHub OAuth or serverless proxy for token storage.
 
 ---
 
 ## Troubleshooting
 
-### "GitHub not configured"
-→ Go to Settings, enter token and repo info
+| Issue | Solution |
+|-------|----------|
+| "GitHub not configured" | Enter credentials in Settings |
+| Images not uploading | Check Cloudinary preset is unsigned |
+| Changes not appearing | Wait 60s, hard refresh (`Ctrl+Shift+R`) |
+| Price mismatch error | Re-save products to regenerate validation |
+| Page not loading | Check browser console for JS errors |
 
-### Images not uploading
-→ Check Cloudinary credentials in Settings
-→ Ensure upload preset is **Unsigned**
-
-### Changes not appearing
-→ Wait ~60 seconds for GitHub Actions
-→ Hard refresh (`Ctrl+Shift+R`)
-
-### Snipcart price mismatch error
-→ Save products again to regenerate validation file
-→ Wait for deployment, then retry checkout
-
-### Debug in Console
+### Debug Commands
 
 ```javascript
 // Check configuration
@@ -285,29 +232,65 @@ RapidWoo.Storage.isCloudinaryConfigured()
 // View products
 console.log(App.products)
 
-// Force save
-await window.saveToGitHubManual()
+// Clear cache
+localStorage.clear(); location.reload();
 ```
 
 ---
 
-## Who Is This For?
+## Version History
 
-- **Developers** exploring JAMstack e-commerce patterns
-- **Small catalog owners** who want a simple, free solution
-- **Prototypers** testing product ideas before investing in full platforms
-- **Learners** studying static site + API integration
+| Version | Date | Highlights |
+|---------|------|------------|
+| **v3.1** | Dec 2025 | Price range display, editor UX improvements |
+| v3.0 | Dec 2025 | Stable baseline, full editor functionality |
+| v4.0 | Deprecated | Had encoding issues, rolled back |
+
+See [VERSION.md](VERSION.md) for complete details.
 
 ---
 
-## Roadmap (Potential)
+## Roadmap
 
-- [ ] GitHub OAuth instead of PAT
-- [ ] Conflict detection/merge UI
-- [ ] Schema validation before save
-- [ ] Image alt text and metadata
-- [ ] Inventory sync with Snipcart
-- [ ] Order webhooks → serverless endpoint (Cloudflare Worker) → GitHub Issues
+### Short-Term (v3.2 – v3.5)
+- Editor UX polish (spinners, toasts, confirmations)
+- Image management improvements
+- Variation enhancements
+- Data validation
+
+### Long-Term (v4.0 – v6.0)
+- Schema migration (prices as cents)
+- Security hardening (remove PAT from localStorage)
+- Multi-user support
+- Order management integration
+
+See [ROADMAP.md](ROADMAP.md) for complete details.
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| Hosting | GitHub Pages |
+| Data Storage | GitHub API |
+| Images | Cloudinary CDN |
+| Checkout | Snipcart v3.4.1 |
+| Frontend | Vanilla JS (ES6+) |
+| Styling | Custom CSS |
+
+---
+
+## Contributing
+
+1. Read [METHODOLOGY.md](METHODOLOGY.md) for development approach
+2. Check [ROADMAP.md](ROADMAP.md) for next version tasks
+3. Follow precision development process:
+   - State goal clearly
+   - Identify all affected files
+   - Map specific code changes
+   - Execute one change at a time
+   - Verify each step
 
 ---
 
@@ -327,6 +310,6 @@ Built with:
 
 ---
 
+**Version:** 3.1  
 **Status:** Proof of Concept  
-**Production-ready:** No  
-**But it works:** Yes ✔
+**Works:** Yes ✔

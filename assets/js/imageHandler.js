@@ -44,11 +44,11 @@ window.RapidWoo.ImageHandler = {
       }
 
       const result = await response.json();
-      console.log('✅ Uploaded to Cloudinary:', result.secure_url);
+      console.log('âœ… Uploaded to Cloudinary:', result.secure_url);
       
       return result.secure_url;
     } catch (error) {
-      console.error('❌ Cloudinary upload failed:', error);
+      console.error('âŒ Cloudinary upload failed:', error);
       throw error;
     }
   },
@@ -72,12 +72,12 @@ window.RapidWoo.ImageHandler = {
         const url = await this.uploadToCloudinary(file);
         return { type: 'url', data: url };
       } catch (error) {
-        console.warn('⚠️ Cloudinary failed, using base64 fallback:', error.message);
+        console.warn('âš ï¸ Cloudinary failed, using base64 fallback:', error.message);
       }
     }
 
     // Fallback to compressed base64
-    console.warn('⚠️ Using base64 fallback (Cloudinary not configured)');
+    console.warn('âš ï¸ Using base64 fallback (Cloudinary not configured)');
     const dataURL = await this.compressImage(file);
     return { type: 'base64', data: dataURL };
   },
@@ -225,7 +225,7 @@ window.RapidWoo.ImageHandler = {
         });
 
       } catch (error) {
-        console.error(`❌ Failed to process ${file.name}:`, error);
+        console.error(`âŒ Failed to process ${file.name}:`, error);
         progressCallback?.({
           current: i + 1,
           total: files.length,
@@ -308,4 +308,4 @@ window.RapidWoo.ImageHandler = {
   }
 };
 
-console.log('✅ RapidWoo ImageHandler loaded (Serverless Mode)');
+console.log('âœ… RapidWoo ImageHandler loaded (Serverless Mode)');

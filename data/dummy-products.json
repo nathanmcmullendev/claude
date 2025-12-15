@@ -401,9 +401,9 @@
       "price": "21.99",
       "attributes": {
         "Size": [
-          "16\u00c3\u201420 Print",
-          "24\u00c3\u201436 Print",
-          "24\u00c3\u201436 Canvas"
+          "16x20 Print",
+          "24x36 Print",
+          "24x36 Canvas"
         ]
       },
       "variations": [
@@ -411,7 +411,7 @@
           "id": 176300002001,
           "sku": "POST-MIN-1620-PRINT",
           "attributes": {
-            "Size": "16\u00c3\u201420 Print"
+            "Size": "16x20 Print"
           },
           "price_delta": "+0.00",
           "stock_status": "instock",
@@ -421,7 +421,7 @@
           "id": 176300002002,
           "sku": "POST-MIN-2436-PRINT",
           "attributes": {
-            "Size": "24\u00c3\u201436 Print"
+            "Size": "24x36 Print"
           },
           "price_delta": "+6.00",
           "stock_status": "instock",
@@ -431,7 +431,7 @@
           "id": 176300002004,
           "sku": "POST-MIN-2436-CANVAS",
           "attributes": {
-            "Size": "24\u00c3\u201436 Canvas"
+            "Size": "24x36 Canvas"
           },
           "price_delta": "+24.00",
           "stock_status": "instock",

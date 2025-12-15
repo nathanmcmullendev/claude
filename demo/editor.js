@@ -737,6 +737,69 @@ function pickPriceNumber(p) {
   return tryParse(p?.sale_price) ?? tryParse(p?.price) ?? tryParse(p?.regular_price) ?? 0;
 }
 
+// Compute display price for table - shows "From $X.XX" for variable products
+function getTableDisplayPrice(product) {
+  const isVariable = product.type === 'variable';
+  const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
+  
+  if (isVariable && hasVariations) {
+    // Find lowest variation price
+    let lowestPrice = Infinity;
+    product.variations.forEach(v => {
+      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price) || Infinity;
+      if (price < lowestPrice) lowestPrice = price;
+    });
+    if (lowestPrice !== Infinity) {
+      return 'From $' + lowestPrice.toFixed(2);
+    }
+  }
+  
+  // Simple product or no variations - show regular/sale price
+  const salePrice = parseFloat(product.sale_price);
+  const regPrice = parseFloat(product.regular_price);
+  if (!isNaN(salePrice) && salePrice > 0) {
+    return '$' + salePrice.toFixed(2);
+  }
+  if (!isNaN(regPrice) && regPrice > 0) {
+    return '$' + regPrice.toFixed(2);
+  }
+  return '';
+}
+
+// Update price field states for variable products
+function updatePriceFieldStates(product) {
+  const regField = Utils.q('#fld-reg');
+  const saleField = Utils.q('#fld-sale');
+  const isVariable = product?.type === 'variable';
+  const hasVariations = Array.isArray(product?.variations) && product.variations.length > 0;
+  const shouldDisable = isVariable && hasVariations;
+  
+  [regField, saleField].forEach(field => {
+    if (!field) return;
+    field.disabled = shouldDisable;
+    field.style.opacity = shouldDisable ? '0.5' : '1';
+    field.style.backgroundColor = shouldDisable ? '#f5f5f5' : '';
+    field.title = shouldDisable ? 'Price is determined by variations below' : '';
+  });
+  
+  // Add/update warning message
+  let warning = Utils.q('#price-variation-warning');
+  const priceSection = regField?.closest('.fpe-inline');
+  
+  if (shouldDisable) {
+    if (!warning && priceSection) {
+      warning = document.createElement('div');
+      warning.id = 'price-variation-warning';
+      warning.style.cssText = 'color: #b45309; background: #fef3c7; padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-top: 8px; display: flex; align-items: center; gap: 6px;';
+      warning.innerHTML = '⚠️ Price is set per variation below. Base price is ignored for variable products.';
+      priceSection.parentNode.insertBefore(warning, priceSection.nextSibling);
+    }
+  } else if (warning) {
+    warning.remove();
+  }
+}
+
+
 // --------------------------------------------
 // Global Shop Display Prefs (persisted)
 // --------------------------------------------
@@ -1074,10 +1137,8 @@ tr.innerHTML = `
     </select>
   </td>
   <td data-col="price"
-      contenteditable="true"
-      class="fpe-cell-edit"
-      data-field="regular_price"
-      data-idx="${index}">${product.regular_price || ''}</td>
+      class="fpe-cell-price"
+      data-idx="${index}">${getTableDisplayPrice(product)}</td>
   <td data-col="categories"
       contenteditable="true"
       class="fpe-cell-edit"
@@ -1340,7 +1401,10 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
     setInputValue('#fld-short', product.short_description || '');
     setInputValue('#fld-desc', (product.description || '').replace(/<[^>]+>/g, ''));
     setInputValue('#fld-reg',  product.regular_price || '');
-    setInputValue('#fld-sale', product.sale_price    || '');
+    setInputValue('#fld-sale', product.sale_price || '');
+    
+    // Update price field states for variable products
+    updatePriceFieldStates(product);
 
     // VARIABLE: load fields (Woo-style)
     setInputValue('#fld-type', (product.type === 'variable') ? 'variable' : 'simple');
@@ -1507,7 +1571,15 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
     // Toggle table when switching type
     Utils.q('#fld-type')?.addEventListener('change', () => {
       const wrap = Utils.q('#var-wrap');
-      if (wrap) wrap.style.display = (Utils.q('#fld-type')?.value === 'variable') ? '' : 'none';
+      const isVariable = Utils.q('#fld-type')?.value === 'variable';
+      if (wrap) wrap.style.display = isVariable ? '' : 'none';
+      
+      // Update price field states when type changes
+      const idx = App.panelProductIndex;
+      if (idx != null && App.products[idx]) {
+        const tempProduct = { ...App.products[idx], type: isVariable ? 'variable' : 'simple' };
+        updatePriceFieldStates(tempProduct);
+      }
     });
 
     setInputValue('#fld-stock-status', product.stock_status || 'instock');

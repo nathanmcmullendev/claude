@@ -271,7 +271,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
     dropZone.dataset.dndBound = '1';
   }
 
-  // Floating Ã¢â‚¬Å“re-uploadÃ¢â‚¬Â button in the preview (tiny overlay icon)
+  // Floating "re-upload" button in the preview (tiny overlay icon)
   const reup = document.getElementById('reupload-primary');
   if (reup && !reup.dataset.bound) {
     reup.addEventListener('click', (e) => {
@@ -1011,10 +1011,10 @@ tr.innerHTML = `
     ${theHidden ? '<div style="font-size:10px;color:#999;margin-top:2px">Hidden</div>' : ''}
   </td>
   <td data-col="edit" style="text-align:center;">
-    <button class="fpe-icon-btn" title="Edit" data-idx="${index}" data-action="edit">âœï¸</button>
+    <button class="fpe-icon-btn" title="Edit" data-idx="${index}" data-action="edit">✏️</button>
   </td>
   <td data-col="preview" style="text-align:center;">
-    <button class="fpe-icon-btn" title="Preview" data-idx="${index}" data-action="preview">ðŸ‘ï¸</button>
+    <button class="fpe-icon-btn" title="Preview" data-idx="${index}" data-action="preview">👁️</button>
   </td>
   <td data-col="name">
     <div contenteditable="true"
@@ -2085,7 +2085,7 @@ document.addEventListener('DOMContentLoaded', init);
   const q  = (sel, r = document) => r.querySelector(sel);
   const qa = (sel, r = document) => Array.from(r.querySelectorAll(sel));
 
-  // Find the Ã¢â‚¬Å“Show Additional ImagesÃ¢â‚¬Â checkbox inside the editor panel
+  // Find the "Show Additional Images" checkbox inside the editor panel
   function findAdditionalImagesCheckbox(panelRoot) {
     if (!panelRoot) return null;
     // 1) direct id (if you added one later)

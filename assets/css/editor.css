@@ -483,6 +483,15 @@
   background: #eef6ff;
 }
 
+.image-preview-container.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.image-preview-container[draggable="true"] {
+  cursor: grab;
+}
+
 .image-preview-container.drop-active::after {
   content: 'Drop image to upload';
   position: absolute;

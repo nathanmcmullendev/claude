@@ -8,7 +8,7 @@
       "sku": "TSHIRT-NEON-001",
       "type": "variable",
       "stock_status": "instock",
-      "regular_price": "24.22",
+      "regular_price": "",
       "sale_price": "19.99",
       "price": "19.99",
       "attributes": {
@@ -210,7 +210,7 @@
       "slug": "stainless-travel-mug-16oz",
       "sku": "MUG-TRAVEL-016",
       "stock_status": "instock",
-      "regular_price": "19.99",
+      "regular_price": "2",
       "sale_price": "16.99",
       "price": "16.99",
       "categories": [

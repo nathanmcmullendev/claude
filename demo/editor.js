@@ -809,6 +809,36 @@ function updatePriceFieldStates(product) {
     warning.remove();
   }
 }
+// Format price for shop preview (handles variable product price ranges)
+function formatShopPreviewPrice(p, nf) {
+  const isVariable = p?.type === 'variable';
+  const hasVariations = Array.isArray(p?.variations) && p.variations.length > 0;
+  
+  if (isVariable && hasVariations) {
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+    
+    p.variations.forEach(v => {
+      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+      if (!isNaN(price) && price > 0) {
+        if (price < minPrice) minPrice = price;
+        if (price > maxPrice) maxPrice = price;
+      }
+    });
+    
+    if (minPrice !== Infinity && maxPrice !== -Infinity) {
+      if (minPrice === maxPrice) {
+        return nf.format(minPrice);
+      }
+      return nf.format(minPrice) + ' – ' + nf.format(maxPrice);
+    }
+  }
+  
+  // Simple product
+  const price = pickPriceNumber(p);
+  return nf.format(price);
+}
+
 
 
 // --------------------------------------------
@@ -1885,11 +1915,37 @@ function openProductModal(index) {
 
   Utils.q('#modal-title').textContent = product.title || 'Untitled Product';
 
-  const price = product.sale_price || product.price || product.regular_price;
-  if (product.sale_price && product.regular_price) {
-    Utils.q('#modal-price').innerHTML = `$${price} <del style="color:#999;font-size:18px;margin-left:8px">$${product.regular_price}</del>`;
+  // Handle price display for variable products
+  const isVariable = product?.type === 'variable';
+  const hasVariations = Array.isArray(product?.variations) && product.variations.length > 0;
+  
+  if (isVariable && hasVariations) {
+    // Variable product - show price range
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+    product.variations.forEach(v => {
+      const p = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+      if (!isNaN(p) && p > 0) {
+        if (p < minPrice) minPrice = p;
+        if (p > maxPrice) maxPrice = p;
+      }
+    });
+    if (minPrice !== Infinity && maxPrice !== -Infinity) {
+      const priceText = (minPrice === maxPrice) 
+        ? `${minPrice.toFixed(2)}`
+        : `${minPrice.toFixed(2)} – ${maxPrice.toFixed(2)}`;
+      Utils.q('#modal-price').textContent = priceText;
+    } else {
+      Utils.q('#modal-price').textContent = '$0.00';
+    }
   } else {
-    Utils.q('#modal-price').textContent = `$${price || '0.00'}`;
+    // Simple product
+    const price = product.sale_price || product.price || product.regular_price;
+    if (product.sale_price && product.regular_price && product.sale_price !== product.regular_price) {
+      Utils.q('#modal-price').innerHTML = `${price} <del style="color:#999;font-size:18px;margin-left:8px">${product.regular_price}</del>`;
+    } else {
+      Utils.q('#modal-price').textContent = `${price || '0.00'}`;
+    }
   }
 
   const stockEl = Utils.q('#modal-stock');
@@ -2039,7 +2095,7 @@ async function openShopModal() {
         <div class="pv-title shop-product-title product-title" style="font-weight:700;font-size:16px;">${title}</div>
         <div class="pv-desc shop-product-description product-description"  style="color:#6b7280;font-size:13px;min-height:32px;">${short || ''}</div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${nf.format(price)}</div>
+          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${formatShopPreviewPrice(p, nf)}</div>
 
           <!-- Snipcart button (attributes read at click-time) -->
           <button

@@ -402,7 +402,7 @@
 }
 
 .fpe-section .sec-h::after {
-  content: "▼";
+  content: "â–¼";
   font-size: 10px;
   color: #666;
   transition: transform 0.2s;
@@ -574,7 +574,7 @@
 }
 
 .reupload-btn::before {
-  content: '📷';
+  content: 'ðŸ“·';
   font-size: 16px;
   line-height: 1;
 }
@@ -767,7 +767,7 @@ body.fpe-lock {
 }
 
 .spreadsheet-close-btn-overlay::before {
-  content: '←';
+  content: 'â†';
   font-size: 16px;
   font-weight: bold;
 }

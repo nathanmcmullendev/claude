@@ -286,6 +286,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
 // ADDITIONAL IMAGES – UI + LOGIC (single-or-both)
 // ============================================
 let GalleryUI = null;
+let _galleryDragSource = null; // Track which slot is being dragged for reorder
 
 function ensureGalleryUI() {
   // If refs already exist, re-query (in case panel re-rendered) and return
@@ -463,6 +464,18 @@ if (url) {
         const dz = slot.wrap;
         const stop = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
 
+        // Make slot draggable for reordering
+        dz.setAttribute('draggable', 'true');
+        dz.addEventListener('dragstart', (e) => {
+          _galleryDragSource = idx;
+          e.dataTransfer.effectAllowed = 'move';
+          dz.classList.add('dragging');
+        });
+        dz.addEventListener('dragend', () => {
+          _galleryDragSource = null;
+          dz.classList.remove('dragging');
+        });
+
         ['dragenter','dragover'].forEach(evt => {
           dz.addEventListener(evt, (e) => { stop(e); dz.classList.add('drop-active'); });
         });
@@ -472,6 +485,15 @@ if (url) {
 
 dz.addEventListener('drop', async (e) => {
   stop(e);
+  
+  // Check for slot-to-slot swap (reorder)
+  if (_galleryDragSource !== null && _galleryDragSource !== idx) {
+    swapGallerySlots();
+    _galleryDragSource = null;
+    return;
+  }
+  
+  // Otherwise handle file drop
   const file = e.dataTransfer?.files?.[0];
   if (!file) return;
   try {
@@ -602,6 +624,38 @@ async function pickAndProcessImage() {
   });
 }
 
+
+// --- Gallery slot swap for drag-and-drop reordering ---
+function swapGallerySlots() {
+  const ui = GalleryUI;
+  if (!ui || !ui.slot1 || !ui.slot2) return;
+  
+  const pr = App.products[App.currentEditIndex];
+  if (!pr) return;
+  
+  // Get current URLs
+  const url1 = ui.slot1.url?.value || '';
+  const url2 = ui.slot2.url?.value || '';
+  
+  // Swap in UI
+  if (ui.slot1.url) {
+    ui.slot1.url.value = url2;
+    ui.slot1.url.setAttribute('value', url2);
+  }
+  if (ui.slot2.url) {
+    ui.slot2.url.value = url1;
+    ui.slot2.url.setAttribute('value', url1);
+  }
+  
+  paintGallerySlot(ui.slot1, url2);
+  paintGallerySlot(ui.slot2, url1);
+  
+  // Swap in product data
+  writeGallerySlotToProduct(pr, 0, url2);
+  writeGallerySlotToProduct(pr, 1, url1);
+  
+  Utils.showToast('Gallery images swapped', 'success');
+}
 
 // --- begin: gallery write helpers ---
 function _ensureTwoGallerySlots(p) {

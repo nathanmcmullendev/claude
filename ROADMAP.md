@@ -53,10 +53,10 @@ Every version increment follows these principles:
 
 | # | Task | File(s) | Status |
 |---|------|---------|--------|
-| 1 | Add loading spinner during GitHub save | `demo/editor.js` | ✅ Already existed |
-| 2 | Add success/error toast notifications | `demo/editor.js`, `editor.css` | ✅ Already existed |
-| 3 | Confirm before delete (single + bulk) | `demo/editor.js` | ✅ Already existed |
-| 4 | Auto-save to localStorage on changes | `demo/editor.js` | ✅ Already existed |
+| 1 | Loading spinner during GitHub save | `demo/editor.js` | ✅ Existed |
+| 2 | Success/error toast notifications | `demo/editor.js` | ✅ Existed |
+| 3 | Confirm before delete (single + bulk) | `demo/editor.js` | ✅ Existed |
+| 4 | Auto-save to localStorage on changes | `demo/editor.js` | ✅ Existed |
 | 5 | "Unsaved changes" warning before leaving | `demo/editor.js` | ✅ Added |
 
 ### Acceptance Criteria
@@ -388,8 +388,8 @@ git push --force origin main
 - Fixed UTF-8 encoding issues
 
 ## v3.2 — Editor UX Polish ✅
-- Unsaved changes warning (beforeunload)
-- Confirmed existing: loading spinner, toasts, delete confirmations, auto-save
+- Added beforeunload warning for unsaved changes
+- Confirmed existing: spinner, toasts, confirmations, auto-save
 
 ---
 

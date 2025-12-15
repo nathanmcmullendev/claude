@@ -22,28 +22,6 @@
     ]
   },
   {
-    "id": "graphic-tshirt-neon-wave-copy",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  },
-  {
-    "id": "1765738324183",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  },
-  {
     "id": "wireless-headphones-matte-black",
     "price": 59.99,
     "url": "/snipcart-products.json"
@@ -110,7 +88,7 @@
     "customFields": [
       {
         "name": "Size",
-        "options": "16Ã-20 Print|24Ã-36 Print[+6.00]|24Ã-36 Canvas[+24.00]"
+        "options": "16Ã—20 Print|24Ã—36 Print[+6.00]|24Ã—36 Canvas[+24.00]"
       }
     ]
   },
@@ -121,7 +99,7 @@
     "customFields": [
       {
         "name": "Size",
-        "options": "16Ã-20 Print|24Ã-36 Print[+6.00]|24Ã-36 Canvas[+24.00]"
+        "options": "16Ã—20 Print|24Ã—36 Print[+6.00]|24Ã—36 Canvas[+24.00]"
       }
     ]
   },

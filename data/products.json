@@ -74,10 +74,10 @@
                 "unisex",
                 "graphic"
             ],
-            "image": "http://localhost/uploads/tmp/afc5bc3bcfeac3b6.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/tshirt-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes S-XL.</p>",
@@ -95,10 +95,10 @@
             "hidden": false,
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tshirt-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
                 }
             ],
             "featured": false,
@@ -178,10 +178,10 @@
                 "unisex",
                 "graphic"
             ],
-            "image": "http://localhost/uploads/tmp/afc5bc3bcfeac3b6.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/tshirt-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes S-XL.</p>",
@@ -199,10 +199,10 @@
             "hidden": false,
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tshirt-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
                 }
             ],
             "featured": false,
@@ -227,18 +227,18 @@
                 "headphones",
                 "noise-canceling"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/headphones-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/headphones-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/headphones-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/headphones-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/headphones-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Premium wireless headphones with comfortable over-ear design, BT 5.0, and up to 25 hours battery.</p>",
@@ -275,18 +275,18 @@
                 "fleece",
                 "unisex"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/hoodie-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/hoodie-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/hoodie-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/hoodie-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/hoodie-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Mid-weight fleece hoodie with a minimalist chest logo. Sizes XS-XXL.</p>",
@@ -324,18 +324,18 @@
                 "travel",
                 "insulated"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/mug-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/mug-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/mug-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/mug-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/mug-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/mug-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/mug-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/mug-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/mug-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/mug-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Double-wall insulated stainless steel mug keeps drinks hot or cold for hours.</p>",
@@ -372,18 +372,18 @@
                 "canvas",
                 "reusable"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/tote-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tote-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tote-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tote-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/tote-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tote-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/tote-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/tote-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tote-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tote-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Durable 12oz canvas tote with long handles and a roomy interior.</p>",
@@ -421,18 +421,18 @@
                 "case",
                 "clear"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/phone-case-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/phone-case-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/phone-case-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/phone-case-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/phone-case-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/phone-case-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/phone-case-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/phone-case-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/phone-case-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/phone-case-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Shock-absorbing clear case with anti-yellowing matte finish. Popular models supported.</p>",
@@ -470,18 +470,18 @@
                 "mat",
                 "workspace"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/desk-mat-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/desk-mat-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/desk-mat-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/desk-mat-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/desk-mat-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/desk-mat-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/desk-mat-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/desk-mat-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/desk-mat-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/desk-mat-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Non-slip extended desk mat with stitched edges and smooth tracking surface.</p>",
@@ -513,9 +513,9 @@
             "price": "21.99",
             "attributes": {
                 "Size": [
-                    "16Ã-20 Print",
-                    "24Ã-36 Print",
-                    "24Ã-36 Canvas"
+                    "16\u00c3-20 Print",
+                    "24\u00c3-36 Print",
+                    "24\u00c3-36 Canvas"
                 ]
             },
             "variations": [
@@ -523,7 +523,7 @@
                     "id": 176300002001,
                     "sku": "POST-MIN-1620-PRINT",
                     "attributes": {
-                        "Size": "16Ã-20 Print"
+                        "Size": "16\u00c3-20 Print"
                     },
                     "price_delta": "+0.00",
                     "stock_status": "instock"
@@ -532,7 +532,7 @@
                     "id": 176300002002,
                     "sku": "POST-MIN-2436-PRINT",
                     "attributes": {
-                        "Size": "24Ã-36 Print"
+                        "Size": "24\u00c3-36 Print"
                     },
                     "price_delta": "+6.00",
                     "stock_status": "instock"
@@ -541,7 +541,7 @@
                     "id": 176300002004,
                     "sku": "POST-MIN-2436-CANVAS",
                     "attributes": {
-                        "Size": "24Ã-36 Canvas"
+                        "Size": "24\u00c3-36 Canvas"
                     },
                     "price_delta": "+24.00",
                     "stock_status": "instock"
@@ -557,10 +557,10 @@
                 "mountains",
                 "wall-art"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/poster-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-1.jpg",
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/poster-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/poster-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Premium matte poster with minimalist mountain artwork. Options include print, framed, and canvas.</p>",
@@ -578,10 +578,10 @@
             "hidden": false,
             "gallery": [
                 {
-                    "url": ""
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-2.jpg"
                 },
                 {
-                    "url": ""
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
                 }
             ],
             "show_additional_images": true
@@ -604,18 +604,18 @@
                 "vinyl",
                 "laptop"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/stickers-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/stickers-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/stickers-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/stickers-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/stickers-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/stickers-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/stickers-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/stickers-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/stickers-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/stickers-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Durable vinyl stickers with a matte finish. Water-resistant and long-lasting.</p>",
@@ -653,18 +653,18 @@
                 "band",
                 "silicone"
             ],
-            "image": "https://rapidwoo.com/demo/store-1/product-images/band-1.jpg",
+            "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/band-1.jpg",
             "gallery": [
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/band-2.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/band-2.jpg"
                 },
                 {
-                    "url": "https://rapidwoo.com/demo/store-1/product-images/band-3.jpg"
+                    "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/band-3.jpg"
                 }
             ],
             "images": [
-                "https://rapidwoo.com/demo/store-1/product-images/band-2.jpg",
-                "https://rapidwoo.com/demo/store-1/product-images/band-3.jpg"
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/band-2.jpg",
+                "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/band-3.jpg"
             ],
             "extra_images_enabled": true,
             "description": "<p>Breathable silicone band with secure pin-and-tuck closure. Fits most smartwatches.</p>",

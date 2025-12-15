@@ -298,8 +298,8 @@
       </a>
     `;
 
-    const isVariable = p && p.type === 'variable';
-    if (isVariable) {
+    const isVariableType = p && p.type === 'variable';
+    if (isVariableType) {
       const chooseBtn = document.createElement('button');
       chooseBtn.className = 'add-btn button button-primary';
       chooseBtn.textContent = 'Choose';

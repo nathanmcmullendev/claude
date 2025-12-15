@@ -122,7 +122,7 @@ function el(tag, attrs = {}, children = []) {
   return n;
 }
 
-// Reusable: turn a File into a URL (server upload first, base64 fallback)
+// Reusable: turn a File into a URL (Cloudinary upload first, base64 fallback)
 async function processImageFile(file) {
   const validation = ImageHandler.validateImage(file);
   if (!validation.valid) {
@@ -132,11 +132,11 @@ async function processImageFile(file) {
   }
 
   try {
-    const url = await ImageHandler.uploadToServer(file);
-    Utils.showToast('Image uploaded to server successfully!', 'success');
+    const url = await ImageHandler.uploadToCloudinary(file);
+    Utils.showToast('Image uploaded to Cloudinary!', 'success');
     return url;
   } catch (uploadError) {
-    console.warn('Server upload failed, falling back to base64:', uploadError);
+    console.warn('Cloudinary upload failed, falling back to base64:', uploadError);
     const url = await ImageHandler.compressImage(file);
     Utils.showToast('Image compressed (stored locally)', 'warning');
     return url;
@@ -587,8 +587,8 @@ async function pickAndProcessImage() {
         }
 
         try {
-          const url = await ImageHandler.uploadToServer(f);
-          Utils.showToast('Image uploaded to server successfully!', 'success');
+          const url = await ImageHandler.uploadToCloudinary(f);
+          Utils.showToast('Image uploaded to Cloudinary!', 'success');
           resolve(url);
         } catch {
           const url = await ImageHandler.compressImage(f);

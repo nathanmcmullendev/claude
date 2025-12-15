@@ -737,6 +737,30 @@ function pickPriceNumber(p) {
   return tryParse(p?.sale_price) ?? tryParse(p?.price) ?? tryParse(p?.regular_price) ?? 0;
 }
 
+// Get price range for variable products
+// Returns { min, max, isRange, formatted } or null if not variable/no variations
+function getVariationPriceRange(product) {
+  if (product?.type !== 'variable') return null;
+  if (!Array.isArray(product?.variations) || product.variations.length === 0) return null;
+  
+  let min = Infinity, max = -Infinity;
+  product.variations.forEach(v => {
+    const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+    if (!isNaN(price) && price > 0) {
+      if (price < min) min = price;
+      if (price > max) max = price;
+    }
+  });
+  
+  if (min === Infinity) return null;
+  
+  const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const formatted = (min === max) ? nf.format(min) : nf.format(min) + ' – ' + nf.format(max);
+  
+  return { min, max, isRange: min !== max, formatted };
+}
+
+
 // --------------------------------------------
 // Global Shop Display Prefs (persisted)
 // --------------------------------------------
@@ -1074,7 +1098,7 @@ tr.innerHTML = `
     </select>
   </td>
   <td data-col="price"
-      data-idx="${index}">${product.regular_price || ''}</td>
+      data-idx="${index}">${(() => { const range = getVariationPriceRange(product); return range ? range.formatted : (product.regular_price ? '$' + product.regular_price : '' ); })()}</td>
   <td data-col="categories"
       contenteditable="true"
       class="fpe-cell-edit"
@@ -1845,11 +1869,17 @@ function openProductModal(index) {
 
   Utils.q('#modal-title').textContent = product.title || 'Untitled Product';
 
-  const price = product.sale_price || product.price || product.regular_price;
-  if (product.sale_price && product.regular_price) {
-    Utils.q('#modal-price').innerHTML = `$${price} <del style="color:#999;font-size:18px;margin-left:8px">$${product.regular_price}</del>`;
+  // Check for variable product price range
+  const priceRange = getVariationPriceRange(product);
+  if (priceRange) {
+    Utils.q('#modal-price').textContent = priceRange.formatted;
   } else {
-    Utils.q('#modal-price').textContent = `$${price || '0.00'}`;
+    const price = product.sale_price || product.price || product.regular_price;
+    if (product.sale_price && product.regular_price && product.sale_price !== product.regular_price) {
+      Utils.q('#modal-price').innerHTML = `${price} <del style="color:#999;font-size:18px;margin-left:8px">${product.regular_price}</del>`;
+    } else {
+      Utils.q('#modal-price').textContent = `${price || '0.00'}`;
+    }
   }
 
   const stockEl = Utils.q('#modal-stock');
@@ -1973,6 +2003,8 @@ async function openShopModal() {
 
   products.forEach((p) => {
     const price = pickPriceNumber(p);
+    const priceRangeShop = getVariationPriceRange(p);
+    const priceDisplay = priceRangeShop ? priceRangeShop.formatted : nf.format(price);
     const title = p?.title || 'Untitled Product';
     const extras = getVisibleGalleryUrls(p);
     const primaryOrExtra = p?.image || extras[0] || '';
@@ -1999,7 +2031,7 @@ async function openShopModal() {
         <div class="pv-title shop-product-title product-title" style="font-weight:700;font-size:16px;">${title}</div>
         <div class="pv-desc shop-product-description product-description"  style="color:#6b7280;font-size:13px;min-height:32px;">${short || ''}</div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${nf.format(price)}</div>
+          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${priceDisplay}</div>
 
           <!-- Snipcart button (attributes read at click-time) -->
           <button

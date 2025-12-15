@@ -294,9 +294,12 @@
       btn.setAttribute('data-item-custom1-required', 'true');
 
       const priceEl = Utils.q('#price');
-      function apply(size){
+      function apply(size, updatePrice = true){
         const v = getVariationBySize(p, size);
         skuEl.textContent = v?.sku ? `SKU: ${v.sku}` : '';
+
+        // Only update price when user changes selection, not on initial load
+        if (!updatePrice) return;
 
         const varReg = Number(v?.regular_price);
         const varSale = Number(v?.sale_price);
@@ -321,8 +324,8 @@
       }
 
       const initial = sizes[0];
-      sel.value = initial; apply(initial);
-      sel.addEventListener('change', () => apply(sel.value));
+      sel.value = initial; apply(initial, false);  // false = don't update price, keep range visible
+      sel.addEventListener('change', () => apply(sel.value, true));  // true = update price on user selection
 
       btn.addEventListener('click', () => {
         const qty = Math.max(1, Number(qtyInput?.value || 1));

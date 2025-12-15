@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Product â€¢ RapidWoo</title>
+  <title>Product - RapidWoo</title>
 
   <!-- Styles (relative) -->
   <link rel="stylesheet" href="assets/css/main.css" />
@@ -86,7 +86,7 @@
       </div>
       <div class="nav-right">
         <button class="snipcart-checkout button">
-          ðŸ›’ Cart (<span class="snipcart-items-count">0</span>)
+          &#128722; Cart (<span class="snipcart-items-count">0</span>)
         </button>
       </div>
     </div>
@@ -94,8 +94,8 @@
 
   <main class="wrap">
     <div class="crumbs">
-      <a href="index.html">Home</a> <span>â€º</span>
-      <a href="shop.html">Shop</a> <span>â€º</span>
+      <a href="index.html">Home</a> <span>&gt;</span>
+      <a href="shop.html">Shop</a> <span>&gt;</span>
       <span id="crumb-title">Product</span>
     </div>
 
@@ -116,7 +116,7 @@
       <div>
         <div class="gallery">
           <div class="hero" id="hero">
-            <div style="font-size:64px;color:#ccc;">ðŸ“¦</div>
+            <div style="font-size:64px;color:#ccc;">&#128230;</div>
           </div>
           <div class="thumbs" id="thumbs" style="display:none;"></div>
         </div>
@@ -134,7 +134,7 @@
         <div class="meta-bar">
           <div class="price" id="price">$0.00</div>
           <span class="stock-badge" id="stock">In Stock</span>
-          <span class="badge-featured" id="featured" style="display:none;">â­ Featured</span>
+          <span class="badge-featured" id="featured" style="display:none;">&#11088; Featured</span>
         </div>
 
         <div id="variations-wrap" class="desc-panel" style="margin: 6px 0 14px; display:none;">
@@ -235,7 +235,7 @@
 
     const btn = document.createElement('button');
     btn.className = 'button button-primary snipcart-add-item';
-    btn.textContent = 'ðŸ›’ Add to Cart';
+    btn.textContent = '&#128722; Add to Cart';
 
     const idAttr = String(p.id || p.slug || Math.random()).replace(/\s+/g,'-');
     const titleAttr = p.title || 'Product';
@@ -374,7 +374,7 @@
 
     hero.innerHTML = images.length
       ? `<img src="${images[0]}" alt="${(p.title || 'Product').replace(/"/g,'&quot;')}" />`
-      : `<div style="font-size:64px;color:#ccc;">ðŸ“¦</div>`;
+      : `<div style="font-size:64px;color:#ccc;">&#128230;</div>`;
 
     thumbs.innerHTML = '';
     if (images.length > 1) {
@@ -398,7 +398,7 @@
   function renderProduct(p) {
     Utils.q('#title').textContent = p.title || 'Product';
     Utils.q('#crumb-title').textContent = p.title || 'Product';
-    document.title = `${p.title || 'Product'} â€¢ RapidWoo`;
+    document.title = `${p.title || 'Product'} - RapidWoo`;
 
     const cats = (p.categories && p.categories.length) ? p.categories.join(', ') : '';
     Utils.q('#cats').textContent = cats;
@@ -422,7 +422,7 @@
 
     const excerpt = textOf(p.short_description || '').trim();
     const desc = (p.description || '').trim();
-    Utils.q('#excerpt').textContent = excerpt || 'â€”';
+    Utils.q('#excerpt').textContent = excerpt || '-';
     Utils.q('#description').innerHTML = desc || '<span class="muted">No description provided.</span>';
 
     renderGallery(p);

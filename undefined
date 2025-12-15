@@ -92,7 +92,103 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
-      ]
+      ],
+      "show_additional_images": true
+    },
+    {
+      "id": 1765767907017,
+      "title": "Graphic T-Shirt - Neon Wave (Copy)",
+      "slug": "graphic-tshirt-neon-wave-copy",
+      "sku": "TSHIRT-NEON-001",
+      "type": "variable",
+      "stock_status": "instock",
+      "regular_price": "24.99",
+      "sale_price": "19.99",
+      "price": "19.99",
+      "attributes": {
+        "Size": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      },
+      "variations": [
+        {
+          "id": 1762000001001,
+          "sku": "TSHIRT-NEON-001-S",
+          "attributes": {
+            "Size": "S"
+          },
+          "price_delta": "+0.00",
+          "stock_status": "instock"
+        },
+        {
+          "id": 1762000001002,
+          "sku": "TSHIRT-NEON-001-M",
+          "attributes": {
+            "Size": "M"
+          },
+          "price_delta": "+0.00",
+          "stock_status": "instock"
+        },
+        {
+          "id": 1762000001003,
+          "sku": "TSHIRT-NEON-001-L",
+          "attributes": {
+            "Size": "L"
+          },
+          "price_delta": "+3.00",
+          "stock_status": "instock"
+        },
+        {
+          "id": 1762000001004,
+          "sku": "TSHIRT-NEON-001-XL",
+          "attributes": {
+            "Size": "XL"
+          },
+          "price_delta": "+5.00",
+          "stock_status": "onbackorder"
+        }
+      ],
+      "categories": [
+        "Clothing",
+        "Apparel"
+      ],
+      "tags": [
+        "tshirt",
+        "cotton",
+        "unisex",
+        "graphic"
+      ],
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
+      "images": [
+        "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
+        "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
+      ],
+      "extra_images_enabled": true,
+      "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes S-XL.</p>",
+      "short_description": "Bold neon graphic tee.",
+      "manage_stock": true,
+      "stock_quantity": 60,
+      "weight": "0.4",
+      "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+      },
+      "shipping_class": "apparel",
+      "sold_individually": false,
+      "hidden": false,
+      "gallery": [
+        {
+          "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg"
+        },
+        {
+          "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
+        }
+      ],
+      "show_additional_images": true
     },
     {
       "id": 1762000000002,
@@ -140,7 +236,8 @@
       },
       "shipping_class": "small-package",
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000003,
@@ -188,7 +285,8 @@
       "shipping_class": "apparel",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000004,
@@ -236,7 +334,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000005,
@@ -283,7 +382,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000006,
@@ -331,7 +431,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000007,
@@ -379,7 +480,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1763000000200,
@@ -463,7 +565,8 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
         }
-      ]
+      ],
+      "show_additional_images": true
     },
     {
       "id": 1762000000009,
@@ -511,7 +614,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000010,
@@ -559,7 +663,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     }
   ]
 }

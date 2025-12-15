@@ -1074,9 +1074,6 @@ tr.innerHTML = `
     </select>
   </td>
   <td data-col="price"
-      contenteditable="true"
-      class="fpe-cell-edit"
-      data-field="regular_price"
       data-idx="${index}">${product.regular_price || ''}</td>
   <td data-col="categories"
       contenteditable="true"
@@ -1341,6 +1338,52 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
     setInputValue('#fld-desc', (product.description || '').replace(/<[^>]+>/g, ''));
     setInputValue('#fld-reg',  product.regular_price || '');
     setInputValue('#fld-sale', product.sale_price    || '');
+
+    // Disable price fields for variable products with variations
+    const isVariable = product.type === 'variable';
+    const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
+    const regField = Utils.q('#fld-reg');
+    const saleField = Utils.q('#fld-sale');
+    
+    if (isVariable && hasVariations) {
+      // Disable and grey out price fields
+      if (regField) {
+        regField.disabled = true;
+        regField.style.opacity = '0.5';
+        regField.style.backgroundColor = '#f5f5f5';
+      }
+      if (saleField) {
+        saleField.disabled = true;
+        saleField.style.opacity = '0.5';
+        saleField.style.backgroundColor = '#f5f5f5';
+      }
+      
+      // Add warning message if not already present
+      let warning = Utils.q('#price-variation-warning');
+      const priceSection = regField?.closest('.fpe-inline');
+      if (!warning && priceSection) {
+        warning = document.createElement('div');
+        warning.id = 'price-variation-warning';
+        warning.style.cssText = 'color: #b45309; background: #fef3c7; padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-top: 8px; display: flex; align-items: center; gap: 6px;';
+        warning.innerHTML = '⚠️ Base price is ignored for variable products. Set prices in the Variations table below.';
+        priceSection.parentNode.insertBefore(warning, priceSection.nextSibling);
+      }
+    } else {
+      // Enable price fields for simple products
+      if (regField) {
+        regField.disabled = false;
+        regField.style.opacity = '1';
+        regField.style.backgroundColor = '';
+      }
+      if (saleField) {
+        saleField.disabled = false;
+        saleField.style.opacity = '1';
+        saleField.style.backgroundColor = '';
+      }
+      // Remove warning if present
+      const warning = Utils.q('#price-variation-warning');
+      if (warning) warning.remove();
+    }
 
     // VARIABLE: load fields (Woo-style)
     setInputValue('#fld-type', (product.type === 'variable') ? 'variable' : 'simple');

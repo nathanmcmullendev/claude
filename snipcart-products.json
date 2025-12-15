@@ -1,16 +1,5 @@
 [
   {
-    "id": "1762000000001",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  },
-  {
     "id": "graphic-tshirt-neon-wave",
     "price": 19.99,
     "url": "/snipcart-products.json",
@@ -22,9 +11,37 @@
     ]
   },
   {
-    "id": "1762000000002",
-    "price": 59.99,
-    "url": "/snipcart-products.json"
+    "id": "1762000000001",
+    "price": 19.99,
+    "url": "/snipcart-products.json",
+    "customFields": [
+      {
+        "name": "Size",
+        "options": "S|M|L[+3.00]|XL[+5.00]"
+      }
+    ]
+  },
+  {
+    "id": "graphic-tshirt-neon-wave-copy",
+    "price": 19.99,
+    "url": "/snipcart-products.json",
+    "customFields": [
+      {
+        "name": "Size",
+        "options": "S|M|L[+3.00]|XL[+5.00]"
+      }
+    ]
+  },
+  {
+    "id": "1765738324183",
+    "price": 19.99,
+    "url": "/snipcart-products.json",
+    "customFields": [
+      {
+        "name": "Size",
+        "options": "S|M|L[+3.00]|XL[+5.00]"
+      }
+    ]
   },
   {
     "id": "wireless-headphones-matte-black",
@@ -32,30 +49,18 @@
     "url": "/snipcart-products.json"
   },
   {
-    "id": "1762000000003",
-    "price": 49.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "XS[-2.00]|S|M|L[+2.00]|XL[+4.00]|XXL[+6.00]"
-      }
-    ]
+    "id": "1762000000002",
+    "price": 59.99,
+    "url": "/snipcart-products.json"
   },
   {
     "id": "pullover-hoodie-minimal-logo",
     "price": 49.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "XS[-2.00]|S|M|L[+2.00]|XL[+4.00]|XXL[+6.00]"
-      }
-    ]
+    "url": "/snipcart-products.json"
   },
   {
-    "id": "1762000000004",
-    "price": 16.99,
+    "id": "1762000000003",
+    "price": 49.99,
     "url": "/snipcart-products.json"
   },
   {
@@ -64,8 +69,8 @@
     "url": "/snipcart-products.json"
   },
   {
-    "id": "1762000000005",
-    "price": 14.99,
+    "id": "1762000000004",
+    "price": 16.99,
     "url": "/snipcart-products.json"
   },
   {
@@ -74,30 +79,18 @@
     "url": "/snipcart-products.json"
   },
   {
+    "id": "1762000000005",
+    "price": 14.99,
+    "url": "/snipcart-products.json"
+  },
+  {
+    "id": "phone-case-clear-matte",
+    "price": 14.99,
+    "url": "/snipcart-products.json"
+  },
+  {
     "id": "1762000000006",
-    "price": 12.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Model",
-        "options": "iPhone 14|iPhone 15|Galaxy S23"
-      }
-    ]
-  },
-  {
-    "id": "phone-case-clear-armor",
-    "price": 12.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Model",
-        "options": "iPhone 14|iPhone 15|Galaxy S23"
-      }
-    ]
-  },
-  {
-    "id": "1762000000007",
-    "price": 29.99,
+    "price": 14.99,
     "url": "/snipcart-products.json"
   },
   {
@@ -106,31 +99,31 @@
     "url": "/snipcart-products.json"
   },
   {
-    "id": "1762000000008",
-    "price": 17.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "18×24|24×36[+4.00]"
-      }
-    ]
+    "id": "1762000000007",
+    "price": 29.99,
+    "url": "/snipcart-products.json"
   },
   {
     "id": "poster-minimal-mountains",
-    "price": 17.99,
+    "price": 21.99,
     "url": "/snipcart-products.json",
     "customFields": [
       {
         "name": "Size",
-        "options": "18×24|24×36[+4.00]"
+        "options": "16Ã—20 Print|24Ã—36 Print[+6.00]|24Ã—36 Canvas[+24.00]"
       }
     ]
   },
   {
-    "id": "1762000000009",
-    "price": 6.99,
-    "url": "/snipcart-products.json"
+    "id": "1763000000200",
+    "price": 21.99,
+    "url": "/snipcart-products.json",
+    "customFields": [
+      {
+        "name": "Size",
+        "options": "16Ã—20 Print|24Ã—36 Print[+6.00]|24Ã—36 Canvas[+24.00]"
+      }
+    ]
   },
   {
     "id": "sticker-pack-tech-icons-10",
@@ -138,25 +131,18 @@
     "url": "/snipcart-products.json"
   },
   {
-    "id": "1762000000010",
-    "price": 18.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Wrist Size",
-        "options": "S/M|M/L|L/XL[+1.50]"
-      }
-    ]
+    "id": "1762000000009",
+    "price": 6.99,
+    "url": "/snipcart-products.json"
   },
   {
     "id": "smartwatch-band-sport-silicone",
     "price": 18.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Wrist Size",
-        "options": "S/M|M/L|L/XL[+1.50]"
-      }
-    ]
+    "url": "/snipcart-products.json"
+  },
+  {
+    "id": "1762000000010",
+    "price": 18.99,
+    "url": "/snipcart-products.json"
   }
 ]

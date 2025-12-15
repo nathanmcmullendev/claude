@@ -1,47 +1,8 @@
 {
   "products": [
     {
-      "id": 1765769438315,
-      "title": "Forth Change",
-      "slug": "new-product",
-      "sku": "",
-      "type": "simple",
-      "status": "publish",
-      "stock_status": "instock",
-      "regular_price": "",
-      "sale_price": "",
-      "price": "",
-      "description": "",
-      "short_description": "",
-      "categories": [],
-      "tags": [],
-      "image": "",
-      "images": [],
-      "gallery": [
-        {
-          "url": ""
-        },
-        {
-          "url": ""
-        }
-      ],
-      "extra_images_enabled": false,
-      "manage_stock": false,
-      "stock_quantity": null,
-      "weight": "",
-      "dimensions": {
-        "length": "",
-        "width": "",
-        "height": ""
-      },
-      "shipping_class": "",
-      "featured": false,
-      "sold_individually": false,
-      "hidden": false
-    },
-    {
       "id": 1762000000001,
-      "title": "New change",
+      "title": "Graphic T-Shirt - Neon Wave",
       "slug": "graphic-tshirt-neon-wave",
       "sku": "TSHIRT-NEON-001",
       "type": "variable",
@@ -59,40 +20,48 @@
       },
       "variations": [
         {
-          "id": 1762000001001,
+          "id": 17620000000011,
           "sku": "TSHIRT-NEON-001-S",
           "attributes": {
             "Size": "S"
           },
-          "price_delta": "+0.00",
-          "stock_status": "instock"
+          "regular_price": "24.99",
+          "sale_price": "80.00",
+          "stock_status": "instock",
+          "price_delta": "+60.01"
         },
         {
-          "id": 1762000001002,
+          "id": 17620000000012,
           "sku": "TSHIRT-NEON-001-M",
           "attributes": {
             "Size": "M"
           },
-          "price_delta": "+0.00",
-          "stock_status": "instock"
+          "regular_price": "24.99",
+          "sale_price": "125.00",
+          "stock_status": "instock",
+          "price_delta": "+105.01"
         },
         {
-          "id": 1762000001003,
+          "id": 17620000000013,
           "sku": "TSHIRT-NEON-001-L",
           "attributes": {
             "Size": "L"
           },
-          "price_delta": "+3.00",
-          "stock_status": "instock"
+          "regular_price": "27.99",
+          "sale_price": "265.00",
+          "stock_status": "instock",
+          "price_delta": "+245.01"
         },
         {
-          "id": 1762000001004,
+          "id": 17620000000014,
           "sku": "TSHIRT-NEON-001-XL",
           "attributes": {
             "Size": "XL"
           },
-          "price_delta": "+5.00",
-          "stock_status": "onbackorder"
+          "regular_price": "29.99",
+          "sale_price": "398.00",
+          "stock_status": "onbackorder",
+          "price_delta": "+378.01"
         }
       ],
       "categories": [
@@ -105,7 +74,7 @@
         "unisex",
         "graphic"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765771021/rapidwoo/products/apdw0tsnse3fe7ubiysr.webp",
       "images": [
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
@@ -132,11 +101,12 @@
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
       ],
+      "featured": false,
       "show_additional_images": true
     },
     {
       "id": 1762000000002,
-      "title": "Second change",
+      "title": "Wireless Headphones - Matte Black",
       "slug": "wireless-headphones-matte-black",
       "sku": "HEAD-WIRE-101",
       "stock_status": "instock",
@@ -185,7 +155,7 @@
     },
     {
       "id": 1762000000003,
-      "title": "Third Change",
+      "title": "Pullover Hoodie - Minimal Logo",
       "slug": "pullover-hoodie-minimal-logo",
       "sku": "HOOD-MIN-001",
       "stock_status": "instock",

@@ -1,37 +1,5 @@
 [
   {
-    "id": "graphic-tshirt-neon-wave",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S[-8.99]|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  },
-  {
-    "id": "1762000000001",
-    "price": 19.99,
-    "url": "/snipcart-products.json",
-    "customFields": [
-      {
-        "name": "Size",
-        "options": "S[-8.99]|M|L[+3.00]|XL[+5.00]"
-      }
-    ]
-  },
-  {
-    "id": "wireless-headphones-matte-black",
-    "price": 59.99,
-    "url": "/snipcart-products.json"
-  },
-  {
-    "id": "1762000000002",
-    "price": 59.99,
-    "url": "/snipcart-products.json"
-  },
-  {
     "id": "pullover-hoodie-minimal-logo",
     "price": 49.99,
     "url": "/snipcart-products.json"

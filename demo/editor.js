@@ -7,45 +7,6 @@
 // Saves edits to LocalStorage so shop/product pages see changes
 // ============================================
 
-// ============================================
-// SECURITY: Defensive checks (V4)
-// ============================================
-
-/**
- * Verify we're running on expected domain
- * Helps detect if code is being served from unexpected location
- */
-(function securityCheck() {
-  const allowedHosts = [
-    'rapidwoo.com',
-    'localhost',
-    '127.0.0.1',
-    'nathanmcmullendev.github.io'
-  ];
-  
-  const currentHost = window.location.hostname;
-  
-  if (!allowedHosts.some(h => currentHost === h || currentHost.endsWith('.' + h))) {
-    console.warn('⚠️ RapidWoo running on unexpected host:', currentHost);
-    console.warn('⚠️ If this is intentional, add host to allowedHosts in editor.js');
-  }
-})();
-
-/**
- * Check if localStorage is available and not tampered with
- */
-(function storageCheck() {
-  try {
-    const test = '__rapidwoo_test__';
-    localStorage.setItem(test, test);
-    localStorage.removeItem(test);
-  } catch (e) {
-    console.error('❌ localStorage not available. Editor will not work correctly.');
-    alert('localStorage is not available. Please enable cookies/storage for this site.');
-  }
-})();
-
-
 const Utils        = window.RapidWoo.Utils;
 const Storage      = window.RapidWoo.Storage;
 const Config       = window.RapidWoo.Config;
@@ -193,7 +154,7 @@ function bindImageUpload() {
   const clearBtn     = Utils.q('#btn-clear-image');           // NEW
 
   if (!uploadBtn || !fileInput) {
-    console.warn('⚠️ Image upload elements not found');
+    console.warn('âš ï¸ Image upload elements not found');
     return;
   }
 
@@ -207,7 +168,7 @@ function bindImageUpload() {
     if (!file) return;
 
     try {
-      uploadBtn.textContent = '⏳ Uploading...';
+      uploadBtn.textContent = 'â³ Uploading...';
       uploadBtn.disabled = true;
 
       const imageUrl = await processImageFile(file);
@@ -218,10 +179,10 @@ function bindImageUpload() {
         imagePreview.style.display = 'block';
       }
     } catch (error) {
-      console.error('❌ Image upload error:', error);
+      console.error('âŒ Image upload error:', error);
       Utils.showToast(error.message || 'Failed to process image', 'error');
     } finally {
-      uploadBtn.textContent = '📤 Upload New Image';
+      uploadBtn.textContent = 'ðŸ“¤ Upload New Image';
       uploadBtn.disabled = false;
       e.target.value = '';
     }
@@ -281,7 +242,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
       const file = e.dataTransfer?.files?.[0];
       if (!file) return;
       try {
-        uploadBtn.textContent = '⏳ Uploading...';
+        uploadBtn.textContent = 'â³ Uploading...';
         uploadBtn.disabled = true;
         const imageUrl = await processImageFile(file);
         imageField.value = imageUrl;
@@ -293,7 +254,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
         console.error('Drop upload error:', err);
         Utils.showToast(err.message || 'Failed to process image', 'error');
       } finally {
-        uploadBtn.textContent = '📤 Upload New Image';
+        uploadBtn.textContent = 'ðŸ“¤ Upload New Image';
         uploadBtn.disabled = false;
       }
     });
@@ -322,7 +283,7 @@ if (clearBtn && !clearBtn.dataset.bound) {
 }
 
 // ============================================
-// ADDITIONAL IMAGES – UI + LOGIC (single-or-both)
+// ADDITIONAL IMAGES â€“ UI + LOGIC (single-or-both)
 // ============================================
 let GalleryUI = null;
 
@@ -381,7 +342,7 @@ function ensureGalleryUI() {
 
   </div>
   <div class="rw-actions">
-    <button id="rw-gal1-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
+    <button id="rw-gal1-upload" type="button" class="button rw-icon" title="Upload"><span>ðŸ“¤ Upload New Image</span></button>
     <button id="rw-gal1-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
@@ -402,7 +363,7 @@ function ensureGalleryUI() {
 
   </div>
   <div class="rw-actions">
-    <button id="rw-gal2-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
+    <button id="rw-gal2-upload" type="button" class="button rw-icon" title="Upload"><span>ðŸ“¤ Upload New Image</span></button>
     <button id="rw-gal2-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
@@ -772,7 +733,7 @@ function pickPriceNumber(p) {
     }
     return null;
   };
-  // priority: sale → price → regular
+  // priority: sale â†’ price â†’ regular
   return tryParse(p?.sale_price) ?? tryParse(p?.price) ?? tryParse(p?.regular_price) ?? 0;
 }
 
@@ -880,9 +841,9 @@ async function loadSavedOrDemo() {
 // INITIALIZATION (load saved first; fallback to file)
 // ============================================
 async function init() {
-  console.log('🚀 Initializing RapidWoo Editor…');
+  console.log('ðŸš€ Initializing RapidWoo Editorâ€¦');
 
-  // ✅ Use saved dataset if present (even empty by design). Only load demo on true first run.
+  // âœ… Use saved dataset if present (even empty by design). Only load demo on true first run.
   App.products = await loadSavedOrDemo();
 
   // 1) Initial table render
@@ -906,7 +867,7 @@ async function init() {
   // Build gallery UI once (safe no-op if panel not yet visible)
   ensureGalleryUI();
 
-  console.log('✅ Editor initialized with', App.products.length, 'product(s). Source:',
+  console.log('âœ… Editor initialized with', App.products.length, 'product(s). Source:',
     (await Storage.getProducts())?.products !== undefined ? 'saved' : 'demo');
 }
 
@@ -954,11 +915,11 @@ async function saveToGitHubManual() {
     const result = await Storage.saveToGitHub({ products: clean });
     
     if (result.success) {
-      console.log('✅ Saved to GitHub:', result.productCount, 'products');
+      console.log('âœ… Saved to GitHub:', result.productCount, 'products');
       Utils.showToast(`Saved ${result.productCount} products to GitHub`, 'success');
       if (Storage._markDirty) Storage._markDirty(false);
     } else {
-      console.warn('⚠️ GitHub save failed:', result.error);
+      console.warn('âš ï¸ GitHub save failed:', result.error);
       Utils.showToast(`Save failed: ${result.error}`, 'error');
     }
     
@@ -985,7 +946,7 @@ window.saveToGitHubManual = saveToGitHubManual;
 // TOOLBAR ACTIONS
 // ============================================
 function bindToolbar() {
-  // 🔄 Reload from /demo/products.json (explicit user action)
+  // ðŸ”„ Reload from /demo/products.json (explicit user action)
   Utils.q('#btn-load-demo').addEventListener('click', async () => {
     const confirmed = await Utils.showConfirm(
       'Reload saved products from the server? This will discard any unsaved local changes.',
@@ -1001,7 +962,7 @@ function bindToolbar() {
   });
 
 
-  // 📦 Load Demo Products (dummy-products.json) - reset to sample data
+  // ðŸ“¦ Load Demo Products (dummy-products.json) - reset to sample data
   Utils.q('#btn-load-dummy')?.addEventListener('click', async () => {
     const confirmed = await Utils.showConfirm(
       'Load demo sample products? This will replace your editor view with sample data. Click "Save to GitHub" to make it permanent.',
@@ -1089,10 +1050,10 @@ tr.innerHTML = `
     ${theHidden ? '<div style="font-size:10px;color:#999;margin-top:2px">Hidden</div>' : ''}
   </td>
   <td data-col="edit" style="text-align:center;">
-    <button class="fpe-icon-btn" title="Edit" data-idx="${index}" data-action="edit">✏️</button>
+    <button class="fpe-icon-btn" title="Edit" data-idx="${index}" data-action="edit">âœï¸</button>
   </td>
   <td data-col="preview" style="text-align:center;">
-    <button class="fpe-icon-btn" title="Preview" data-idx="${index}" data-action="preview">👁️</button>
+    <button class="fpe-icon-btn" title="Preview" data-idx="${index}" data-action="preview">ðŸ‘ï¸</button>
   </td>
   <td data-col="name">
     <div contenteditable="true"
@@ -1438,7 +1399,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
         };
         const delta = cleanDelta(v.price_delta);
 
-        // Prefer variation's own prices; else compute from base ± delta
+        // Prefer variation's own prices; else compute from base Â± delta
         const varRegNum  = Number(v.regular_price);
         const varSaleNum = Number(v.sale_price);
         const hasVarReg  = Number.isFinite(varRegNum)  && varRegNum  > 0;
@@ -1465,7 +1426,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
               <option value="outofstock"${(v.stock_status)==='outofstock'?' selected':''}>Out of stock</option>
             </select>
           </td>
-          <td style="padding:6px 8px;"><button class="var-remove button">✕</button></td>
+          <td style="padding:6px 8px;"><button class="var-remove button">âœ•</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -1475,7 +1436,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       });
     })();
 
-    // Preset → fill the options text automatically
+    // Preset â†’ fill the options text automatically
     Utils.q('#fld-attr-preset')?.addEventListener('change', () => {
       const preset = Utils.q('#fld-attr-preset').value;
       if (preset !== 'custom') {
@@ -1512,7 +1473,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
               <option value="outofstock">Out of stock</option>
             </select>
           </td>
-          <td style="padding:6px 8px;"><button class="var-remove button">✕</button></td>
+          <td style="padding:6px 8px;"><button class="var-remove button">âœ•</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -1522,7 +1483,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       });
     });
 
-    // Generate SKUs (unique): baseSKU-size, de-dupe with -2, -3, …
+    // Generate SKUs (unique): baseSKU-size, de-dupe with -2, -3, â€¦
     Utils.q('#btn-generate-skus')?.addEventListener('click', () => {
       const base = (Utils.q('#fld-sku')?.value || '').trim() || 'SKU';
       const tbody = Utils.q('#var-tbody');
@@ -1832,7 +1793,7 @@ function bindModals() {
     if (e.target.id === 'quickview-modal') closeQuickView();
   });
 
-  // (No direct toggle handlers here–openShopModal owns persistence + live apply)
+  // (No direct toggle handlers hereâ€“ÂopenShopModal owns persistence + live apply)
 }
 
 function openProductModal(index) {
@@ -1940,7 +1901,7 @@ async function openShopModal() {
     return;
   }
 
-  // ✅ Load saved prefs & reflect in toggles BEFORE rendering cards
+  // âœ… Load saved prefs & reflect in toggles BEFORE rendering cards
   const saved = getShopPrefs();
   if (tTitle) tTitle.checked = saved.title !== false;
   if (tPrice) tPrice.checked = saved.price !== false;
@@ -1948,7 +1909,7 @@ async function openShopModal() {
   if (tStock) tStock.checked = saved.stock !== false;
   if (tAdd)   tAdd.checked   = saved.add   !== false;
 
-  // ✅ Auto-save current toggle state immediately on open + broadcast
+  // âœ… Auto-save current toggle state immediately on open + broadcast
   saveShopPrefs({
     title: tTitle ? !!tTitle.checked : true,
     price: tPrice ? !!tPrice.checked : true,
@@ -1975,7 +1936,7 @@ async function openShopModal() {
     const safeImg = getSnipcartSafeImage(p); // http/https only (no base64)
 
     const desc  = (p?.short_description || p?.description || '').toString().replace(/<[^>]*>/g, '');
-    const short = desc.length > 120 ? (desc.slice(0, 120) + '…') : desc;
+    const short = desc.length > 120 ? (desc.slice(0, 120) + 'â€¦') : desc;
 
     const productUrl = (location && location.origin ? location.origin : '') + '/shop.html';
 
@@ -1989,7 +1950,7 @@ async function openShopModal() {
     card.innerHTML = `
       <div style="aspect-ratio:1/1;background:#fafafa;display:grid;place-items:center">
         ${primaryOrExtra ? `<img src="${primaryOrExtra}" alt="${title.replace(/"/g,'&quot;')}" style="width:100%;height:100%;object-fit:cover">`
-                          : `<div style="font-size:48px;color:#cbd5e1">📦</div>`}
+                          : `<div style="font-size:48px;color:#cbd5e1">ðŸ“¦</div>`}
       </div>
       <div style="padding:12px;display:grid;gap:8px">
         <div class="pv-title shop-product-title product-title" style="font-weight:700;font-size:16px;">${title}</div>
@@ -2006,7 +1967,7 @@ async function openShopModal() {
             data-item-url="${productUrl}"
             ${safeImg ? `data-item-image="${safeImg.replace(/"/g,'&quot;')}"` : ''}
           >
-            🛒 Add
+            ðŸ›’ Add
           </button>
         </div>
         <div>
@@ -2023,7 +1984,7 @@ async function openShopModal() {
   // Apply prefs to the freshly-rendered grid
   applyPrefsToGrid(grid, getShopPrefs());
 
-  // Bind toggle → persist + live apply (once)
+  // Bind toggle â†’ persist + live apply (once)
   if (!grid.dataset.togglesBound) {
     function handleToggleChange() {
       const prefs = prefsFromToggles(tTitle, tPrice, tDesc, tStock, tAdd);
@@ -2155,7 +2116,7 @@ function closeQuickView() {
 document.addEventListener('DOMContentLoaded', init);
 
 /* =========================================================
-   RapidWoo – Default "Show Additional Images" = ON (when exists)
+   RapidWoo â€“Â Default "Show Additional Images" = ON (when exists)
    Drop-in patch: place at the very end of /demo/editor.js
    ========================================================= */
 (function () {
@@ -2173,7 +2134,7 @@ document.addEventListener('DOMContentLoaded', init);
     // 2) best-effort: look for a checkbox whose nearby label text contains our phrase
     const inputs = qa('input[type="checkbox"]', panelRoot);
     for (const input of inputs) {
-      // Try <label for="…">text</label>
+      // Try <label for="â€¦">text</label>
       const id = input.getAttribute('id');
       if (id) {
         const label = panelRoot.querySelector(`label[for="${CSS.escape(id)}"]`);

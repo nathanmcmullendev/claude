@@ -737,110 +737,6 @@ function pickPriceNumber(p) {
   return tryParse(p?.sale_price) ?? tryParse(p?.price) ?? tryParse(p?.regular_price) ?? 0;
 }
 
-// Compute display price for table - shows "From $X.XX" for variable products
-function getTableDisplayPrice(product) {
-  const isVariable = product.type === 'variable';
-  const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
-  
-  if (isVariable && hasVariations) {
-    // Find price range across all variations
-    let minPrice = Infinity;
-    let maxPrice = -Infinity;
-    
-    product.variations.forEach(v => {
-      // Use sale price if available, otherwise regular price
-      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
-      if (!isNaN(price) && price > 0) {
-        if (price < minPrice) minPrice = price;
-        if (price > maxPrice) maxPrice = price;
-      }
-    });
-    
-    if (minPrice !== Infinity && maxPrice !== -Infinity) {
-      // Show range if different, otherwise single price
-      if (minPrice === maxPrice) {
-        return '$' + minPrice.toFixed(2);
-      }
-      return '$' + minPrice.toFixed(2) + ' - $' + maxPrice.toFixed(2);
-    }
-  }
-  
-  // Simple product or no variations - show regular/sale price
-  const salePrice = parseFloat(product.sale_price);
-  const regPrice = parseFloat(product.regular_price);
-  if (!isNaN(salePrice) && salePrice > 0) {
-    return '$' + salePrice.toFixed(2);
-  }
-  if (!isNaN(regPrice) && regPrice > 0) {
-    return '$' + regPrice.toFixed(2);
-  }
-  return '';
-}
-
-// Update price field states for variable products
-function updatePriceFieldStates(product) {
-  const regField = Utils.q('#fld-reg');
-  const saleField = Utils.q('#fld-sale');
-  const isVariable = product?.type === 'variable';
-  const hasVariations = Array.isArray(product?.variations) && product.variations.length > 0;
-  const shouldDisable = isVariable && hasVariations;
-  
-  [regField, saleField].forEach(field => {
-    if (!field) return;
-    field.disabled = shouldDisable;
-    field.style.opacity = shouldDisable ? '0.5' : '1';
-    field.style.backgroundColor = shouldDisable ? '#f5f5f5' : '';
-    field.title = shouldDisable ? 'Price is determined by variations below' : '';
-  });
-  
-  // Add/update warning message
-  let warning = Utils.q('#price-variation-warning');
-  const priceSection = regField?.closest('.fpe-inline');
-  
-  if (shouldDisable) {
-    if (!warning && priceSection) {
-      warning = document.createElement('div');
-      warning.id = 'price-variation-warning';
-      warning.style.cssText = 'color: #b45309; background: #fef3c7; padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-top: 8px; display: flex; align-items: center; gap: 6px;';
-      warning.innerHTML = '⚠️ Price is set per variation below. Base price is ignored for variable products.';
-      priceSection.parentNode.insertBefore(warning, priceSection.nextSibling);
-    }
-  } else if (warning) {
-    warning.remove();
-  }
-}
-// Format price for shop preview (handles variable product price ranges)
-function formatShopPreviewPrice(p, nf) {
-  const isVariable = p?.type === 'variable';
-  const hasVariations = Array.isArray(p?.variations) && p.variations.length > 0;
-  
-  if (isVariable && hasVariations) {
-    let minPrice = Infinity;
-    let maxPrice = -Infinity;
-    
-    p.variations.forEach(v => {
-      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
-      if (!isNaN(price) && price > 0) {
-        if (price < minPrice) minPrice = price;
-        if (price > maxPrice) maxPrice = price;
-      }
-    });
-    
-    if (minPrice !== Infinity && maxPrice !== -Infinity) {
-      if (minPrice === maxPrice) {
-        return nf.format(minPrice);
-      }
-      return nf.format(minPrice) + ' – ' + nf.format(maxPrice);
-    }
-  }
-  
-  // Simple product
-  const price = pickPriceNumber(p);
-  return nf.format(price);
-}
-
-
-
 // --------------------------------------------
 // Global Shop Display Prefs (persisted)
 // --------------------------------------------
@@ -1178,8 +1074,10 @@ tr.innerHTML = `
     </select>
   </td>
   <td data-col="price"
-      class="fpe-cell-price"
-      data-idx="${index}">${getTableDisplayPrice(product)}</td>
+      contenteditable="true"
+      class="fpe-cell-edit"
+      data-field="regular_price"
+      data-idx="${index}">${product.regular_price || ''}</td>
   <td data-col="categories"
       contenteditable="true"
       class="fpe-cell-edit"
@@ -1442,10 +1340,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
     setInputValue('#fld-short', product.short_description || '');
     setInputValue('#fld-desc', (product.description || '').replace(/<[^>]+>/g, ''));
     setInputValue('#fld-reg',  product.regular_price || '');
-    setInputValue('#fld-sale', product.sale_price || '');
-    
-    // Update price field states for variable products
-    updatePriceFieldStates(product);
+    setInputValue('#fld-sale', product.sale_price    || '');
 
     // VARIABLE: load fields (Woo-style)
     setInputValue('#fld-type', (product.type === 'variable') ? 'variable' : 'simple');
@@ -1612,15 +1507,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
     // Toggle table when switching type
     Utils.q('#fld-type')?.addEventListener('change', () => {
       const wrap = Utils.q('#var-wrap');
-      const isVariable = Utils.q('#fld-type')?.value === 'variable';
-      if (wrap) wrap.style.display = isVariable ? '' : 'none';
-      
-      // Update price field states when type changes
-      const idx = App.panelProductIndex;
-      if (idx != null && App.products[idx]) {
-        const tempProduct = { ...App.products[idx], type: isVariable ? 'variable' : 'simple' };
-        updatePriceFieldStates(tempProduct);
-      }
+      if (wrap) wrap.style.display = (Utils.q('#fld-type')?.value === 'variable') ? '' : 'none';
     });
 
     setInputValue('#fld-stock-status', product.stock_status || 'instock');
@@ -1915,37 +1802,11 @@ function openProductModal(index) {
 
   Utils.q('#modal-title').textContent = product.title || 'Untitled Product';
 
-  // Handle price display for variable products
-  const isVariable = product?.type === 'variable';
-  const hasVariations = Array.isArray(product?.variations) && product.variations.length > 0;
-  
-  if (isVariable && hasVariations) {
-    // Variable product - show price range
-    let minPrice = Infinity;
-    let maxPrice = -Infinity;
-    product.variations.forEach(v => {
-      const p = parseFloat(v.sale_price) || parseFloat(v.regular_price);
-      if (!isNaN(p) && p > 0) {
-        if (p < minPrice) minPrice = p;
-        if (p > maxPrice) maxPrice = p;
-      }
-    });
-    if (minPrice !== Infinity && maxPrice !== -Infinity) {
-      const priceText = (minPrice === maxPrice) 
-        ? `${minPrice.toFixed(2)}`
-        : `${minPrice.toFixed(2)} – ${maxPrice.toFixed(2)}`;
-      Utils.q('#modal-price').textContent = priceText;
-    } else {
-      Utils.q('#modal-price').textContent = '$0.00';
-    }
+  const price = product.sale_price || product.price || product.regular_price;
+  if (product.sale_price && product.regular_price) {
+    Utils.q('#modal-price').innerHTML = `$${price} <del style="color:#999;font-size:18px;margin-left:8px">$${product.regular_price}</del>`;
   } else {
-    // Simple product
-    const price = product.sale_price || product.price || product.regular_price;
-    if (product.sale_price && product.regular_price && product.sale_price !== product.regular_price) {
-      Utils.q('#modal-price').innerHTML = `${price} <del style="color:#999;font-size:18px;margin-left:8px">${product.regular_price}</del>`;
-    } else {
-      Utils.q('#modal-price').textContent = `${price || '0.00'}`;
-    }
+    Utils.q('#modal-price').textContent = `$${price || '0.00'}`;
   }
 
   const stockEl = Utils.q('#modal-stock');
@@ -2095,7 +1956,7 @@ async function openShopModal() {
         <div class="pv-title shop-product-title product-title" style="font-weight:700;font-size:16px;">${title}</div>
         <div class="pv-desc shop-product-description product-description"  style="color:#6b7280;font-size:13px;min-height:32px;">${short || ''}</div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${formatShopPreviewPrice(p, nf)}</div>
+          <div class="pv-price shop-product-price product-price" style="font-weight:700;">${nf.format(price)}</div>
 
           <!-- Snipcart button (attributes read at click-time) -->
           <button

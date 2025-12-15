@@ -1,5 +1,5 @@
 // ============================================
-// RapidWoo Cart Ã¢â‚¬â€ self-contained cart engine
+// RapidWoo Cart ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â self-contained cart engine
 // Works with your existing RapidWoo.Storage and Utils if present
 // Emits: 'rapidwoo:cart:updated' on window when cart changes
 // ============================================
@@ -320,5 +320,5 @@
     Cart.updateCartBadge();
   }
 
-  console.log('âœ… RapidWoo Cart ready');
+  console.log('Ã¢Å“â€¦ RapidWoo Cart ready');
 })();

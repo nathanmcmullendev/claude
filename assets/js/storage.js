@@ -36,142 +36,12 @@ window.RapidWoo.Storage = {
   },
 
   // ============================================
-  // SECURITY: Input Validation & Sanitization (V4)
-  // ============================================
-  // WARNING: This is a POC system. Credentials are stored in localStorage.
-  // Do NOT use for production with real customer data.
-  // See docs/SECURITY.md for details.
-  // ============================================
-
-  /**
-   * Validate products before saving to GitHub
-   * Returns { valid: boolean, errors: string[] }
-   */
-  _validateProductsBeforeSave(products) {
-    const errors = [];
-    
-    if (!Array.isArray(products)) {
-      return { valid: false, errors: ['Products must be an array'] };
-    }
-    
-    products.forEach((product, index) => {
-      // Required fields
-      if (!product.id) errors.push(`Product ${index}: missing id`);
-      if (!product.title) errors.push(`Product ${index}: missing title`);
-      if (!product.slug) errors.push(`Product ${index}: missing slug`);
-      if (!product.sku) errors.push(`Product ${index}: missing sku`);
-      
-      // Price validation
-      const price = parseFloat(product.price);
-      if (isNaN(price) || price < 0) {
-        errors.push(`Product ${index}: invalid price "${product.price}"`);
-      }
-      
-      // Check for script injection in text fields
-      const textFields = ['title', 'description', 'short_description'];
-      textFields.forEach(field => {
-        if (product[field] && /<script/i.test(product[field])) {
-          errors.push(`Product ${index}: script tag detected in ${field}`);
-        }
-      });
-      
-      // URL validation for images
-      if (product.image && !this._isValidUrl(product.image)) {
-        errors.push(`Product ${index}: invalid image URL`);
-      }
-    });
-    
-    return { valid: errors.length === 0, errors };
-  },
-
-  /**
-   * Sanitize products when loading from GitHub
-   * Removes potentially dangerous content
-   */
-  _sanitizeProducts(data) {
-    if (!data || !Array.isArray(data.products)) {
-      return data;
-    }
-    
-    data.products = data.products.map(product => {
-      // Sanitize text fields
-      if (product.title) {
-        product.title = this._escapeHtml(product.title);
-      }
-      
-      if (product.description) {
-        product.description = this._sanitizeHtml(product.description);
-      }
-      
-      if (product.short_description) {
-        product.short_description = this._sanitizeHtml(product.short_description);
-      }
-      
-      return product;
-    });
-    
-    return data;
-  },
-
-  /**
-   * Escape HTML entities (for titles, plain text)
-   */
-  _escapeHtml(str) {
-    if (typeof str !== 'string') return str;
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  },
-
-  /**
-   * Sanitize HTML (allow basic formatting, remove scripts)
-   */
-  _sanitizeHtml(str) {
-    if (typeof str !== 'string') return str;
-    
-    // Remove script tags and their contents
-    let clean = str.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    
-    // Remove on* event handlers
-    clean = clean.replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, '');
-    clean = clean.replace(/\bon\w+\s*=\s*[^\s>]*/gi, '');
-    
-    // Remove javascript: URLs
-    clean = clean.replace(/javascript:/gi, '');
-    
-    // Log if we sanitized anything
-    if (clean !== str) {
-      console.warn('⚠️ Sanitized potentially dangerous content from product');
-    }
-    
-    return clean;
-  },
-
-  /**
-   * Validate URL format
-   */
-  _isValidUrl(str) {
-    if (!str || typeof str !== 'string') return false;
-    
-    // Allow Cloudinary URLs and common image hosts
-    const allowedPatterns = [
-      /^https:\/\/res\.cloudinary\.com\//,
-      /^https:\/\/images\.unsplash\.com\//,
-      /^https:\/\/via\.placeholder\.com\//,
-      /^\/images\//,  // Relative paths
-      /^data:image\//  // Data URLs (base64)
-    ];
-    
-    return allowedPatterns.some(pattern => pattern.test(str));
-  },
-
-  // ============================================
   // INITIALIZATION
   // ============================================
 
   init() {
     this._loadConfig();
-    console.log('✅ RapidWoo Storage initialized (Serverless Mode)');
+    console.log('âœ… RapidWoo Storage initialized (Serverless Mode)');
     return this;
   },
 
@@ -216,7 +86,7 @@ window.RapidWoo.Storage = {
       branch: options.branch || 'main'
     };
     this._saveConfig();
-    console.log('✅ GitHub configured:', options.owner + '/' + options.repo);
+    console.log('âœ… GitHub configured:', options.owner + '/' + options.repo);
     return true;
   },
 
@@ -233,7 +103,7 @@ window.RapidWoo.Storage = {
       uploadPreset: options.uploadPreset
     };
     this._saveConfig();
-    console.log('✅ Cloudinary configured:', options.cloudName);
+    console.log('âœ… Cloudinary configured:', options.cloudName);
     return true;
   },
 
@@ -289,8 +159,8 @@ window.RapidWoo.Storage = {
     // Try cache first
     const cached = this._getCache();
     if (cached && cached.products) {
-      console.log('📦 Loaded from cache:', cached.products.length, 'products');
-      return this._sanitizeProducts(cached);
+      console.log('ðŸ“¦ Loaded from cache:', cached.products.length, 'products');
+      return cached;
     }
 
     // Try GitHub
@@ -298,8 +168,8 @@ window.RapidWoo.Storage = {
       try {
         const data = await this._fetchFromGitHub();
         this._setCache(data);
-        console.log('📦 Loaded from GitHub:', data.products.length, 'products');
-        return this._sanitizeProducts(data);
+        console.log('ðŸ“¦ Loaded from GitHub:', data.products.length, 'products');
+        return data;
       } catch (e) {
         console.warn('GitHub fetch failed:', e.message);
       }
@@ -311,15 +181,15 @@ window.RapidWoo.Storage = {
       if (response.ok) {
         const data = await response.json();
         this._setCache(data);
-        console.log('📦 Loaded from file:', data.products.length, 'products');
-        return this._sanitizeProducts(data);
+        console.log('ðŸ“¦ Loaded from file:', data.products.length, 'products');
+        return data;
       }
     } catch (e) {
       console.warn('Direct fetch failed:', e.message);
     }
 
     // Return empty
-    console.log('📦 No products found, returning empty');
+    console.log('ðŸ“¦ No products found, returning empty');
     return { products: [] };
   },
 
@@ -329,7 +199,7 @@ window.RapidWoo.Storage = {
   saveProducts(data) {
     this._setCache(data);
     this._markDirty(true);
-    console.log('💾 Saved to cache:', data.products.length, 'products (not yet pushed to GitHub)');
+    console.log('ðŸ’¾ Saved to cache:', data.products.length, 'products (not yet pushed to GitHub)');
     return true;
   },
 
@@ -357,16 +227,6 @@ window.RapidWoo.Storage = {
       return { success: false, error: 'Invalid data: products array required' };
     }
 
-
-    // V4: Validate before saving
-    const validation = this._validateProductsBeforeSave(products);
-    if (!validation.valid) {
-      console.error('❌ Validation failed:', validation.errors);
-      return { 
-        success: false, 
-        error: 'Validation failed: ' + validation.errors.join(', ') 
-      };
-    }
     try {
       const gh = this._config.github;
       const content = JSON.stringify({ schema_version: 1, products }, null, 2);
@@ -405,7 +265,7 @@ window.RapidWoo.Storage = {
       if (!response.ok) {
         // If SHA mismatch, clear cache and retry once
         if (result.message && result.message.includes('does not match')) {
-          console.warn('⚠️ SHA mismatch detected, fetching fresh SHA and retrying...');
+          console.warn('âš ï¸ SHA mismatch detected, fetching fresh SHA and retrying...');
           this._lastKnownSha.products = null;
           const freshFile = await this._getGitHubFile(gh.productPath);
           const freshSha = freshFile?.sha || null;
@@ -438,7 +298,7 @@ window.RapidWoo.Storage = {
           
           // Cache the new SHA from retry
           this._lastKnownSha.products = retryResult.content?.sha || null;
-          console.log('✅ Retry succeeded, new SHA cached:', this._lastKnownSha.products?.substring(0, 7));
+          console.log('âœ… Retry succeeded, new SHA cached:', this._lastKnownSha.products?.substring(0, 7));
           
           // Continue with snipcart validation
           await this._saveSnipcartValidation(products);
@@ -459,7 +319,7 @@ window.RapidWoo.Storage = {
 
       // Cache the new SHA for next save (prevents CDN stale SHA issue)
       this._lastKnownSha.products = result.content?.sha || null;
-      console.log('📌 SHA cached for products.json:', this._lastKnownSha.products?.substring(0, 7));
+      console.log('ðŸ“Œ SHA cached for products.json:', this._lastKnownSha.products?.substring(0, 7));
 
       // Also update Snipcart validation file
       await this._saveSnipcartValidation(products);
@@ -468,7 +328,7 @@ window.RapidWoo.Storage = {
       this._setCache({ products });
       this._markDirty(false);
 
-      console.log('✅ Pushed to GitHub:', result.commit?.sha?.substring(0, 7));
+      console.log('âœ… Pushed to GitHub:', result.commit?.sha?.substring(0, 7));
 
       return {
         success: true,
@@ -478,7 +338,7 @@ window.RapidWoo.Storage = {
       };
 
     } catch (error) {
-      console.error('❌ GitHub push failed:', error);
+      console.error('âŒ GitHub push failed:', error);
       return { success: false, error: error.message };
     }
   },
@@ -529,11 +389,11 @@ window.RapidWoo.Storage = {
       if (response.ok) {
         // Cache the new SHA
         this._lastKnownSha.snipcart = result.content?.sha || null;
-        console.log('✅ Snipcart validation updated:', snipcartProducts.length, 'products');
+        console.log('âœ… Snipcart validation updated:', snipcartProducts.length, 'products');
       } else {
         // If SHA mismatch, retry with fresh SHA
         if (result.message && result.message.includes('does not match')) {
-          console.warn('⚠️ Snipcart SHA mismatch, retrying...');
+          console.warn('âš ï¸ Snipcart SHA mismatch, retrying...');
           this._lastKnownSha.snipcart = null;
           const freshFile = await this._getGitHubFile(validationPath);
           const freshSha = freshFile?.sha || null;
@@ -560,16 +420,16 @@ window.RapidWoo.Storage = {
           if (retryResponse.ok) {
             const retryResult = await retryResponse.json();
             this._lastKnownSha.snipcart = retryResult.content?.sha || null;
-            console.log('✅ Snipcart validation retry succeeded');
+            console.log('âœ… Snipcart validation retry succeeded');
           } else {
-            console.warn('⚠️ Snipcart validation retry failed');
+            console.warn('âš ï¸ Snipcart validation retry failed');
           }
         } else {
-          console.warn('⚠️ Snipcart validation update failed:', result.message);
+          console.warn('âš ï¸ Snipcart validation update failed:', result.message);
         }
       }
     } catch (error) {
-      console.warn('⚠️ Could not update Snipcart validation:', error.message);
+      console.warn('âš ï¸ Could not update Snipcart validation:', error.message);
       // Don't fail the main save - validation is secondary
     }
   },
@@ -812,7 +672,7 @@ window.RapidWoo.Storage = {
    */
   clearAll() {
     Object.values(this.KEYS).forEach(key => localStorage.removeItem(key));
-    console.log('🗑️ Cleared all local data');
+    console.log('ðŸ—‘ï¸ Cleared all local data');
   },
 
   /**
@@ -854,4 +714,4 @@ window.RapidWoo.Storage = {
 
 }.init();
 
-console.log('✅ RapidWoo Storage loaded (Serverless Mode)');
+console.log('âœ… RapidWoo Storage loaded (Serverless Mode)');

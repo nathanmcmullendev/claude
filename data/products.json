@@ -21,48 +21,40 @@
       },
       "variations": [
         {
-          "id": 17620000000011,
+          "id": 1762000001001,
           "sku": "TSHIRT-NEON-001-S",
           "attributes": {
             "Size": "S"
           },
-          "regular_price": "24.99",
-          "sale_price": "80.00",
-          "stock_status": "instock",
-          "price_delta": "+60.01"
+          "price_delta": "+0.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000012,
+          "id": 1762000001002,
           "sku": "TSHIRT-NEON-001-M",
           "attributes": {
             "Size": "M"
           },
-          "regular_price": "24.99",
-          "sale_price": "125.00",
-          "stock_status": "instock",
-          "price_delta": "+105.01"
+          "price_delta": "+0.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000013,
+          "id": 1762000001003,
           "sku": "TSHIRT-NEON-001-L",
           "attributes": {
             "Size": "L"
           },
-          "regular_price": "27.99",
-          "sale_price": "265.00",
-          "stock_status": "instock",
-          "price_delta": "+245.01"
+          "price_delta": "+3.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000014,
+          "id": 1762000001004,
           "sku": "TSHIRT-NEON-001-XL",
           "attributes": {
             "Size": "XL"
           },
-          "regular_price": "29.99",
-          "sale_price": "398.00",
-          "stock_status": "onbackorder",
-          "price_delta": "+378.01"
+          "price_delta": "+5.00",
+          "stock_status": "onbackorder"
         }
       ],
       "categories": [
@@ -75,7 +67,7 @@
         "unisex",
         "graphic"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765771021/rapidwoo/products/apdw0tsnse3fe7ubiysr.webp",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
       "images": [
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
@@ -101,9 +93,7 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
-      ],
-      "featured": false,
-      "show_additional_images": true
+      ]
     },
     {
       "id": 1762000000002,
@@ -151,8 +141,7 @@
       },
       "shipping_class": "small-package",
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000003,
@@ -200,8 +189,7 @@
       "shipping_class": "apparel",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000004,
@@ -249,8 +237,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000005,
@@ -297,8 +284,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000006,
@@ -346,8 +332,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000007,
@@ -395,8 +380,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1763000000200,
@@ -480,8 +464,7 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
         }
-      ],
-      "show_additional_images": true
+      ]
     },
     {
       "id": 1762000000009,
@@ -529,8 +512,7 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000010,
@@ -578,8 +560,7 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     }
   ]
 }

@@ -80,7 +80,7 @@
                 "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
             ],
             "extra_images_enabled": true,
-            "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes Sâ€“XL.</p>",
+            "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes S-XL.</p>",
             "short_description": "Bold neon graphic tee.",
             "manage_stock": true,
             "stock_quantity": 60,
@@ -184,7 +184,7 @@
                 "https://rapidwoo.com/demo/store-1/product-images/tshirt-3.jpg"
             ],
             "extra_images_enabled": true,
-            "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes Sâ€“XL.</p>",
+            "description": "<p>Soft 100% cotton tee with a bold neon wave print. Unisex fit. Sizes S-XL.</p>",
             "short_description": "Bold neon graphic tee.",
             "manage_stock": true,
             "stock_quantity": 60,
@@ -259,7 +259,7 @@
         },
         {
             "id": 1762000000003,
-            "title": "Pullover Hoodie â€“ Minimal Logo",
+            "title": "Pullover Hoodie - Minimal Logo",
             "slug": "pullover-hoodie-minimal-logo",
             "sku": "HOOD-MIN-001",
             "stock_status": "instock",
@@ -289,7 +289,7 @@
                 "https://rapidwoo.com/demo/store-1/product-images/hoodie-3.jpg"
             ],
             "extra_images_enabled": true,
-            "description": "<p>Mid-weight fleece hoodie with a minimalist chest logo. Sizes XSâ€“XXL.</p>",
+            "description": "<p>Mid-weight fleece hoodie with a minimalist chest logo. Sizes XS-XXL.</p>",
             "short_description": "Cozy fleece hoodie.",
             "type": "simple",
             "manage_stock": true,
@@ -308,7 +308,7 @@
         },
         {
             "id": 1762000000004,
-            "title": "Stainless Travel Mug â€“ 16oz",
+            "title": "Stainless Travel Mug - 16oz",
             "slug": "stainless-travel-mug-16oz",
             "sku": "MUG-TRAVEL-016",
             "stock_status": "instock",
@@ -357,7 +357,7 @@
         },
         {
             "id": 1762000000005,
-            "title": "Canvas Tote â€“ Market Day",
+            "title": "Canvas Tote - Market Day",
             "slug": "canvas-tote-market-day",
             "sku": "TOTE-CANVAS-001",
             "stock_status": "instock",
@@ -405,7 +405,7 @@
         },
         {
             "id": 1762000000006,
-            "title": "Phone Case â€“ Clear Matte",
+            "title": "Phone Case - Clear Matte",
             "slug": "phone-case-clear-matte",
             "sku": "CASE-CLR-001",
             "stock_status": "instock",
@@ -454,7 +454,7 @@
         },
         {
             "id": 1762000000007,
-            "title": "Desk Mat â€“ Extended 35\"",
+            "title": "Desk Mat - Extended 35\"",
             "slug": "desk-mat-extended-35",
             "sku": "DSK-MAT-035",
             "stock_status": "instock",
@@ -503,7 +503,7 @@
         },
         {
             "id": 1763000000200,
-            "title": "Poster â€“ Minimal Mountains",
+            "title": "Poster - Minimal Mountains",
             "slug": "poster-minimal-mountains",
             "sku": "POST-MIN-0001",
             "type": "variable",
@@ -513,9 +513,9 @@
             "price": "21.99",
             "attributes": {
                 "Size": [
-                    "16Ã—20 Print",
-                    "24Ã—36 Print",
-                    "24Ã—36 Canvas"
+                    "16Ã-20 Print",
+                    "24Ã-36 Print",
+                    "24Ã-36 Canvas"
                 ]
             },
             "variations": [
@@ -523,7 +523,7 @@
                     "id": 176300002001,
                     "sku": "POST-MIN-1620-PRINT",
                     "attributes": {
-                        "Size": "16Ã—20 Print"
+                        "Size": "16Ã-20 Print"
                     },
                     "price_delta": "+0.00",
                     "stock_status": "instock"
@@ -532,7 +532,7 @@
                     "id": 176300002002,
                     "sku": "POST-MIN-2436-PRINT",
                     "attributes": {
-                        "Size": "24Ã—36 Print"
+                        "Size": "24Ã-36 Print"
                     },
                     "price_delta": "+6.00",
                     "stock_status": "instock"
@@ -541,7 +541,7 @@
                     "id": 176300002004,
                     "sku": "POST-MIN-2436-CANVAS",
                     "attributes": {
-                        "Size": "24Ã—36 Canvas"
+                        "Size": "24Ã-36 Canvas"
                     },
                     "price_delta": "+24.00",
                     "stock_status": "instock"
@@ -588,7 +588,7 @@
         },
         {
             "id": 1762000000009,
-            "title": "Sticker Pack â€“ Tech Icons (10 pcs)",
+            "title": "Sticker Pack - Tech Icons (10 pcs)",
             "slug": "sticker-pack-tech-icons-10",
             "sku": "STICK-TECH-010",
             "stock_status": "instock",
@@ -637,7 +637,7 @@
         },
         {
             "id": 1762000000010,
-            "title": "Smartwatch Band â€“ Sport Silicone",
+            "title": "Smartwatch Band - Sport Silicone",
             "slug": "smartwatch-band-sport-silicone",
             "sku": "WATCH-BAND-001",
             "stock_status": "instock",

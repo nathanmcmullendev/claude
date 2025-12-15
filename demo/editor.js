@@ -743,14 +743,25 @@ function getTableDisplayPrice(product) {
   const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
   
   if (isVariable && hasVariations) {
-    // Find lowest variation price
-    let lowestPrice = Infinity;
+    // Find price range across all variations
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+    
     product.variations.forEach(v => {
-      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price) || Infinity;
-      if (price < lowestPrice) lowestPrice = price;
+      // Use sale price if available, otherwise regular price
+      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+      if (!isNaN(price) && price > 0) {
+        if (price < minPrice) minPrice = price;
+        if (price > maxPrice) maxPrice = price;
+      }
     });
-    if (lowestPrice !== Infinity) {
-      return 'From $' + lowestPrice.toFixed(2);
+    
+    if (minPrice !== Infinity && maxPrice !== -Infinity) {
+      // Show range if different, otherwise single price
+      if (minPrice === maxPrice) {
+        return '$' + minPrice.toFixed(2);
+      }
+      return '$' + minPrice.toFixed(2) + ' - $' + maxPrice.toFixed(2);
     }
   }
   

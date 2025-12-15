@@ -188,6 +188,57 @@
     return null;
   }
 
+  // Get price display info for variable products (returns {min, max, isRange})
+  function getPriceRange(p) {
+    const isVariable = p?.type === 'variable';
+    const hasVariations = Array.isArray(p?.variations) && p.variations.length > 0;
+    
+    if (isVariable && hasVariations) {
+      let minPrice = Infinity;
+      let maxPrice = -Infinity;
+      
+      p.variations.forEach(v => {
+        const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+        if (!isNaN(price) && price > 0) {
+          if (price < minPrice) minPrice = price;
+          if (price > maxPrice) maxPrice = price;
+        }
+      });
+      
+      if (minPrice !== Infinity && maxPrice !== -Infinity) {
+        return { min: minPrice, max: maxPrice, isRange: minPrice !== maxPrice };
+      }
+    }
+    
+    // Simple product - no range
+    const price = priceOf(p);
+    return { min: price, max: price, isRange: false };
+  }
+
+  // Format price display (handles range for variable products)
+  function formatPriceDisplay(p, nf) {
+    const range = getPriceRange(p);
+    const isVariable = p?.type === 'variable';
+    const hasVariations = Array.isArray(p?.variations) && p.variations.length > 0;
+    
+    if (isVariable && hasVariations && range.isRange) {
+      // Variable product with price range
+      return nf.format(range.min) + ' – ' + nf.format(range.max);
+    } else if (isVariable && hasVariations) {
+      // Variable product, all same price
+      return nf.format(range.min);
+    } else {
+      // Simple product - show sale/regular price
+      const hasSale = p.sale_price && p.regular_price &&
+                      String(p.sale_price).trim() !== String(p.regular_price).trim();
+      const effectivePrice = priceOf(p);
+      if (hasSale) {
+        return '<del>' + nf.format(Number(p.regular_price) || 0) + '</del> ' + nf.format(effectivePrice ?? 0);
+      }
+      return nf.format(effectivePrice ?? 0);
+    }
+  }
+
   function productImage(p) {
     const cand = p?.image || (p?.images && p.images[0] && (p.images[0].src || p.images[0])) || '';
     return cand || '';
@@ -232,7 +283,8 @@
     card.className = 'product-card';
 
     const effectivePrice = priceOf(p);
-    const hasSale = p.sale_price && p.regular_price &&
+    const isVariable = p?.type === 'variable' && Array.isArray(p?.variations) && p.variations.length > 0;
+    const hasSale = !isVariable && p.sale_price && p.regular_price &&
                     String(p.sale_price).trim() !== String(p.regular_price).trim();
     let description = cleanText(p.short_description || p.description || '');
     if (description.length > 120) description = description.slice(0, 120) + '...';
@@ -263,8 +315,7 @@
           <div class="product-footer">
             <div>
               <div class="product-price">
-                ${hasSale ? `<del>${nf.format(Number(p.regular_price) || 0)}</del>` : ''}
-                <span>${nf.format(effectivePrice ?? 0)}</span>
+                <span>${formatPriceDisplay(p, nf)}</span>
               </div>
               <span class="stock-badge ${stock}">
                 ${stock === 'instock' ? 'In Stock' : stock === 'outofstock' ? 'Out of Stock' : 'On Backorder'}

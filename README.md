@@ -1,73 +1,38 @@
 # RapidWoo
 
-**A serverless e-commerce platform running entirely on GitHub Pages.**
+**A serverless e-commerce platform with a browser-based product editor — no backend required.**
 
-> **Live Demo:** [rapidwoo.com](https://rapidwoo.com)  
-> **Current Version:** v3.1  
-> **Test Card:** `4242 4242 4242 4242`
+> 🔗 **[Live Demo](https://rapidwoo.com)** · **[Editor](https://rapidwoo.com/demo/)** · Test Card: `4242 4242 4242 4242`
 
----
-
-## Features
-
-### ✅ What's Included
-
-| Feature | Description |
-|---------|-------------|
-| **Product Editor** | Visual admin interface for managing products |
-| **Simple & Variable Products** | Single items or products with variations (sizes, colors) |
-| **Price Range Display** | Variable products show `$19.99 – $29.99` |
-| **Snipcart Checkout** | Full shopping cart and payment processing |
-| **Cloudinary Images** | CDN-hosted product images |
-| **GitHub Storage** | Products saved to repository via API |
-| **Zero Monthly Cost** | GitHub Pages + Snipcart test mode = free |
-
-### ⚠️ Current Limitations
-
-| Limitation | Reason |
-|------------|--------|
-| Not production-ready | GitHub token stored in localStorage |
-| Single editor only | No multi-user conflict resolution |
-| No customer accounts | Snipcart handles all customer data |
-| Manual deployment | ~60 second wait after saves |
+![RapidWoo Editor](https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765795777/rapidwoo/products/qcxy2q7u470du17ifurk.png)
 
 ---
 
-## Quick Start
+## Why This Exists
 
-### 1. Fork & Enable GitHub Pages
+Most static e-commerce solutions rely on external dashboards or headless CMSs. I wanted to explore whether a **full product management workflow could live entirely in the browser** while persisting safely to GitHub — no server, no database, no monthly hosting costs.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/rapidwoo.git
-```
+The result is a working proof-of-concept that demonstrates:
+- Client-side data persistence using GitHub's REST API
+- Real checkout integration (Snipcart) with price validation
+- CDN image uploads from the browser (Cloudinary)
+- A complete admin interface built in vanilla JavaScript
 
-**Settings → Pages → Source: GitHub Actions**
+---
 
-### 2. Create GitHub Token
+## Key Engineering Challenges
 
-1. **Settings → Developer settings → Personal access tokens → Fine-grained tokens**
-2. Select your repo
-3. Grant: **Contents: Read and write**
-4. Copy token
+These are the interesting problems I solved:
 
-### 3. Set Up Cloudinary (Free)
-
-1. Sign up at [cloudinary.com](https://cloudinary.com)
-2. Create unsigned upload preset
-3. Note your Cloud name
-
-### 4. Set Up Snipcart (Free Test Mode)
-
-1. Sign up at [snipcart.com](https://snipcart.com)
-2. Get public API key from Dashboard
-3. Update API key in HTML files
-
-### 5. Configure Editor
-
-1. Visit `https://YOUR_SITE/demo/`
-2. Click **⚙️ Settings**
-3. Enter credentials
-4. **Save & Test Connection**
+| Challenge | Solution |
+|-----------|----------|
+| **Client-side persistence** | GitHub Contents API for reads/writes with SHA-based conflict detection |
+| **Idempotent variation generation** | Prevent duplicate SKUs when clicking "Generate" multiple times |
+| **Global SKU uniqueness** | Build index from all products before generating new SKUs |
+| **Schema evolution without migrations** | Runtime normalization layer that handles legacy + new formats |
+| **Optimistic UI with eventual consistency** | localStorage for instant feedback, GitHub API for permanent storage |
+| **Price validation for checkout security** | Auto-generated validation file synced with product data |
+| **Storing credentials client-side** | Documented tradeoffs; designed for dedicated bot accounts with minimal permissions |
 
 ---
 
@@ -75,241 +40,139 @@ git clone https://github.com/YOUR_USERNAME/rapidwoo.git
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   GitHub Pages  │────▶│   Static HTML   │────▶│   Snipcart      │
-│   (Hosting)     │     │   + JavaScript  │     │   (Checkout)    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-        │                       │                       │
-        ▼                       ▼                       ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   GitHub API    │     │   Cloudinary    │     │   Payment       │
-│   (Data Store)  │     │   (Images)      │     │   Processing    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
+│  GitHub Pages   │────▶│  Static HTML    │────▶│   Snipcart      │
+│  (Free Hosting) │     │  + Vanilla JS   │     │   (Checkout)    │
+└────────┬────────┘     └────────┬────────┘     └─────────────────┘
+         │                       │
+         ▼                       ▼
+┌─────────────────┐     ┌─────────────────┐
+│  GitHub API     │     │   Cloudinary    │
+│  (Data Store)   │     │   (Image CDN)   │
+└─────────────────┘     └─────────────────┘
 ```
 
-### Data Flow
+**Data Flow:**
+```
+User edits → localStorage (instant) → GitHub API (permanent) → GitHub Actions → Live site (~60s)
+```
 
-```
-Editor → localStorage (instant) → GitHub API (permanent)
-                                        ↓
-                              GitHub Actions deploys
-                                        ↓
-                              Live site updated (~60s)
-```
+This architecture eliminates:
+- Monthly hosting costs
+- Database management
+- Server maintenance
+- DevOps complexity
 
 ---
 
-## File Structure
+## What It Does
 
-```
-rapidwoo/
-├── index.html              # Landing page
-├── shop.html               # Product catalog
-├── product.html            # Product detail page
-├── snipcart-products.json  # Price validation (auto-generated)
-│
-├── demo/
-│   ├── index.html          # Editor interface
-│   └── editor.js           # Editor logic (~2300 lines)
-│
-├── data/
-│   ├── products.json       # Live product data
-│   └── dummy-products.json # Demo data
-│
-├── assets/
-│   ├── js/                 # Core modules
-│   └── css/                # Stylesheets
-│
-├── VERSION.md              # Current version documentation
-├── ROADMAP.md              # Development roadmap
-├── METHODOLOGY.md          # Development approach
-└── SESSION-START.md        # Session context guide
-```
+### Product Editor
+- Visual interface for creating/editing products
+- Simple products (single price) and variable products (size/color variations)
+- Drag-and-drop image uploads to Cloudinary
+- Real-time preview
+- One-click save to GitHub
 
----
-
-## Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [VERSION.md](VERSION.md) | Current state, schema, features |
-| [ROADMAP.md](ROADMAP.md) | Short-term (v3.2-3.5) and long-term (v4.0-6.0) plans |
-| [METHODOLOGY.md](METHODOLOGY.md) | Precision development approach |
-| [SESSION-START.md](SESSION-START.md) | How to start development sessions |
-
----
-
-## Pages
-
-| Page | URL | Description |
-|------|-----|-------------|
-| Landing | `/` | Hero + featured products |
-| Shop | `/shop.html` | Product catalog grid |
-| Product | `/product.html?product=slug` | Single product detail |
-| Editor | `/demo/` | Admin product editor |
-
----
-
-## Product Types
-
-### Simple Products
-Single item, single price.
-
-```
-Price: $24.99
-[Add to Cart]
-```
+### Storefront
+- Responsive product catalog
+- Dynamic price ranges for variable products (`$19.99 – $29.99`)
+- Working checkout with Snipcart integration
+- Auto-generated price validation to prevent tampering
 
 ### Variable Products
-Multiple variations with individual prices.
-
-```
-Price: $19.99 – $29.99
-Size: [S ▼]
-[Add to Cart]
-```
-
-When customer selects a size, price updates to that variation's price.
-
----
-
-## Snipcart Integration
-
-### Price Validation
-
-Products are validated against `snipcart-products.json` to prevent tampering:
-
-```json
-{
-  "id": "graphic-tshirt",
-  "price": 19.99,
-  "customFields": [
-    { "name": "Size", "options": "S|M|L[+3.00]|XL[+5.00]" }
-  ]
-}
-```
-
-This file auto-generates when you save products.
-
-### Test Checkout
-
-1. Add products to cart
-2. Use card: `4242 4242 4242 4242`
-3. Expiry: Any future date
-4. CVC: Any 3 digits
-
----
-
-## Security Notes
-
-| Risk | Mitigation |
-|------|------------|
-| GitHub token in localStorage | Use dedicated bot account with minimal permissions |
-| Unsigned Cloudinary uploads | Restrict formats and file size in Cloudinary settings |
-| HTML in descriptions | Sanitize with DOMPurify if accepting user content |
-| Single editor | Designate one editor or implement locking |
-
-**For production:** Use GitHub OAuth or serverless proxy for token storage.
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| "GitHub not configured" | Enter credentials in Settings |
-| Images not uploading | Check Cloudinary preset is unsigned |
-| Changes not appearing | Wait 60s, hard refresh (`Ctrl+Shift+R`) |
-| Price mismatch error | Re-save products to regenerate validation |
-| Page not loading | Check browser console for JS errors |
-
-### Debug Commands
-
-```javascript
-// Check configuration
-RapidWoo.Storage.isGitHubConfigured()
-RapidWoo.Storage.isCloudinaryConfigured()
-
-// View products
-console.log(App.products)
-
-// Clear cache
-localStorage.clear(); location.reload();
-```
-
----
-
-## Version History
-
-| Version | Date | Highlights |
-|---------|------|------------|
-| **v3.1** | Dec 2025 | Price range display, editor UX improvements |
-| v3.0 | Dec 2025 | Stable baseline, full editor functionality |
-| v4.0 | Deprecated | Had encoding issues, rolled back |
-
-See [VERSION.md](VERSION.md) for complete details.
-
----
-
-## Roadmap
-
-### Short-Term (v3.2 – v3.5)
-- Editor UX polish (spinners, toasts, confirmations)
-- Image management improvements
-- Variation enhancements
-- Data validation
-
-### Long-Term (v4.0 – v6.0)
-- Schema migration (prices as cents)
-- Security hardening (remove PAT from localStorage)
-- Multi-user support
-- Order management integration
-
-See [ROADMAP.md](ROADMAP.md) for complete details.
+- Generate variations from attribute options (S, M, L, XL)
+- Auto-generate unique SKUs across all products
+- Per-variation pricing and stock status
+- Inherited base prices with override capability
 
 ---
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Hosting | GitHub Pages |
-| Data Storage | GitHub API |
-| Images | Cloudinary CDN |
-| Checkout | Snipcart v3.4.1 |
-| Frontend | Vanilla JS (ES6+) |
-| Styling | Custom CSS |
+| Layer | Technology | Why |
+|-------|------------|-----|
+| Hosting | GitHub Pages | Free, reliable, automatic SSL |
+| Data | GitHub REST API | Version control built-in, no database needed |
+| Images | Cloudinary | CDN, automatic optimization, free tier |
+| Checkout | Snipcart | Handles payments, cart, validation |
+| Frontend | Vanilla JS (ES6+) | No build step, no dependencies, fast |
+| Styling | Custom CSS | Full control, no framework bloat |
 
 ---
 
-## Contributing
+## Code Highlights
 
-1. Read [METHODOLOGY.md](METHODOLOGY.md) for development approach
-2. Check [ROADMAP.md](ROADMAP.md) for next version tasks
-3. Follow precision development process:
-   - State goal clearly
-   - Identify all affected files
-   - Map specific code changes
-   - Execute one change at a time
-   - Verify each step
+**Editor:** `demo/editor.js` (~2500 lines)
+- Complete product CRUD interface
+- Variation management with idempotent generation
+- Image upload with drag-and-drop
+- Settings panel for credentials
+
+**Storage Layer:** `assets/js/storage.js`
+- GitHub API wrapper with error handling
+- SHA tracking for updates
+- Dirty state management
+
+**Product Schema:** Normalized at runtime
+- Handles legacy and current formats
+- Automatic `gallery[]` ↔ `images[]` sync
+- Price validation file generation
+
+---
+
+## Tradeoffs & Decisions
+
+| Decision | Tradeoff | Rationale |
+|----------|----------|-----------|
+| GitHub token in localStorage | Security risk | POC scope; documented mitigation path |
+| No build step | No TypeScript, no bundling | Faster iteration, simpler debugging |
+| Vanilla JS over React | More verbose | Zero dependencies, no framework lock-in |
+| Single editor assumption | No collaboration | Avoids complex conflict resolution |
+| 60-second deploy delay | Not instant | Acceptable for low-frequency edits |
+
+---
+
+## Running Locally
+
+```bash
+git clone https://github.com/nathanmcmullendev/claude.git
+cd claude
+# Serve with any static server
+npx serve .
+```
+
+Then visit `http://localhost:3000/demo/` and configure:
+1. GitHub token (fine-grained, Contents: Read/Write)
+2. Cloudinary cloud name + unsigned preset
+3. Save & test connection
+
+---
+
+## What I Learned
+
+1. **GitHub API is surprisingly capable as a data store** — version history, atomic updates, and free hosting make it viable for low-write applications.
+
+2. **Idempotency matters even in simple UIs** — users click buttons multiple times. If your generators don't check for existing data, you get duplicates.
+
+3. **Schema evolution is hard without a backend** — I ended up building a normalization layer that handles multiple data formats at runtime.
+
+4. **Client-side security is about tradeoffs, not perfection** — documenting the risks and mitigation paths is more valuable than pretending they don't exist.
+
+---
+
+## Status
+
+**Current Version:** 3.3  
+**Status:** Proof of Concept (functional, not production-ready)
+
+This project demonstrates the architecture and solves the interesting engineering problems. For production use, the token storage would need to move server-side (OAuth flow or serverless proxy).
 
 ---
 
 ## License
 
-MIT License
+MIT
 
 ---
 
-## Credits
-
-Built with:
-- [Snipcart](https://snipcart.com) — Checkout & payments
-- [Cloudinary](https://cloudinary.com) — Image CDN
-- [GitHub Pages](https://pages.github.com) — Hosting
-- [GitHub API](https://docs.github.com/en/rest) — Data persistence
-
----
-
-**Version:** 3.1  
-**Status:** Proof of Concept  
-**Works:** Yes ✔
+*Built by [Nathan McMullen](https://github.com/nathanmcmullendev)*

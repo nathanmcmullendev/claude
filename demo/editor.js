@@ -1569,7 +1569,7 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       }
     });
 
-    // Generate variations from Attribute Options
+    // Generate variations from Attribute Options (IDEMPOTENT - doesn't duplicate existing)
     Utils.q('#btn-generate-vars')?.addEventListener('click', () => {
       const attrName2 = (Utils.q('#fld-attr-name')?.value || 'Size').trim();
       const opts = (Utils.q('#fld-attr-options')?.value || '')
@@ -1581,10 +1581,20 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
       const wrap = Utils.q('#var-wrap');
       if (!tbody) return;
 
-      tbody.innerHTML = '';
       if (wrap) wrap.style.display = (Utils.q('#fld-type')?.value === 'variable') ? '' : 'none';
 
+      // Get existing variations from the table
+      const existingOpts = new Set();
+      Utils.qa('tr', tbody).forEach(tr => {
+        const size = tr.querySelector('.var-size')?.value?.trim();
+        if (size) existingOpts.add(size);
+      });
+
+      // Only add variations that don't already exist
+      let added = 0;
       opts.forEach((opt) => {
+        if (existingOpts.has(opt)) return; // Skip existing
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="padding:6px 8px;"><input class="var-size" type="text" value="${opt}"></td>
@@ -1601,32 +1611,66 @@ if (clearBtn) clearBtn.disabled = !(product.image && product.image.trim());
           <td style="padding:6px 8px;"><button class="var-remove button">✕</button></td>
         `;
         tbody.appendChild(tr);
+        tr.querySelector('.var-remove')?.addEventListener('click', () => tr.remove());
+        added++;
       });
 
-      Utils.qa('.var-remove', tbody).forEach(btn=>{
-        btn.addEventListener('click', () => btn.closest('tr')?.remove());
-      });
+      if (added > 0) {
+        Utils.showToast(`Added ${added} new variation${added > 1 ? 's' : ''}`, 'success');
+      } else {
+        Utils.showToast('All variations already exist', 'info');
+      }
     });
 
-    // Generate SKUs (unique): baseSKU-size, de-dupe with -2, -3, …
+    // Generate SKUs (globally unique across ALL products)
     Utils.q('#btn-generate-skus')?.addEventListener('click', () => {
       const base = (Utils.q('#fld-sku')?.value || '').trim() || 'SKU';
       const tbody = Utils.q('#var-tbody');
       if (!tbody) return;
 
+      // Build global SKU index from ALL products (not just current)
       const used = new Set();
+      (App.products || []).forEach(p => {
+        if (p.sku) used.add(String(p.sku).trim().toUpperCase());
+        if (Array.isArray(p.variations)) {
+          p.variations.forEach(v => {
+            if (v.sku) used.add(String(v.sku).trim().toUpperCase());
+          });
+        }
+      });
+
+      // Also add SKUs already in the current variation table
       Utils.qa('tr', tbody).forEach(tr => {
+        const sku = tr.querySelector('.var-sku')?.value?.trim();
+        if (sku) used.add(sku.toUpperCase());
+      });
+
+      let generated = 0;
+      Utils.qa('tr', tbody).forEach(tr => {
+        const skuEl = tr.querySelector('.var-sku');
+        if (skuEl && skuEl.value.trim()) return; // Don't overwrite existing
+
         const size = tr.querySelector('.var-size')?.value?.trim() || '';
         if (!size) return;
-        let candidate = `${base}-${size}`;
+
+        // Slugify the size for SKU
+        const sizeSlug = size.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        let candidate = `${base}-${sizeSlug}`.toUpperCase();
         let n = 2;
         while (used.has(candidate)) {
-          candidate = `${base}-${size}-${n++}`;
+          candidate = `${base}-${sizeSlug}-${String(n).padStart(2, '0')}`.toUpperCase();
+          n++;
         }
         used.add(candidate);
-        const skuEl = tr.querySelector('.var-sku');
-        if (skuEl && !skuEl.value) skuEl.value = candidate;
+        skuEl.value = candidate;
+        generated++;
       });
+
+      if (generated > 0) {
+        Utils.showToast(`Generated ${generated} SKU${generated > 1 ? 's' : ''}`, 'success');
+      } else {
+        Utils.showToast('All variations already have SKUs', 'info');
+      }
     });
 
     // Toggle table when switching type

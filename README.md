@@ -1,6 +1,6 @@
 # RapidWoo
 
-**A proof-of-concept serverless e-commerce system running entirely on GitHub Pages.**
+**A proof-of-concept serverless product catalog with Snipcart checkout, running entirely on GitHub Pages.**
 
 > **Live Demo:** [rapidwoo.com](https://rapidwoo.com)
 
@@ -60,6 +60,22 @@ Go to **Settings → Pages → Source: GitHub Actions**
 2. Click **⚙️ Settings**
 3. Enter GitHub token, repo info, Cloudinary credentials
 4. **Save & Test Connection**
+
+---
+
+## ⚠️ GitHub Pages Deployment Note
+
+If deploying as a **project site** (e.g., `username.github.io/rapidwoo/`), all fetch calls must use relative paths:
+
+```javascript
+// ✅ Correct (works in subdirectory)
+fetch('./data/products.json')
+
+// ❌ Wrong (404 on project sites)  
+fetch('/data/products.json')
+```
+
+The live demo at `rapidwoo.com` uses a custom domain (root path), so this doesn't apply there.
 
 ---
 
@@ -185,6 +201,14 @@ This POC stores your GitHub Personal Access Token in browser `localStorage`. Thi
 - Implement a serverless proxy (Cloudflare Worker) for token storage
 - Use GitHub OAuth App instead of PAT
 
+### ⚠️ HTML in Descriptions
+
+Product descriptions are rendered as HTML. If accepting user-generated content, sanitize input:
+
+```javascript
+const safe = DOMPurify.sanitize(product.description);
+```
+
 ### ⚠️ Cloudinary Unsigned Uploads
 
 Unsigned presets allow anyone with the preset name to upload. Restrict in Cloudinary settings:
@@ -283,7 +307,7 @@ await window.saveToGitHubManual()
 - [ ] Schema validation before save
 - [ ] Image alt text and metadata
 - [ ] Inventory sync with Snipcart
-- [ ] Order webhooks → GitHub Issues
+- [ ] Order webhooks → serverless endpoint (Cloudflare Worker) → GitHub Issues
 
 ---
 
@@ -305,4 +329,4 @@ Built with:
 
 **Status:** Proof of Concept  
 **Production-ready:** No  
-**But it works:** Yes ✓
+**But it works:** Yes ✔

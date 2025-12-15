@@ -36,6 +36,136 @@ window.RapidWoo.Storage = {
   },
 
   // ============================================
+  // SECURITY: Input Validation & Sanitization (V4)
+  // ============================================
+  // WARNING: This is a POC system. Credentials are stored in localStorage.
+  // Do NOT use for production with real customer data.
+  // See docs/SECURITY.md for details.
+  // ============================================
+
+  /**
+   * Validate products before saving to GitHub
+   * Returns { valid: boolean, errors: string[] }
+   */
+  _validateProductsBeforeSave(products) {
+    const errors = [];
+    
+    if (!Array.isArray(products)) {
+      return { valid: false, errors: ['Products must be an array'] };
+    }
+    
+    products.forEach((product, index) => {
+      // Required fields
+      if (!product.id) errors.push(`Product ${index}: missing id`);
+      if (!product.title) errors.push(`Product ${index}: missing title`);
+      if (!product.slug) errors.push(`Product ${index}: missing slug`);
+      if (!product.sku) errors.push(`Product ${index}: missing sku`);
+      
+      // Price validation
+      const price = parseFloat(product.price);
+      if (isNaN(price) || price < 0) {
+        errors.push(`Product ${index}: invalid price "${product.price}"`);
+      }
+      
+      // Check for script injection in text fields
+      const textFields = ['title', 'description', 'short_description'];
+      textFields.forEach(field => {
+        if (product[field] && /<script/i.test(product[field])) {
+          errors.push(`Product ${index}: script tag detected in ${field}`);
+        }
+      });
+      
+      // URL validation for images
+      if (product.image && !this._isValidUrl(product.image)) {
+        errors.push(`Product ${index}: invalid image URL`);
+      }
+    });
+    
+    return { valid: errors.length === 0, errors };
+  },
+
+  /**
+   * Sanitize products when loading from GitHub
+   * Removes potentially dangerous content
+   */
+  _sanitizeProducts(data) {
+    if (!data || !Array.isArray(data.products)) {
+      return data;
+    }
+    
+    data.products = data.products.map(product => {
+      // Sanitize text fields
+      if (product.title) {
+        product.title = this._escapeHtml(product.title);
+      }
+      
+      if (product.description) {
+        product.description = this._sanitizeHtml(product.description);
+      }
+      
+      if (product.short_description) {
+        product.short_description = this._sanitizeHtml(product.short_description);
+      }
+      
+      return product;
+    });
+    
+    return data;
+  },
+
+  /**
+   * Escape HTML entities (for titles, plain text)
+   */
+  _escapeHtml(str) {
+    if (typeof str !== 'string') return str;
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  },
+
+  /**
+   * Sanitize HTML (allow basic formatting, remove scripts)
+   */
+  _sanitizeHtml(str) {
+    if (typeof str !== 'string') return str;
+    
+    // Remove script tags and their contents
+    let clean = str.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    
+    // Remove on* event handlers
+    clean = clean.replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, '');
+    clean = clean.replace(/\bon\w+\s*=\s*[^\s>]*/gi, '');
+    
+    // Remove javascript: URLs
+    clean = clean.replace(/javascript:/gi, '');
+    
+    // Log if we sanitized anything
+    if (clean !== str) {
+      console.warn('⚠️ Sanitized potentially dangerous content from product');
+    }
+    
+    return clean;
+  },
+
+  /**
+   * Validate URL format
+   */
+  _isValidUrl(str) {
+    if (!str || typeof str !== 'string') return false;
+    
+    // Allow Cloudinary URLs and common image hosts
+    const allowedPatterns = [
+      /^https:\/\/res\.cloudinary\.com\//,
+      /^https:\/\/images\.unsplash\.com\//,
+      /^https:\/\/via\.placeholder\.com\//,
+      /^\/images\//,  // Relative paths
+      /^data:image\//  // Data URLs (base64)
+    ];
+    
+    return allowedPatterns.some(pattern => pattern.test(str));
+  },
+
+  // ============================================
   // INITIALIZATION
   // ============================================
 
@@ -160,7 +290,7 @@ window.RapidWoo.Storage = {
     const cached = this._getCache();
     if (cached && cached.products) {
       console.log('📦 Loaded from cache:', cached.products.length, 'products');
-      return cached;
+      return this._sanitizeProducts(cached);
     }
 
     // Try GitHub
@@ -169,7 +299,7 @@ window.RapidWoo.Storage = {
         const data = await this._fetchFromGitHub();
         this._setCache(data);
         console.log('📦 Loaded from GitHub:', data.products.length, 'products');
-        return data;
+        return this._sanitizeProducts(data);
       } catch (e) {
         console.warn('GitHub fetch failed:', e.message);
       }
@@ -182,7 +312,7 @@ window.RapidWoo.Storage = {
         const data = await response.json();
         this._setCache(data);
         console.log('📦 Loaded from file:', data.products.length, 'products');
-        return data;
+        return this._sanitizeProducts(data);
       }
     } catch (e) {
       console.warn('Direct fetch failed:', e.message);
@@ -227,6 +357,16 @@ window.RapidWoo.Storage = {
       return { success: false, error: 'Invalid data: products array required' };
     }
 
+
+    // V4: Validate before saving
+    const validation = this._validateProductsBeforeSave(products);
+    if (!validation.valid) {
+      console.error('❌ Validation failed:', validation.errors);
+      return { 
+        success: false, 
+        error: 'Validation failed: ' + validation.errors.join(', ') 
+      };
+    }
     try {
       const gh = this._config.github;
       const content = JSON.stringify({ schema_version: 1, products }, null, 2);

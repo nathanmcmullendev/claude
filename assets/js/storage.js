@@ -116,6 +116,13 @@ window.RapidWoo.Storage = {
   },
 
   /**
+   * Get GitHub config for save operations
+   */
+  getGitHubConfig() {
+    return this._config.github;
+  },
+
+  /**
    * Check if Cloudinary is configured
    */
   isCloudinaryConfigured() {

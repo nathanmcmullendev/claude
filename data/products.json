@@ -111,7 +111,7 @@
       "slug": "wireless-headphones-matte-black",
       "sku": "HEAD-WIRE-101",
       "stock_status": "instock",
-      "regular_price": "22",
+      "regular_price": "22.00",
       "sale_price": "59.99",
       "price": "59.99",
       "categories": [
@@ -124,7 +124,7 @@
         "headphones",
         "noise-canceling"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-1.jpg",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765782841/rapidwoo/products/yreazhaso3sh2j2x1vz9.webp",
       "gallery": [
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-2.jpg"
@@ -152,7 +152,8 @@
       "shipping_class": "small-package",
       "sold_individually": false,
       "hidden": false,
-      "show_additional_images": true
+      "show_additional_images": true,
+      "featured": false
     },
     {
       "id": 1762000000003,

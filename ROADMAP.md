@@ -1,7 +1,7 @@
 # RapidWoo Development Roadmap
 
 **Created:** December 15, 2025  
-**Current Version:** v3.1  
+**Current Version:** v3.2  
 **Repository:** [github.com/nathanmcmullendev/claude](https://github.com/nathanmcmullendev/claude)
 
 ---
@@ -39,32 +39,32 @@ Every version increment follows these principles:
 
 ---
 
-# SHORT-TERM ROADMAP (v3.2 – v3.5)
+# SHORT-TERM ROADMAP (v3.3 – v3.5)
 
 *Target: Next 2-4 weeks*
 
 ---
 
-## v3.2 — Editor UX Polish
+## v3.2 — Editor UX Polish ✅ COMPLETED
 
 **Goal:** Improve editor usability and fix remaining rough edges.
 
 ### Changes
 
-| # | Task | File(s) | Priority |
-|---|------|---------|----------|
-| 1 | Add loading spinner during GitHub save | `demo/editor.js` | High |
-| 2 | Add success/error toast notifications | `demo/editor.js`, `editor.css` | High |
-| 3 | Confirm before delete (single + bulk) | `demo/editor.js` | Medium |
-| 4 | Auto-save to localStorage on changes | `demo/editor.js` | Medium |
-| 5 | "Unsaved changes" warning before leaving | `demo/editor.js` | Medium |
+| # | Task | File(s) | Status |
+|---|------|---------|--------|
+| 1 | Add loading spinner during GitHub save | `demo/editor.js` | ✅ Already existed |
+| 2 | Add success/error toast notifications | `demo/editor.js`, `editor.css` | ✅ Already existed |
+| 3 | Confirm before delete (single + bulk) | `demo/editor.js` | ✅ Already existed |
+| 4 | Auto-save to localStorage on changes | `demo/editor.js` | ✅ Already existed |
+| 5 | "Unsaved changes" warning before leaving | `demo/editor.js` | ✅ Added |
 
 ### Acceptance Criteria
-- [ ] User sees spinner when saving to GitHub
-- [ ] Toast shows "Saved successfully" or error message
-- [ ] Delete requires confirmation click
-- [ ] Changes persist in localStorage automatically
-- [ ] Browser warns if leaving with unsaved changes
+- [x] User sees spinner when saving to GitHub
+- [x] Toast shows "Saved successfully" or error message
+- [x] Delete requires confirmation click
+- [x] Changes persist in localStorage automatically
+- [x] Browser warns if leaving with unsaved changes
 
 ---
 
@@ -386,6 +386,10 @@ git push --force origin main
 - Disabled base price for variables (with warning)
 - Removed inline price editing
 - Fixed UTF-8 encoding issues
+
+## v3.2 — Editor UX Polish ✅
+- Unsaved changes warning (beforeunload)
+- Confirmed existing: loading spinner, toasts, delete confirmations, auto-save
 
 ---
 

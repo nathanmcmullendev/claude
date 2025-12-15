@@ -25,12 +25,11 @@
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg"
         },
         {
-          "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-3.jpg"
+          "url": ""
         }
       ],
       "images": [
-        "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg",
-        "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-3.jpg"
+        "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg"
       ],
       "extra_images_enabled": true,
       "description": "<p>Mid-weight fleece hoodie with a minimalist chest logo. Sizes XS-XXL.</p>",

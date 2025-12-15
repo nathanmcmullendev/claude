@@ -1,6 +1,6 @@
 // ============================================
-// RAPIDWOO CONFIGURATION
-// Global constants and settings
+// RAPIDWOO CONFIGURATION - SERVERLESS EDITION
+// No PHP required - GitHub API + Cloudinary
 // ============================================
 
 window.RapidWoo = window.RapidWoo || {};
@@ -13,24 +13,38 @@ window.RapidWoo.Config = {
     USER_PRODUCTS: 'rapidwoo-user-products',
     DEMO_PRODUCTS: 'rapidwoo-demo-products',
     UPLOADED_DEMO: 'rapidwoo-uploaded-demo',
-    LEGACY: 'wfsm-v22-backup' // For backwards compatibility
+    GITHUB_CONFIG: 'rapidwoo-github-config',
+    CLOUDINARY_CONFIG: 'rapidwoo-cloudinary-config',
+    PRODUCTS_CACHE: 'rapidwoo-products-cache',
+    PRODUCTS_DIRTY: 'rapidwoo-products-dirty'
   },
 
   // --------------------------------------------
-  // API Endpoints
+  // API Endpoints (serverless - no PHP!)
   // --------------------------------------------
   API: {
-    UPLOAD: '/upload-temp.php',
+    // Products JSON path in repository
     PRODUCTS_JSON: '/data/products.json',
-    // NEW: Netlify function for GitHub commits
-    GITHUB_SAVE: '/save-products.php'
+    // GitHub API base (used by storage.js)
+    GITHUB_API: 'https://api.github.com',
+    // Cloudinary upload URL template (cloud name inserted at runtime)
+    CLOUDINARY_UPLOAD: 'https://api.cloudinary.com/v1_1/{cloudName}/image/upload'
   },
 
   // --------------------------------------------
-  // Image Settings (used by ImageHandler)
+  // Default Cloudinary Settings
+  // Users can override these in Settings
+  // --------------------------------------------
+  CLOUDINARY_DEFAULTS: {
+    cloudName: 'dh4qwuvuo',  // Your cloud name
+    folder: 'rapidwoo'       // Organize uploads in folder
+  },
+
+  // --------------------------------------------
+  // Image Settings
   // --------------------------------------------
   IMAGE: {
-    MAX_SIZE: 8 * 1024 * 1024, // 8MB (match PHP)
+    MAX_SIZE: 10 * 1024 * 1024, // 10MB (Cloudinary free tier)
     MAX_WIDTH: 1200,
     QUALITY: 0.85,
     THUMBNAIL_SIZE: 400,
@@ -73,7 +87,7 @@ window.RapidWoo.Config = {
   },
 
   // --------------------------------------------
-  // Demo Products (fallback if JSON fails)
+  // Demo Products (fallback if fetch fails)
   // --------------------------------------------
   DEMO_PRODUCTS: [
     {
@@ -86,13 +100,10 @@ window.RapidWoo.Config = {
       categories: ['Art Prints', 'Photography'],
       tags: ['neon', 'city', 'night'],
       image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=1200&auto=format&fit=crop&q=80',
-      images: [
-        { src: 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?w=1000&auto=format&fit=crop&q=80' },
-        { src: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=1000&auto=format&fit=crop&q=80' }
-      ],
+      images: [],
       gallery: [{ url: '' }, { url: '' }],
       extra_images_enabled: false,
-      description: '<p>Vibrant neon reflections across a rainy avenue. Perfect centerpiece for modern spaces.</p>',
+      description: '<p>Vibrant neon reflections across a rainy avenue.</p>',
       short_description: 'A vibrant nightscape bathed in neon.',
       type: 'simple',
       manage_stock: true,
@@ -102,7 +113,7 @@ window.RapidWoo.Config = {
       hidden: false
     },
     {
-      id: 1761000000003,
+      id: 1761000000002,
       title: 'Tropical Wave',
       slug: 'tropical-wave',
       sku: 'ARTP-OCEAN-001',
@@ -111,13 +122,10 @@ window.RapidWoo.Config = {
       categories: ['Art Prints', 'Nature'],
       tags: ['ocean', 'surf', 'blue'],
       image: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&auto=format&fit=crop&q=80',
-      images: [
-        { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1000&auto=format&fit=crop&q=80' },
-        { src: 'https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=1000&auto=format&fit=crop&q=80' }
-      ],
+      images: [],
       gallery: [{ url: '' }, { url: '' }],
       extra_images_enabled: false,
-      description: '<p>A crystalline breaker captured at golden hour. Cool blues with soft foam detail.</p>',
+      description: '<p>A crystalline breaker captured at golden hour.</p>',
       short_description: 'Serene, high-energy ocean print.',
       type: 'simple',
       manage_stock: true,
@@ -127,7 +135,7 @@ window.RapidWoo.Config = {
       hidden: false
     },
     {
-      id: 1761000000004,
+      id: 1761000000003,
       title: 'Golden Desert Dunes',
       slug: 'golden-desert-dunes',
       sku: 'ARTP-DESERT-001',
@@ -136,13 +144,10 @@ window.RapidWoo.Config = {
       categories: ['Art Prints', 'Landscape'],
       tags: ['desert', 'sand', 'minimal'],
       image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&auto=format&fit=crop&q=80',
-      images: [
-        { src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1000&auto=format&fit=crop&q=80' },
-        { src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&auto=format&fit=crop&q=80' }
-      ],
+      images: [],
       gallery: [{ url: '' }, { url: '' }],
       extra_images_enabled: false,
-      description: '<p>Minimalist ridgelines and long shadowsÃ¢â‚¬â€calm, warm, and sculptural.</p>',
+      description: '<p>Minimalist ridgelines and long shadows.</p>',
       short_description: 'Minimal desert geometry.',
       type: 'simple',
       manage_stock: false,
@@ -154,4 +159,4 @@ window.RapidWoo.Config = {
   ]
 };
 
-console.log('âœ… RapidWoo Config loaded');
+console.log('✅ RapidWoo Config loaded (Serverless Mode)');

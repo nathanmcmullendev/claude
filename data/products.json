@@ -1,6 +1,45 @@
 {
   "products": [
     {
+      "id": 1765769438315,
+      "title": "Forth Change",
+      "slug": "new-product",
+      "sku": "",
+      "type": "simple",
+      "status": "publish",
+      "stock_status": "instock",
+      "regular_price": "",
+      "sale_price": "",
+      "price": "",
+      "description": "",
+      "short_description": "",
+      "categories": [],
+      "tags": [],
+      "image": "",
+      "images": [],
+      "gallery": [
+        {
+          "url": ""
+        },
+        {
+          "url": ""
+        }
+      ],
+      "extra_images_enabled": false,
+      "manage_stock": false,
+      "stock_quantity": null,
+      "weight": "",
+      "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+      },
+      "shipping_class": "",
+      "featured": false,
+      "sold_individually": false,
+      "hidden": false
+    },
+    {
       "id": 1762000000001,
       "title": "New change",
       "slug": "graphic-tshirt-neon-wave",

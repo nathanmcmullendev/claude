@@ -1,6 +1,6 @@
 # RapidWoo
 
-**A serverless static commerce platform with browser-based admin editor and hosted checkout — no backend required.**
+**A serverless static commerce system with a browser-based admin editor and hosted checkout.**
 
 > 🔗 **[Live Demo](https://rapidwoo.com)** · **[Editor](https://rapidwoo.com/demo/)** · Test Card: `4242 4242 4242 4242`
 
@@ -18,7 +18,8 @@ The result is a working proof-of-concept that demonstrates:
 - CDN image uploads directly from the browser (Cloudinary)
 - A complete admin interface built in vanilla JavaScript
 
-**Source of truth:** Product JSON in GitHub is the single source of truth — the storefront renders from it, and checkout validation is generated from it.
+> 🔐 **Source of Truth**
+> Product JSON in GitHub is the single source of truth — the storefront renders from it, and checkout validation is generated from it.
 
 ---
 
@@ -189,7 +190,7 @@ To run your own instance:
 **Version:** 3.3  
 **Status:** Proof of Concept (functional, not production-ready)
 
-This project demonstrates architecture and solves real engineering problems. For production, token storage would move server-side via OAuth or serverless proxy.
+This project is intended as a **portfolio and architectural proof-of-concept**, not a drop-in production store. It demonstrates architecture and solves real engineering problems. For production, token storage would move server-side via OAuth or serverless proxy.
 
 ---
 

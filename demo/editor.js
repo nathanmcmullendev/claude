@@ -154,7 +154,7 @@ function bindImageUpload() {
   const clearBtn     = Utils.q('#btn-clear-image');           // NEW
 
   if (!uploadBtn || !fileInput) {
-    console.warn('âš ï¸ Image upload elements not found');
+    console.warn('⚠️ Image upload elements not found');
     return;
   }
 
@@ -841,9 +841,9 @@ async function loadSavedOrDemo() {
 // INITIALIZATION (load saved first; fallback to file)
 // ============================================
 async function init() {
-  console.log('ðŸš€ Initializing RapidWoo EditorÃ¢â‚¬Â¦');
+  console.log('🚀 Initializing RapidWoo EditorÃ¢â‚¬Â¦');
 
-  // âœ… Use saved dataset if present (even empty by design). Only load demo on true first run.
+  // ✅ Use saved dataset if present (even empty by design). Only load demo on true first run.
   App.products = await loadSavedOrDemo();
 
   // 1) Initial table render
@@ -867,32 +867,29 @@ async function init() {
   // Build gallery UI once (safe no-op if panel not yet visible)
   ensureGalleryUI();
 
-  console.log('âœ… Editor initialized with', App.products.length, 'product(s). Source:',
+  console.log('✅ Editor initialized with', App.products.length, 'product(s). Source:',
     (await Storage.getProducts())?.products !== undefined ? 'saved' : 'demo');
 }
 
 // ============================================
 // STORAGE SAVE (normalize first; strips base64)
 // ============================================
+// Save lock to prevent concurrent GitHub saves
+let _githubSaveInProgress = false;
+let _pendingGitHubSave = false;
+
 function safeSaveProducts() {
   try {
     // Ensure normalized (base64-free in images[]/image)
     const clean = normalizeAllProducts(App.products.map(p => ({ ...p })));
     
-    // Save to localStorage (for immediate UI)
+    // Save to localStorage only (for immediate UI persistence)
+    // GitHub save is manual via the Save button to avoid race conditions
     Storage.saveProducts({ products: clean });
     
-    // ALSO save to server (PHP)
-    Storage.saveToGitHub({ products: clean })
-      .then(result => {
-        if (result.success) {
-          console.log('âœ… Saved to server:', result.productCount, 'products');
-        } else {
-          console.warn('âš ï¸ Server save failed:', result.error);
-        }
-      })
-      .catch(err => console.error('Server save error:', err));
-      
+    // Mark as dirty (has unsaved changes)
+    if (Storage._markDirty) Storage._markDirty(true);
+    
   } catch (err) {
     console.error('saveProducts failed:', err);
     Utils.showToast(
@@ -902,6 +899,48 @@ function safeSaveProducts() {
     );
   }
 }
+
+// Manual save to GitHub with lock to prevent concurrent saves
+async function saveToGitHubManual() {
+  if (_githubSaveInProgress) {
+    _pendingGitHubSave = true;
+    console.log('Save already in progress, will retry...');
+    return { success: false, error: 'Save in progress' };
+  }
+  
+  _githubSaveInProgress = true;
+  
+  try {
+    const clean = normalizeAllProducts(App.products.map(p => ({ ...p })));
+    const result = await Storage.saveToGitHub({ products: clean });
+    
+    if (result.success) {
+      console.log('✅ Saved to GitHub:', result.productCount, 'products');
+      Utils.showToast(`Saved ${result.productCount} products to GitHub`, 'success');
+      if (Storage._markDirty) Storage._markDirty(false);
+    } else {
+      console.warn('⚠️ GitHub save failed:', result.error);
+      Utils.showToast(`Save failed: ${result.error}`, 'error');
+    }
+    
+    return result;
+  } catch (err) {
+    console.error('GitHub save error:', err);
+    Utils.showToast(`Save failed: ${err.message}`, 'error');
+    return { success: false, error: err.message };
+  } finally {
+    _githubSaveInProgress = false;
+    
+    // If another save was requested while we were saving, do it now
+    if (_pendingGitHubSave) {
+      _pendingGitHubSave = false;
+      setTimeout(() => saveToGitHubManual(), 500);
+    }
+  }
+}
+
+// Expose for the Save button
+window.saveToGitHubManual = saveToGitHubManual;
 
 // ============================================
 // TOOLBAR ACTIONS
@@ -923,7 +962,7 @@ function bindToolbar() {
   });
 
 
-  // ðŸ“¦ Load Demo Products (dummy-products.json) - reset to sample data
+  // 📦 Load Demo Products (dummy-products.json) - reset to sample data
   Utils.q('#btn-load-dummy')?.addEventListener('click', async () => {
     const confirmed = await Utils.showConfirm(
       'Load demo sample products? This will replace your editor view with sample data. Click "Save to GitHub" to make it permanent.',
@@ -1862,7 +1901,7 @@ async function openShopModal() {
     return;
   }
 
-  // âœ… Load saved prefs & reflect in toggles BEFORE rendering cards
+  // ✅ Load saved prefs & reflect in toggles BEFORE rendering cards
   const saved = getShopPrefs();
   if (tTitle) tTitle.checked = saved.title !== false;
   if (tPrice) tPrice.checked = saved.price !== false;
@@ -1870,7 +1909,7 @@ async function openShopModal() {
   if (tStock) tStock.checked = saved.stock !== false;
   if (tAdd)   tAdd.checked   = saved.add   !== false;
 
-  // âœ… Auto-save current toggle state immediately on open + broadcast
+  // ✅ Auto-save current toggle state immediately on open + broadcast
   saveShopPrefs({
     title: tTitle ? !!tTitle.checked : true,
     price: tPrice ? !!tPrice.checked : true,
@@ -1911,7 +1950,7 @@ async function openShopModal() {
     card.innerHTML = `
       <div style="aspect-ratio:1/1;background:#fafafa;display:grid;place-items:center">
         ${primaryOrExtra ? `<img src="${primaryOrExtra}" alt="${title.replace(/"/g,'&quot;')}" style="width:100%;height:100%;object-fit:cover">`
-                          : `<div style="font-size:48px;color:#cbd5e1">ðŸ“¦</div>`}
+                          : `<div style="font-size:48px;color:#cbd5e1">📦</div>`}
       </div>
       <div style="padding:12px;display:grid;gap:8px">
         <div class="pv-title shop-product-title product-title" style="font-weight:700;font-size:16px;">${title}</div>

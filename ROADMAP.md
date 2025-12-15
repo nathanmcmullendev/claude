@@ -389,7 +389,6 @@ git push --force origin main
 
 ## v3.2 — Editor UX Polish ✅
 - Added beforeunload warning for unsaved changes
-- Confirmed existing: spinner, toasts, confirmations, auto-save
 
 ---
 

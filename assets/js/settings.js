@@ -15,7 +15,7 @@ window.RapidWoo.Settings = {
     this._injectStyles();
     this._createModal();
     this._bindEvents();
-    console.log('✅ RapidWoo Settings initialized');
+    console.log('âœ… RapidWoo Settings initialized');
     return this;
   },
 
@@ -31,15 +31,15 @@ window.RapidWoo.Settings = {
       <div class="rw-settings-overlay"></div>
       <div class="rw-settings-dialog">
         <div class="rw-settings-header">
-          <h2>⚙️ RapidWoo Settings</h2>
-          <button class="rw-settings-close" aria-label="Close">✕</button>
+          <h2>âš™ï¸ RapidWoo Settings</h2>
+          <button class="rw-settings-close" aria-label="Close">âœ•</button>
         </div>
         
         <div class="rw-settings-body">
           <!-- GitHub Section -->
           <div class="rw-settings-section">
             <div class="rw-section-header">
-              <h3>🐙 GitHub Connection</h3>
+              <h3>ðŸ™ GitHub Connection</h3>
               <span class="rw-status" id="gh-status">Not configured</span>
             </div>
             <p class="rw-section-desc">Connect to GitHub to save products directly to your repository.</p>
@@ -76,7 +76,7 @@ window.RapidWoo.Settings = {
           <!-- Cloudinary Section -->
           <div class="rw-settings-section">
             <div class="rw-section-header">
-              <h3>☁️ Cloudinary (Image Hosting)</h3>
+              <h3>â˜ï¸ Cloudinary (Image Hosting)</h3>
               <span class="rw-status" id="cl-status">Not configured</span>
             </div>
             <p class="rw-section-desc">Connect to Cloudinary for free image hosting. <a href="https://cloudinary.com/users/register_free" target="_blank">Sign up free</a> (25GB included).</p>
@@ -90,7 +90,7 @@ window.RapidWoo.Settings = {
               <div class="rw-field">
                 <label for="cl-preset">Upload Preset</label>
                 <input type="text" id="cl-preset" placeholder="your-unsigned-preset">
-                <small>Create an <strong>unsigned</strong> preset in Settings → Upload</small>
+                <small>Create an <strong>unsigned</strong> preset in Settings â†’ Upload</small>
               </div>
             </div>
             
@@ -103,15 +103,15 @@ window.RapidWoo.Settings = {
 
           <!-- Status Overview -->
           <div class="rw-settings-section rw-status-overview">
-            <h3>📊 Connection Status</h3>
+            <h3>ðŸ“Š Connection Status</h3>
             <div class="rw-status-grid">
               <div class="rw-status-item" id="status-github">
-                <span class="rw-status-icon">❌</span>
+                <span class="rw-status-icon">âŒ</span>
                 <span class="rw-status-label">GitHub</span>
                 <span class="rw-status-text">Not connected</span>
               </div>
               <div class="rw-status-item" id="status-cloudinary">
-                <span class="rw-status-icon">❌</span>
+                <span class="rw-status-icon">âŒ</span>
                 <span class="rw-status-label">Cloudinary</span>
                 <span class="rw-status-text">Not connected</span>
               </div>
@@ -385,10 +385,10 @@ window.RapidWoo.Settings = {
 
       try {
         Storage.configureGitHub({ token, owner, repo, branch });
-        this._showResult('gh-result', 'success', '✅ GitHub settings saved!');
+        this._showResult('gh-result', 'success', 'âœ… GitHub settings saved!');
         this._updateStatus();
       } catch (e) {
-        this._showResult('gh-result', 'error', '❌ ' + e.message);
+        this._showResult('gh-result', 'error', 'âŒ ' + e.message);
       }
     });
 
@@ -409,12 +409,12 @@ window.RapidWoo.Settings = {
         const result = await Storage.testGitHubConnection();
         
         if (result.success) {
-          this._showResult('gh-result', 'success', `✅ Connected to ${result.repo} (${result.private ? 'private' : 'public'})`);
+          this._showResult('gh-result', 'success', `âœ… Connected to ${result.repo} (${result.private ? 'private' : 'public'})`);
         } else {
-          this._showResult('gh-result', 'error', '❌ ' + result.error);
+          this._showResult('gh-result', 'error', 'âŒ ' + result.error);
         }
       } catch (e) {
-        this._showResult('gh-result', 'error', '❌ ' + e.message);
+        this._showResult('gh-result', 'error', 'âŒ ' + e.message);
       }
 
       btn.textContent = 'Test Connection';
@@ -429,10 +429,10 @@ window.RapidWoo.Settings = {
 
       try {
         Storage.configureCloudinary({ cloudName, uploadPreset });
-        this._showResult('cl-result', 'success', '✅ Cloudinary settings saved!');
+        this._showResult('cl-result', 'success', 'âœ… Cloudinary settings saved!');
         this._updateStatus();
       } catch (e) {
-        this._showResult('cl-result', 'error', '❌ ' + e.message);
+        this._showResult('cl-result', 'error', 'âŒ ' + e.message);
       }
     });
 
@@ -451,12 +451,12 @@ window.RapidWoo.Settings = {
         const result = await ImageHandler.testCloudinaryConnection();
         
         if (result.success) {
-          this._showResult('cl-result', 'success', '✅ Upload test successful!');
+          this._showResult('cl-result', 'success', 'âœ… Upload test successful!');
         } else {
-          this._showResult('cl-result', 'error', '❌ ' + result.error);
+          this._showResult('cl-result', 'error', 'âŒ ' + result.error);
         }
       } catch (e) {
-        this._showResult('cl-result', 'error', '❌ ' + e.message);
+        this._showResult('cl-result', 'error', 'âŒ ' + e.message);
       }
 
       btn.textContent = 'Test Upload';
@@ -492,12 +492,12 @@ window.RapidWoo.Settings = {
     if (config.github.configured) {
       ghStatus.textContent = 'Connected';
       ghStatus.classList.add('connected');
-      ghItem.querySelector('.rw-status-icon').textContent = '✅';
+      ghItem.querySelector('.rw-status-icon').textContent = 'âœ…';
       ghItem.querySelector('.rw-status-text').textContent = config.github.owner + '/' + config.github.repo;
     } else {
       ghStatus.textContent = 'Not configured';
       ghStatus.classList.remove('connected');
-      ghItem.querySelector('.rw-status-icon').textContent = '❌';
+      ghItem.querySelector('.rw-status-icon').textContent = 'âŒ';
       ghItem.querySelector('.rw-status-text').textContent = 'Not connected';
     }
 
@@ -507,12 +507,12 @@ window.RapidWoo.Settings = {
     if (config.cloudinary.configured) {
       clStatus.textContent = 'Connected';
       clStatus.classList.add('connected');
-      clItem.querySelector('.rw-status-icon').textContent = '✅';
+      clItem.querySelector('.rw-status-icon').textContent = 'âœ…';
       clItem.querySelector('.rw-status-text').textContent = config.cloudinary.cloudName;
     } else {
       clStatus.textContent = 'Not configured';
       clStatus.classList.remove('connected');
-      clItem.querySelector('.rw-status-icon').textContent = '❌';
+      clItem.querySelector('.rw-status-icon').textContent = 'âŒ';
       clItem.querySelector('.rw-status-text').textContent = 'Not connected';
     }
   },
@@ -574,4 +574,4 @@ if (document.readyState === 'loading') {
   window.RapidWoo.Settings.init();
 }
 
-console.log('✅ RapidWoo Settings loaded');
+console.log('âœ… RapidWoo Settings loaded');

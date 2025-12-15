@@ -3,6 +3,16 @@
 <head>
    
 <!-- Google tag (gtag.js) -->
+  <!-- Content Security Policy (V4 Security) -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.snipcart.com https://app.snipcart.com;
+    style-src 'self' 'unsafe-inline' https://cdn.snipcart.com https://app.snipcart.com;
+    img-src 'self' data: https://res.cloudinary.com https://app.snipcart.com https://*.snipcart.com;
+    connect-src 'self' https://api.github.com https://api.cloudinary.com https://app.snipcart.com https://*.snipcart.com;
+    frame-src https://app.snipcart.com https://*.snipcart.com;
+    font-src 'self' https://app.snipcart.com https://*.snipcart.com;
+  ">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHE179GXX5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];

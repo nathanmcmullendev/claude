@@ -93,7 +93,8 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
-      ]
+      ],
+      "show_additional_images": true
     },
     {
       "id": 1762000000002,
@@ -141,7 +142,8 @@
       },
       "shipping_class": "small-package",
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000003,
@@ -189,7 +191,8 @@
       "shipping_class": "apparel",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000004,
@@ -237,7 +240,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000005,
@@ -284,7 +288,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000006,
@@ -332,7 +337,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000007,
@@ -380,7 +386,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1763000000200,
@@ -464,7 +471,8 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
         }
-      ]
+      ],
+      "show_additional_images": true
     },
     {
       "id": 1762000000009,
@@ -512,7 +520,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000010,
@@ -560,7 +569,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     }
   ]
 }

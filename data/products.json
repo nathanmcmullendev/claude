@@ -102,7 +102,8 @@
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
       ],
-      "featured": false
+      "featured": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000002,
@@ -150,7 +151,8 @@
       },
       "shipping_class": "small-package",
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000003,
@@ -198,7 +200,8 @@
       "shipping_class": "apparel",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000004,
@@ -246,7 +249,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000005,
@@ -293,7 +297,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000006,
@@ -341,7 +346,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000007,
@@ -389,7 +395,8 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1763000000200,
@@ -410,31 +417,37 @@
       },
       "variations": [
         {
-          "id": 176300002001,
+          "id": 17630000002001,
           "sku": "POST-MIN-1620-PRINT",
           "attributes": {
             "Size": "16Ã—20 Print"
           },
-          "price_delta": "+0.00",
-          "stock_status": "instock"
+          "regular_price": "21.99",
+          "sale_price": "",
+          "stock_status": "instock",
+          "price_delta": "+0.00"
         },
         {
-          "id": 176300002002,
+          "id": 17630000002002,
           "sku": "POST-MIN-2436-PRINT",
           "attributes": {
             "Size": "24Ã—36 Print"
           },
-          "price_delta": "+6.00",
-          "stock_status": "instock"
+          "regular_price": "27.99",
+          "sale_price": "",
+          "stock_status": "instock",
+          "price_delta": "+6.00"
         },
         {
-          "id": 176300002004,
+          "id": 17630000002003,
           "sku": "POST-MIN-2436-CANVAS",
           "attributes": {
             "Size": "24Ã—36 Canvas"
           },
-          "price_delta": "+24.00",
-          "stock_status": "instock"
+          "regular_price": "45.99",
+          "sale_price": "",
+          "stock_status": "instock",
+          "price_delta": "+24.00"
         }
       ],
       "categories": [
@@ -473,7 +486,9 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
         }
-      ]
+      ],
+      "show_additional_images": true,
+      "featured": false
     },
     {
       "id": 1762000000009,
@@ -521,7 +536,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000010,
@@ -569,7 +585,8 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false
+      "hidden": false,
+      "show_additional_images": true
     }
   ]
 }

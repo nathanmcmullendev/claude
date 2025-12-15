@@ -205,6 +205,7 @@ window.RapidWoo.Storage = {
 
   /**
    * Push products to GitHub (the real save)
+   * Also generates and saves snipcart-products.json for checkout validation
    */
   async saveToGitHub(data, commitMessage = null) {
     if (!this.isGitHubConfigured()) {
@@ -228,7 +229,7 @@ window.RapidWoo.Storage = {
       const currentFile = await this._getGitHubFile(gh.productPath);
       const sha = currentFile?.sha || null;
 
-      // Create/update file
+      // Create/update products.json
       const response = await fetch(
         `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${gh.productPath}`,
         {
@@ -254,6 +255,9 @@ window.RapidWoo.Storage = {
         throw new Error(result.message || `HTTP ${response.status}`);
       }
 
+      // Also update Snipcart validation file
+      await this._saveSnipcartValidation(products);
+
       // Update cache and clear dirty flag
       this._setCache({ products });
       this._markDirty(false);
@@ -271,6 +275,166 @@ window.RapidWoo.Storage = {
       console.error('❌ GitHub push failed:', error);
       return { success: false, error: error.message };
     }
+  },
+
+  /**
+   * Generate and save Snipcart validation JSON
+   * This file is used by Snipcart to validate prices at checkout
+   * Prevents price tampering in the cart
+   */
+  async _saveSnipcartValidation(products) {
+    const gh = this._config.github;
+    const validationPath = 'snipcart-products.json';
+    
+    try {
+      // Generate Snipcart validation array
+      const snipcartProducts = this._generateSnipcartValidation(products);
+      const content = JSON.stringify(snipcartProducts, null, 2);
+      
+      // Get current file SHA
+      const currentFile = await this._getGitHubFile(validationPath);
+      const sha = currentFile?.sha || null;
+      
+      // Upload validation file
+      const response = await fetch(
+        `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${validationPath}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${gh.token}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update Snipcart validation (${snipcartProducts.length} products)`,
+            content: btoa(unescape(encodeURIComponent(content))),
+            branch: gh.branch,
+            ...(sha && { sha })
+          })
+        }
+      );
+      
+      if (response.ok) {
+        console.log('✅ Snipcart validation updated:', snipcartProducts.length, 'products');
+      } else {
+        const err = await response.json();
+        console.warn('⚠️ Snipcart validation update failed:', err.message);
+      }
+    } catch (error) {
+      console.warn('⚠️ Could not update Snipcart validation:', error.message);
+      // Don't fail the main save - validation is secondary
+    }
+  },
+
+  /**
+   * Generate Snipcart-compatible validation array from products
+   * Format: [{ id, price, url, customFields? }]
+   */
+  _generateSnipcartValidation(products) {
+    const validationUrl = '/snipcart-products.json';
+    const result = [];
+    
+    products.forEach(product => {
+      if (product.hidden) return; // Skip hidden products
+      
+      // Get the active price (sale price takes priority)
+      const price = parseFloat(product.sale_price) || 
+                    parseFloat(product.price) || 
+                    parseFloat(product.regular_price) || 0;
+      
+      // Base validation entry using slug as ID
+      const entry = {
+        id: product.slug || String(product.id),
+        price: Math.round(price * 100) / 100, // Ensure 2 decimal places
+        url: validationUrl
+      };
+      
+      // Add custom fields for variable products
+      if (product.type === 'variable' && product.variations?.length > 0) {
+        const customFields = this._buildSnipcartCustomFields(product);
+        if (customFields.length > 0) {
+          entry.customFields = customFields;
+        }
+      }
+      
+      result.push(entry);
+      
+      // Also add entry with numeric ID for compatibility
+      if (product.id && String(product.id) !== entry.id) {
+        result.push({
+          ...entry,
+          id: String(product.id)
+        });
+      }
+    });
+    
+    return result;
+  },
+
+  /**
+   * Build Snipcart customFields from product variations
+   * Format: [{ name: "Size", options: "S|M|L[+3.00]|XL[+5.00]" }]
+   */
+  _buildSnipcartCustomFields(product) {
+    const customFields = [];
+    const variations = product.variations || [];
+    const attributes = product.attributes || {};
+    
+    // Get base price for calculating deltas
+    const basePrice = parseFloat(product.sale_price) || 
+                      parseFloat(product.price) || 
+                      parseFloat(product.regular_price) || 0;
+    
+    // Group variations by attribute name
+    Object.keys(attributes).forEach(attrName => {
+      const attrValues = attributes[attrName];
+      if (!Array.isArray(attrValues) || attrValues.length === 0) return;
+      
+      // Build options string with price modifiers
+      const options = attrValues.map(value => {
+        // Find variation for this attribute value
+        const variation = variations.find(v => 
+          v.attributes && v.attributes[attrName] === value
+        );
+        
+        let optionStr = value;
+        
+        if (variation) {
+          // Calculate price difference from base
+          const varPrice = parseFloat(variation.sale_price) || 
+                          parseFloat(variation.price) || 
+                          parseFloat(variation.regular_price);
+          
+          // Check for price_delta field (e.g., "+3.00" or "-2.00")
+          if (variation.price_delta) {
+            const delta = variation.price_delta.toString().trim();
+            if (delta && delta !== '+0.00' && delta !== '0.00' && delta !== '0') {
+              // Ensure proper format [+X.XX] or [-X.XX]
+              const numDelta = parseFloat(delta.replace('+', ''));
+              if (numDelta !== 0) {
+                optionStr += `[${numDelta >= 0 ? '+' : ''}${numDelta.toFixed(2)}]`;
+              }
+            }
+          } else if (varPrice && varPrice !== basePrice) {
+            // Calculate delta from prices
+            const delta = varPrice - basePrice;
+            if (delta !== 0) {
+              optionStr += `[${delta >= 0 ? '+' : ''}${delta.toFixed(2)}]`;
+            }
+          }
+        }
+        
+        return optionStr;
+      }).join('|');
+      
+      customFields.push({
+        name: attrName,
+        options: options
+      });
+    });
+    
+    return customFields;
   },
 
   /**

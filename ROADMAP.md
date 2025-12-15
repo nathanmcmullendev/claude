@@ -1,7 +1,7 @@
 # RapidWoo Development Roadmap
 
 **Created:** December 15, 2025  
-**Current Version:** v3.2  
+**Current Version:** v3.3  
 **Repository:** [github.com/nathanmcmullendev/claude](https://github.com/nathanmcmullendev/claude)
 
 ---
@@ -39,13 +39,17 @@ Every version increment follows these principles:
 
 ---
 
-# SHORT-TERM ROADMAP (v3.3 – v3.5)
+# SHORT-TERM ROADMAP (v3.4 – v3.5)
 
 *Target: Next 2-4 weeks*
 
 ---
 
 ## v3.2 — Editor UX Polish ✅ COMPLETED
+
+## v3.3 — Gallery Image UX ✅
+- Added ❌ overlay remove button on gallery images
+- Improved discoverability of image removal
 
 **Goal:** Improve editor usability and fix remaining rough edges.
 
@@ -388,6 +392,10 @@ git push --force origin main
 - Fixed UTF-8 encoding issues
 
 ## v3.2 — Editor UX Polish ✅
+
+## v3.3 — Gallery Image UX ✅
+- Added ❌ overlay remove button on gallery images
+- Improved discoverability of image removal
 - Added beforeunload warning for unsaved changes
 
 ---

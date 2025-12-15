@@ -1,6 +1,6 @@
 # RapidWoo Version Documentation
 
-**Current Version:** v3.2  
+**Current Version:** v3.3  
 **Last Updated:** December 15, 2025  
 **Repository:** [github.com/nathanmcmullendev/claude](https://github.com/nathanmcmullendev/claude)  
 **Live Site:** [rapidwoo.com](https://rapidwoo.com)
@@ -292,7 +292,11 @@ window.SnipcartSettings = {
 
 ## Version History
 
-### v3.2 (Current) - December 15, 2025
+### v3.3 (Current) - December 15, 2025
+- Added ❌ overlay remove button on gallery images
+- Removed old text-based Remove buttons
+
+### v3.2 - December 15, 2025
 - Added beforeunload warning for unsaved changes
 
 ### v3.1 - December 15, 2025
@@ -405,4 +409,4 @@ MIT License - See repository for details.
 
 ---
 
-*This document describes RapidWoo v3.2 as of December 15, 2025.*
+*This document describes RapidWoo v3.3 as of December 15, 2025.*

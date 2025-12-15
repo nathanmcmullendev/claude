@@ -294,7 +294,6 @@ window.SnipcartSettings = {
 
 ### v3.3 (Current) - December 15, 2025
 - Added ❌ overlay remove button on gallery images
-- Removed old text-based Remove buttons
 
 ### v3.2 - December 15, 2025
 - Added beforeunload warning for unsaved changes

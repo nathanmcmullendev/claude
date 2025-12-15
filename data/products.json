@@ -27,9 +27,9 @@
             "Size": "S"
           },
           "regular_price": "24.99",
-          "sale_price": "19.99",
+          "sale_price": "11.00",
           "stock_status": "instock",
-          "price_delta": "+0.00"
+          "price_delta": "-8.99"
         },
         {
           "id": 17620000000012,

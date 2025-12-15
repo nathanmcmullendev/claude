@@ -745,7 +745,7 @@ if (btnCloseSpreadsheet) {
 </script>
 
 <script>
-// GitHub Save Button Handler (uses serverless storage.js)
+// GitHub Save Button Handler - uses saveToGitHubManual() from editor.js
 (function() {
   const btn = document.getElementById('btn-github-save');
   if (!btn) return;
@@ -754,7 +754,6 @@ if (btnCloseSpreadsheet) {
     const originalText = btn.textContent;
     const Storage = window.RapidWoo?.Storage;
     const Utils = window.RapidWoo?.Utils;
-    const App = window.App;
     
     // Check if GitHub is configured
     const config = Storage?.getGitHubConfig?.();
@@ -764,37 +763,26 @@ if (btnCloseSpreadsheet) {
       return;
     }
     
-    const products = App?.products || [];
-    if (!products.length) {
-      Utils?.showToast?.('No products to save', 'error') || alert('No products to save');
-      return;
-    }
-    
-    try {
+    // Use the saveToGitHubManual function from editor.js (has lock to prevent concurrent saves)
+    if (typeof window.saveToGitHubManual === 'function') {
       btn.disabled = true;
       btn.textContent = '🔄 Saving...';
       
-      const result = await Storage.saveToGitHub({ products });
+      const result = await window.saveToGitHubManual();
       
       if (result.success) {
         btn.textContent = '✅ Saved!';
-        Utils?.showToast?.(
-          `Saved ${result.productCount} products to GitHub`,
-          'success'
-        ) || alert(`Saved to GitHub!`);
       } else {
-        throw new Error(result.error || 'Save failed');
+        btn.textContent = '❌ Error';
       }
       
-    } catch (error) {
-      console.error('GitHub save error:', error);
-      btn.textContent = '❌ Error';
-      Utils?.showToast?.(`Failed: ${error.message}`, 'error') || alert(`Failed: ${error.message}`);
-    } finally {
       setTimeout(() => {
         btn.disabled = false;
         btn.textContent = originalText;
-      }, 3000);
+      }, 2000);
+    } else {
+      // Fallback if editor.js hasn't loaded yet
+      Utils?.showToast?.('Editor not ready, please try again', 'warning');
     }
   });
 })();

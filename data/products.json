@@ -75,7 +75,7 @@
         "unisex",
         "graphic"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765776837/rapidwoo/products/ohrpk7kuzcd07h0nnkli.jpg",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765782577/rapidwoo/products/g3y2ww3wypcc2yc8sl7h.webp",
       "images": [
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
@@ -102,8 +102,8 @@
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
       ],
-      "show_additional_images": true,
-      "featured": false
+      "featured": false,
+      "show_additional_images": true
     },
     {
       "id": 1762000000002,

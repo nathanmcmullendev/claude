@@ -188,6 +188,25 @@
     return null;
   }
 
+  // Get price range for variable products
+  function getVariationPriceRange(product) {
+    if (product?.type !== 'variable') return null;
+    if (!Array.isArray(product?.variations) || product.variations.length === 0) return null;
+    
+    let min = Infinity, max = -Infinity;
+    product.variations.forEach(v => {
+      const price = parseFloat(v.sale_price) || parseFloat(v.regular_price);
+      if (!isNaN(price) && price > 0) {
+        if (price < min) min = price;
+        if (price > max) max = price;
+      }
+    });
+    
+    if (min === Infinity) return null;
+    const formatted = (min === max) ? nf.format(min) : nf.format(min) + ' – ' + nf.format(max);
+    return { min, max, isRange: min !== max, formatted };
+  }
+
   function productImage(p) {
     const cand = p?.image || (p?.images && p.images[0] && (p.images[0].src || p.images[0])) || '';
     return cand || '';
@@ -234,6 +253,8 @@
     const effectivePrice = priceOf(p);
     const hasSale = p.sale_price && p.regular_price &&
                     String(p.sale_price).trim() !== String(p.regular_price).trim();
+    const priceRange = getVariationPriceRange(p);
+    const isVariable = priceRange !== null;
     let description = cleanText(p.short_description || p.description || '');
     if (description.length > 120) description = description.slice(0, 120) + '...';
 
@@ -263,8 +284,9 @@
           <div class="product-footer">
             <div>
               <div class="product-price">
-                ${hasSale ? `<del>${nf.format(Number(p.regular_price) || 0)}</del>` : ''}
-                <span>${nf.format(effectivePrice ?? 0)}</span>
+                ${isVariable ? `<span>${priceRange.formatted}</span>` : 
+                  (hasSale ? `<del>${nf.format(Number(p.regular_price) || 0)}</del> <span>${nf.format(effectivePrice ?? 0)}</span>` :
+                  `<span>${nf.format(effectivePrice ?? 0)}</span>`)}
               </div>
               <span class="stock-badge ${stock}">
                 ${stock === 'instock' ? 'In Stock' : stock === 'outofstock' ? 'Out of Stock' : 'On Backorder'}

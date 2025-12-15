@@ -1,6 +1,6 @@
 # RapidWoo Version Documentation
 
-**Current Version:** v3.1  
+**Current Version:** v3.2  
 **Last Updated:** December 15, 2025  
 **Repository:** [github.com/nathanmcmullendev/claude](https://github.com/nathanmcmullendev/claude)  
 **Live Site:** [rapidwoo.com](https://rapidwoo.com)
@@ -292,7 +292,14 @@ window.SnipcartSettings = {
 
 ## Version History
 
-### v3.1 (Current) - December 15, 2025
+### v3.2 (Current) - December 15, 2025
+- ✅ Unsaved changes warning (beforeunload) when leaving with edits
+- ✅ Confirmed existing: loading spinner during GitHub save
+- ✅ Confirmed existing: success/error toast notifications
+- ✅ Confirmed existing: delete confirmations (single + bulk)
+- ✅ Confirmed existing: auto-save to localStorage
+
+### v3.1 - December 15, 2025
 - ✅ Price range display for variable products
 - ✅ Disabled base price fields for variable products (with warning)
 - ✅ Removed inline price editing in product table
@@ -402,4 +409,4 @@ MIT License - See repository for details.
 
 ---
 
-*This document describes RapidWoo v3.1 as of December 15, 2025.*
+*This document describes RapidWoo v3.2 as of December 15, 2025.*

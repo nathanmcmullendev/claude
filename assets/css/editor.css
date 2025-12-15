@@ -525,6 +525,50 @@
   font-weight: 500;
 }
 
+/* Gallery remove button - ❌ overlay on image */
+.gallery-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.gallery-remove-btn:hover {
+  background: #dc2626;
+}
+
+.gallery-remove-btn:focus {
+  opacity: 1;
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.image-preview-container:hover .gallery-remove-btn {
+  opacity: 1;
+}
+
+/* Always show on touch devices */
+@media (hover: none) {
+  .gallery-remove-btn {
+    opacity: 1;
+  }
+}
+
 .empty-placeholder {
   display: flex;
   flex-direction: column;

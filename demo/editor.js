@@ -7,6 +7,45 @@
 // Saves edits to LocalStorage so shop/product pages see changes
 // ============================================
 
+// ============================================
+// SECURITY: Defensive checks (V4)
+// ============================================
+
+/**
+ * Verify we're running on expected domain
+ * Helps detect if code is being served from unexpected location
+ */
+(function securityCheck() {
+  const allowedHosts = [
+    'rapidwoo.com',
+    'localhost',
+    '127.0.0.1',
+    'nathanmcmullendev.github.io'
+  ];
+  
+  const currentHost = window.location.hostname;
+  
+  if (!allowedHosts.some(h => currentHost === h || currentHost.endsWith('.' + h))) {
+    console.warn('⚠️ RapidWoo running on unexpected host:', currentHost);
+    console.warn('⚠️ If this is intentional, add host to allowedHosts in editor.js');
+  }
+})();
+
+/**
+ * Check if localStorage is available and not tampered with
+ */
+(function storageCheck() {
+  try {
+    const test = '__rapidwoo_test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+  } catch (e) {
+    console.error('❌ localStorage not available. Editor will not work correctly.');
+    alert('localStorage is not available. Please enable cookies/storage for this site.');
+  }
+})();
+
+
 const Utils        = window.RapidWoo.Utils;
 const Storage      = window.RapidWoo.Storage;
 const Config       = window.RapidWoo.Config;

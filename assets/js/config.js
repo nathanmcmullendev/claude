@@ -159,4 +159,4 @@ window.RapidWoo.Config = {
   ]
 };
 
-console.log('✅ RapidWoo Config loaded (Serverless Mode)');
+console.log('âœ… RapidWoo Config loaded (Serverless Mode)');

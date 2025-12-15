@@ -293,11 +293,7 @@ window.SnipcartSettings = {
 ## Version History
 
 ### v3.2 (Current) - December 15, 2025
-- ✅ Unsaved changes warning (beforeunload) when leaving with edits
-- ✅ Confirmed existing: loading spinner during GitHub save
-- ✅ Confirmed existing: success/error toast notifications
-- ✅ Confirmed existing: delete confirmations (single + bulk)
-- ✅ Confirmed existing: auto-save to localStorage
+- Added beforeunload warning for unsaved changes
 
 ### v3.1 - December 15, 2025
 - ✅ Price range display for variable products

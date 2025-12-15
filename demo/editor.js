@@ -296,7 +296,7 @@ function ensureGalleryUI() {
       img:    Utils.q(`#rw-gal${n}-img`),
       url:    Utils.q(`#rw-gal${n}-url`),
       upload: Utils.q(`#rw-gal${n}-upload`),
-      clear:  Utils.q(`#rw-gal${n}-clear`)
+      remove: Utils.q(`#rw-gal${n}-remove`)
     });
     GalleryUI = {
       enabled: Utils.q('#rw-gal-enabled'),
@@ -334,7 +334,7 @@ function ensureGalleryUI() {
               <div class="image-preview-container" id="rw-gal1-wrap" style="min-height:110px; flex:1; position:relative;">
                 <img id="rw-gal1-img" alt="Gallery image 1"
                      style="display:none; max-width:100%; height:auto; border-radius:8px; border:2px solid #e5e7eb;">
-                 
+                <button type="button" class="gallery-remove-btn" id="rw-gal1-remove" aria-label="Remove image" title="Remove image">×</button>
               </div>
 
               <div class="rw-slot">
@@ -344,7 +344,6 @@ function ensureGalleryUI() {
   </div>
   <div class="rw-actions">
     <button id="rw-gal1-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
-    <button id="rw-gal1-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
 
@@ -355,7 +354,7 @@ function ensureGalleryUI() {
               <div class="image-preview-container" id="rw-gal2-wrap" style="min-height:110px; flex:1; position:relative;">
                 <img id="rw-gal2-img" alt="Gallery image 2"
                      style="display:none; max-width:100%; height:auto; border-radius:8px; border:2px solid #e5e7eb;">
-                
+                <button type="button" class="gallery-remove-btn" id="rw-gal2-remove" aria-label="Remove image" title="Remove image">×</button>
               </div>
 
               <div class="rw-slot">
@@ -365,7 +364,6 @@ function ensureGalleryUI() {
   </div>
   <div class="rw-actions">
     <button id="rw-gal2-upload" type="button" class="button rw-icon" title="Upload"><span>📤 Upload New Image</span></button>
-    <button id="rw-gal2-clear" type="button" class="button" title="Clear"><span>Remove</span></button>
   </div>
 </div>
 
@@ -394,7 +392,7 @@ if (fieldContainer && fieldContainer.parentElement) {
       img:    Utils.q(`#rw-gal${n}-img`),
       url:    Utils.q(`#rw-gal${n}-url`),
       upload: Utils.q(`#rw-gal${n}-upload`),
-      clear:  Utils.q(`#rw-gal${n}-clear`)
+      remove: Utils.q(`#rw-gal${n}-remove`)
     });
 
     GalleryUI = {
@@ -422,8 +420,9 @@ if (slot.url && !slot.url.dataset.bound) {
 }
 
 
-if (slot.clear && !slot.clear.dataset.bound) {
-  slot.clear.addEventListener('click', () => {
+if (slot.remove && !slot.remove.dataset.bound) {
+  slot.remove.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent triggering upload on click
 if (slot.url) {
   slot.url.value = '';
   slot.url.setAttribute('value', '');
@@ -433,7 +432,7 @@ const pr = App.products[App.currentEditIndex];
 if (pr) writeGallerySlotToProduct(pr, idx, '');
 
   });
-  slot.clear.dataset.bound = '1';
+  slot.remove.dataset.bound = '1';
 }
 
 
@@ -588,6 +587,11 @@ function paintGallerySlot(slotEl, url) {
       slotEl.img.style.display = 'none';
       slotEl.img.setAttribute('aria-hidden', 'true');
     }
+  }
+
+  // Show/hide the ❌ remove button based on image presence
+  if (slotEl.remove) {
+    slotEl.remove.style.display = url ? '' : 'none';
   }
 }
 

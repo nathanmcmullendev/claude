@@ -29,10 +29,10 @@ window.RapidWoo.Utils = {
     toast.className = `toast ${type}`;
     
     const icons = {
-      success: 'âœ“',
-      error: 'âœ•',
-      warning: 'âš ',
-      info: 'â„¹'
+      success: '✓',
+      error: '✕',
+      warning: '⚠',
+      info: 'ℹ'
     };
     
     const titles = {
@@ -48,7 +48,7 @@ window.RapidWoo.Utils = {
         <div class='toast-title'>${titles[type]}</div>
         <div class='toast-message'>${message}</div>
       </div>
-      <button class='toast-close' aria-label='Close'>Ã—</button>
+      <button class='toast-close' aria-label='Close'>×</button>
     `;
     
     container.appendChild(toast);
@@ -257,7 +257,7 @@ window.RapidWoo.Utils = {
       overlay.id = 'lightbox-overlay';
       overlay.className = 'lightbox-overlay';
       overlay.innerHTML = `
-        <button class='lightbox-close' aria-label='Close'>âœ•</button>
+        <button class='lightbox-close' aria-label='Close'>✕</button>
         <img class='lightbox-image' src='' alt='Product image'>
       `;
       document.body.appendChild(overlay);

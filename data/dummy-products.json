@@ -26,7 +26,9 @@
             "Size": "S"
           },
           "price_delta": "+0.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "24.99",
+          "sale_price": "19.99"
         },
         {
           "id": 1762000001002,
@@ -35,7 +37,9 @@
             "Size": "M"
           },
           "price_delta": "+0.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "24.99",
+          "sale_price": "19.99"
         },
         {
           "id": 1762000001003,
@@ -44,7 +48,9 @@
             "Size": "L"
           },
           "price_delta": "+3.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "27.99",
+          "sale_price": "22.99"
         },
         {
           "id": 1762000001004,
@@ -53,7 +59,9 @@
             "Size": "XL"
           },
           "price_delta": "+5.00",
-          "stock_status": "onbackorder"
+          "stock_status": "onbackorder",
+          "regular_price": "29.99",
+          "sale_price": "24.99"
         }
       ],
       "categories": [
@@ -406,7 +414,8 @@
             "Size": "16\u00c3\u201420 Print"
           },
           "price_delta": "+0.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "21.99"
         },
         {
           "id": 176300002002,
@@ -415,7 +424,8 @@
             "Size": "24\u00c3\u201436 Print"
           },
           "price_delta": "+6.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "27.99"
         },
         {
           "id": 176300002004,
@@ -424,7 +434,8 @@
             "Size": "24\u00c3\u201436 Canvas"
           },
           "price_delta": "+24.00",
-          "stock_status": "instock"
+          "stock_status": "instock",
+          "regular_price": "45.99"
         }
       ],
       "categories": [

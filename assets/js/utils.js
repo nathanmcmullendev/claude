@@ -29,10 +29,10 @@ window.RapidWoo.Utils = {
     toast.className = `toast ${type}`;
     
     const icons = {
-      success: '✓',
-      error: '✕',
-      warning: '⚠',
-      info: 'ℹ'
+      success: 'âœ“',
+      error: 'âœ•',
+      warning: 'âš ',
+      info: 'â„¹'
     };
     
     const titles = {
@@ -48,7 +48,7 @@ window.RapidWoo.Utils = {
         <div class='toast-title'>${titles[type]}</div>
         <div class='toast-message'>${message}</div>
       </div>
-      <button class='toast-close' aria-label='Close'>×</button>
+      <button class='toast-close' aria-label='Close'>Ã—</button>
     `;
     
     container.appendChild(toast);
@@ -257,7 +257,7 @@ window.RapidWoo.Utils = {
       overlay.id = 'lightbox-overlay';
       overlay.className = 'lightbox-overlay';
       overlay.innerHTML = `
-        <button class='lightbox-close' aria-label='Close'>✕</button>
+        <button class='lightbox-close' aria-label='Close'>âœ•</button>
         <img class='lightbox-image' src='' alt='Product image'>
       `;
       document.body.appendChild(overlay);
@@ -305,7 +305,7 @@ window.RapidWoo.Utils = {
       this.showToast('Copied to clipboard', 'success');
       return true;
     } catch (error) {
-      console.error('âŒ Copy failed:', error);
+      console.error('Ã¢ÂÅ’ Copy failed:', error);
       this.showToast('Failed to copy', 'error');
       return false;
     }
@@ -424,4 +424,4 @@ window.RapidWoo.Utils = {
   }
 };
 
-console.log('âœ… RapidWoo Utils loaded')
+console.log('Ã¢Å“â€¦ RapidWoo Utils loaded')

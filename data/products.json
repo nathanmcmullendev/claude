@@ -3,12 +3,12 @@
   "products": [
     {
       "id": 1762000000001,
-      "title": "Change 1",
+      "title": "Graphic T-Shirt - Neon Wave",
       "slug": "graphic-tshirt-neon-wave",
       "sku": "TSHIRT-NEON-001",
       "type": "variable",
       "stock_status": "instock",
-      "regular_price": "",
+      "regular_price": "24.99",
       "sale_price": "19.99",
       "price": "19.99",
       "attributes": {
@@ -21,48 +21,40 @@
       },
       "variations": [
         {
-          "id": 17620000000011,
+          "id": 1762000001001,
           "sku": "TSHIRT-NEON-001-S",
           "attributes": {
             "Size": "S"
           },
-          "regular_price": "24.99",
-          "sale_price": "19.99",
-          "stock_status": "instock",
-          "price_delta": "+0.00"
+          "price_delta": "+0.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000012,
+          "id": 1762000001002,
           "sku": "TSHIRT-NEON-001-M",
           "attributes": {
             "Size": "M"
           },
-          "regular_price": "24.99",
-          "sale_price": "19.99",
-          "stock_status": "instock",
-          "price_delta": "+0.00"
+          "price_delta": "+0.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000013,
+          "id": 1762000001003,
           "sku": "TSHIRT-NEON-001-L",
           "attributes": {
             "Size": "L"
           },
-          "regular_price": "27.99",
-          "sale_price": "22.99",
-          "stock_status": "instock",
-          "price_delta": "+3.00"
+          "price_delta": "+3.00",
+          "stock_status": "instock"
         },
         {
-          "id": 17620000000014,
+          "id": 1762000001004,
           "sku": "TSHIRT-NEON-001-XL",
           "attributes": {
             "Size": "XL"
           },
-          "regular_price": "29.99",
-          "sale_price": "24.99",
-          "stock_status": "onbackorder",
-          "price_delta": "+5.00"
+          "price_delta": "+5.00",
+          "stock_status": "onbackorder"
         }
       ],
       "categories": [
@@ -75,7 +67,7 @@
         "unisex",
         "graphic"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765782656/rapidwoo/products/n4bwsbafypvneqn0xpel.webp",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-1.jpg",
       "images": [
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-2.jpg",
         "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
@@ -101,17 +93,15 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/tshirt-3.jpg"
         }
-      ],
-      "featured": false,
-      "show_additional_images": true
+      ]
     },
     {
       "id": 1762000000002,
-      "title": "Change 2",
+      "title": "Wireless Headphones - Matte Black",
       "slug": "wireless-headphones-matte-black",
       "sku": "HEAD-WIRE-101",
       "stock_status": "instock",
-      "regular_price": "22.00",
+      "regular_price": "79.99",
       "sale_price": "59.99",
       "price": "59.99",
       "categories": [
@@ -124,7 +114,7 @@
         "headphones",
         "noise-canceling"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765782855/rapidwoo/products/r0tl5e941mfyj3fr0w4i.jpg",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-1.jpg",
       "gallery": [
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/headphones-2.jpg"
@@ -151,13 +141,11 @@
       },
       "shipping_class": "small-package",
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true,
-      "featured": false
+      "hidden": false
     },
     {
       "id": 1762000000003,
-      "title": "Change 3",
+      "title": "Pullover Hoodie - Minimal Logo",
       "slug": "pullover-hoodie-minimal-logo",
       "sku": "HOOD-MIN-001",
       "stock_status": "instock",
@@ -173,7 +161,7 @@
         "fleece",
         "unisex"
       ],
-      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/v1765782829/rapidwoo/products/kdfjuhse2rwmgveizhng.jpg",
+      "image": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-1.jpg",
       "gallery": [
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/hoodie-2.jpg"
@@ -201,8 +189,7 @@
       "shipping_class": "apparel",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000004,
@@ -210,7 +197,7 @@
       "slug": "stainless-travel-mug-16oz",
       "sku": "MUG-TRAVEL-016",
       "stock_status": "instock",
-      "regular_price": "2",
+      "regular_price": "19.99",
       "sale_price": "16.99",
       "price": "16.99",
       "categories": [
@@ -250,8 +237,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000005,
@@ -298,8 +284,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000006,
@@ -347,8 +332,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000007,
@@ -396,8 +380,7 @@
       "shipping_class": "small-package",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1763000000200,
@@ -481,8 +464,7 @@
         {
           "url": "https://res.cloudinary.com/dh4qwuvuo/image/upload/rapidwoo/products/poster-3.jpg"
         }
-      ],
-      "show_additional_images": true
+      ]
     },
     {
       "id": 1762000000009,
@@ -530,8 +512,7 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     },
     {
       "id": 1762000000010,
@@ -579,8 +560,7 @@
       "shipping_class": "letter",
       "featured": false,
       "sold_individually": false,
-      "hidden": false,
-      "show_additional_images": true
+      "hidden": false
     }
   ]
 }

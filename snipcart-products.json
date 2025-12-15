@@ -6,7 +6,7 @@
     "customFields": [
       {
         "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
+        "options": "S[-8.99]|M|L[+3.00]|XL[+5.00]"
       }
     ]
   },
@@ -17,7 +17,7 @@
     "customFields": [
       {
         "name": "Size",
-        "options": "S|M|L[+3.00]|XL[+5.00]"
+        "options": "S[-8.99]|M|L[+3.00]|XL[+5.00]"
       }
     ]
   },

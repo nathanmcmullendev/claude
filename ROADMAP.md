@@ -47,10 +47,6 @@ Every version increment follows these principles:
 
 ## v3.2 — Editor UX Polish ✅ COMPLETED
 
-## v3.3 — Gallery Image UX ✅
-- Added ❌ overlay remove button on gallery images
-- Improved discoverability of image removal
-
 **Goal:** Improve editor usability and fix remaining rough edges.
 
 ### Changes
@@ -72,25 +68,24 @@ Every version increment follows these principles:
 
 ---
 
-## v3.3 — Image Management Improvements
+## v3.3 — Image Management Improvements ✅ COMPLETED
 
 **Goal:** Make image handling more robust and user-friendly.
 
 ### Changes
 
-| # | Task | File(s) | Priority |
-|---|------|---------|----------|
-| 1 | Image reordering via drag-and-drop | `demo/editor.js` | High |
-| 2 | Delete image button (gallery items) | `demo/editor.js` | High |
-| 3 | Image upload progress indicator | `imageHandler.js`, `demo/editor.js` | Medium |
-| 4 | Lazy loading for gallery images | `demo/editor.js` | Low |
-| 5 | Image dimension validation | `imageHandler.js` | Low |
+| # | Task | File(s) | Status |
+|---|------|---------|--------|
+| 1 | Image reordering via drag-and-drop | `demo/editor.js` | ⏸️ Deferred (low value with 2 slots) |
+| 2 | Delete image button (gallery items) | `demo/editor.js` | ✅ Done |
+| 3 | Image upload progress indicator | `imageHandler.js` | ⏸️ Deferred to v3.4 |
+| 4 | Lazy loading for gallery images | `demo/editor.js` | ⏸️ Deferred |
+| 5 | Image dimension validation | `imageHandler.js` | ⏸️ Deferred |
 
 ### Acceptance Criteria
-- [ ] User can drag to reorder gallery images
-- [ ] Each gallery image has a delete (X) button
-- [ ] Upload shows progress percentage
-- [ ] Gallery images load on scroll (not all at once)
+- [x] Each gallery image has a delete (X) button
+- [ ] ~~User can drag to reorder gallery images~~ (deferred)
+- [ ] ~~Upload shows progress percentage~~ (moved to v3.4)
 
 ---
 
@@ -392,11 +387,10 @@ git push --force origin main
 - Fixed UTF-8 encoding issues
 
 ## v3.2 — Editor UX Polish ✅
+- Added beforeunload warning for unsaved changes
 
 ## v3.3 — Gallery Image UX ✅
 - Added ❌ overlay remove button on gallery images
-- Improved discoverability of image removal
-- Added beforeunload warning for unsaved changes
 
 ---
 

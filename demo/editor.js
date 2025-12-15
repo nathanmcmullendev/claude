@@ -2190,6 +2190,16 @@ function closeQuickView() {
 // ============================================
 document.addEventListener('DOMContentLoaded', init);
 
+// ============================================
+// UNSAVED CHANGES WARNING
+// ============================================
+window.addEventListener('beforeunload', (e) => {
+  if (Storage.isDirty()) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
 /* =========================================================
    RapidWoo – Default "Show Additional Images" = ON (when exists)
    Drop-in patch: place at the very end of /demo/editor.js

@@ -222,7 +222,7 @@ window.RapidWoo.Storage = {
 
     try {
       const gh = this._config.github;
-      const content = JSON.stringify({ products }, null, 2);
+      const content = JSON.stringify({ schema_version: 1, products }, null, 2);
       const message = commitMessage || `Update products (${products.length} items) via RapidWoo`;
 
       // Get current file SHA (needed for update)

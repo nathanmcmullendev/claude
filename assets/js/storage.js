@@ -203,6 +203,13 @@ window.RapidWoo.Storage = {
     return true;
   },
 
+  // SHA cache to prevent mismatch on rapid saves
+  // GitHub's CDN may return stale SHA, so we cache the last known good SHA
+  _lastKnownSha: {
+    products: null,
+    snipcart: null
+  },
+
   /**
    * Push products to GitHub (the real save)
    * Also generates and saves snipcart-products.json for checkout validation
@@ -225,9 +232,13 @@ window.RapidWoo.Storage = {
       const content = JSON.stringify({ schema_version: 1, products }, null, 2);
       const message = commitMessage || `Update products (${products.length} items) via RapidWoo`;
 
-      // Get current file SHA (needed for update)
-      const currentFile = await this._getGitHubFile(gh.productPath);
-      const sha = currentFile?.sha || null;
+      // Use cached SHA if available (prevents CDN stale SHA issue)
+      // Otherwise fetch from GitHub API
+      let sha = this._lastKnownSha.products;
+      if (!sha) {
+        const currentFile = await this._getGitHubFile(gh.productPath);
+        sha = currentFile?.sha || null;
+      }
 
       // Create/update products.json
       const response = await fetch(
@@ -252,8 +263,63 @@ window.RapidWoo.Storage = {
       const result = await response.json();
 
       if (!response.ok) {
+        // If SHA mismatch, clear cache and retry once
+        if (result.message && result.message.includes('does not match')) {
+          console.warn('⚠️ SHA mismatch detected, fetching fresh SHA and retrying...');
+          this._lastKnownSha.products = null;
+          const freshFile = await this._getGitHubFile(gh.productPath);
+          const freshSha = freshFile?.sha || null;
+          
+          // Retry with fresh SHA
+          const retryResponse = await fetch(
+            `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${gh.productPath}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${gh.token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message,
+                content: btoa(unescape(encodeURIComponent(content))),
+                branch: gh.branch,
+                ...(freshSha && { sha: freshSha })
+              })
+            }
+          );
+          
+          const retryResult = await retryResponse.json();
+          
+          if (!retryResponse.ok) {
+            throw new Error(retryResult.message || `HTTP ${retryResponse.status}`);
+          }
+          
+          // Cache the new SHA from retry
+          this._lastKnownSha.products = retryResult.content?.sha || null;
+          console.log('✅ Retry succeeded, new SHA cached:', this._lastKnownSha.products?.substring(0, 7));
+          
+          // Continue with snipcart validation
+          await this._saveSnipcartValidation(products);
+          this._setCache({ products });
+          this._markDirty(false);
+          
+          return {
+            success: true,
+            commit: retryResult.commit?.sha?.substring(0, 7),
+            productCount: products.length,
+            url: retryResult.content?.html_url,
+            retried: true
+          };
+        }
+        
         throw new Error(result.message || `HTTP ${response.status}`);
       }
+
+      // Cache the new SHA for next save (prevents CDN stale SHA issue)
+      this._lastKnownSha.products = result.content?.sha || null;
+      console.log('📌 SHA cached for products.json:', this._lastKnownSha.products?.substring(0, 7));
 
       // Also update Snipcart validation file
       await this._saveSnipcartValidation(products);
@@ -291,9 +357,12 @@ window.RapidWoo.Storage = {
       const snipcartProducts = this._generateSnipcartValidation(products);
       const content = JSON.stringify(snipcartProducts, null, 2);
       
-      // Get current file SHA
-      const currentFile = await this._getGitHubFile(validationPath);
-      const sha = currentFile?.sha || null;
+      // Use cached SHA if available, otherwise fetch
+      let sha = this._lastKnownSha.snipcart;
+      if (!sha) {
+        const currentFile = await this._getGitHubFile(validationPath);
+        sha = currentFile?.sha || null;
+      }
       
       // Upload validation file
       const response = await fetch(
@@ -315,11 +384,49 @@ window.RapidWoo.Storage = {
         }
       );
       
+      const result = await response.json();
+      
       if (response.ok) {
+        // Cache the new SHA
+        this._lastKnownSha.snipcart = result.content?.sha || null;
         console.log('✅ Snipcart validation updated:', snipcartProducts.length, 'products');
       } else {
-        const err = await response.json();
-        console.warn('⚠️ Snipcart validation update failed:', err.message);
+        // If SHA mismatch, retry with fresh SHA
+        if (result.message && result.message.includes('does not match')) {
+          console.warn('⚠️ Snipcart SHA mismatch, retrying...');
+          this._lastKnownSha.snipcart = null;
+          const freshFile = await this._getGitHubFile(validationPath);
+          const freshSha = freshFile?.sha || null;
+          
+          const retryResponse = await fetch(
+            `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${validationPath}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${gh.token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message: `Update Snipcart validation (${snipcartProducts.length} products)`,
+                content: btoa(unescape(encodeURIComponent(content))),
+                branch: gh.branch,
+                ...(freshSha && { sha: freshSha })
+              })
+            }
+          );
+          
+          if (retryResponse.ok) {
+            const retryResult = await retryResponse.json();
+            this._lastKnownSha.snipcart = retryResult.content?.sha || null;
+            console.log('✅ Snipcart validation retry succeeded');
+          } else {
+            console.warn('⚠️ Snipcart validation retry failed');
+          }
+        } else {
+          console.warn('⚠️ Snipcart validation update failed:', result.message);
+        }
       }
     } catch (error) {
       console.warn('⚠️ Could not update Snipcart validation:', error.message);
